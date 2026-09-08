@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'motion/react';
 
 interface CompetitorTableProps {
   onNavigateToModeler: () => void;
@@ -7,7 +8,13 @@ interface CompetitorTableProps {
 export const CompetitorTable: React.FC<CompetitorTableProps> = ({ onNavigateToModeler }) => {
   return (
     <section id="tco-table" className="px-4 sm:px-6 lg:px-12 max-w-7xl mx-auto w-full mb-20 sm:mb-24">
-      <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-12">
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-40px' }}
+        transition={{ duration: 0.5 }}
+        className="text-center max-w-3xl mx-auto mb-10 sm:mb-12"
+      >
         <span className="text-xs font-mono text-[#00E5FF] uppercase tracking-widest mb-3 block">
           BENCHMARK ANALYSIS
         </span>
@@ -17,9 +24,15 @@ export const CompetitorTable: React.FC<CompetitorTableProps> = ({ onNavigateToMo
         <p className="text-slate-400 text-sm sm:text-base font-mono">
           A direct look at hardware outlays, hidden software add-ons, and regulatory compliance.
         </p>
-      </div>
+      </motion.div>
 
-      <div className="overflow-x-auto bg-[#161F30] border border-[#2A374F] rounded-xl shadow-2xl custom-scrollbar">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-40px' }}
+        transition={{ duration: 0.5, delay: 0.1 }}
+        className="overflow-x-auto bg-[#161F30] border border-[#2A374F] rounded-xl shadow-2xl custom-scrollbar"
+      >
         <table className="w-full text-left border-collapse min-w-[760px]">
           <thead>
             <tr className="border-b border-[#2A374F] bg-[#0B0F19]/50">
@@ -34,8 +47,8 @@ export const CompetitorTable: React.FC<CompetitorTableProps> = ({ onNavigateToMo
           </thead>
           <tbody className="divide-y divide-[#2A374F]/50 text-sm font-mono">
             {/* Row 1 */}
-            <tr className="hover:bg-[#0B0F19]/30 transition-colors">
-              <td className="p-4 font-headline font-semibold text-white">Hardware Upfront</td>
+            <tr className="hover:bg-[#0B0F19]/40 transition-colors group">
+              <td className="p-4 font-headline font-semibold text-white group-hover:text-[#00E5FF] transition-colors">Hardware Upfront</td>
               <td className="p-4 text-slate-400">$18,500</td>
               <td className="p-4 text-slate-400">$65,000</td>
               <td className="p-4 text-slate-400">$120,000+</td>
@@ -45,8 +58,8 @@ export const CompetitorTable: React.FC<CompetitorTableProps> = ({ onNavigateToMo
             </tr>
 
             {/* Row 2 */}
-            <tr className="hover:bg-[#0B0F19]/30 transition-colors">
-              <td className="p-4 font-headline font-semibold text-white">3-Year SaaS Software</td>
+            <tr className="hover:bg-[#0B0F19]/40 transition-colors group">
+              <td className="p-4 font-headline font-semibold text-white group-hover:text-[#00E5FF] transition-colors">3-Year SaaS Software</td>
               <td className="p-4 text-slate-400">$12,000</td>
               <td className="p-4 text-slate-400">$24,000</td>
               <td className="p-4 text-slate-400">$45,000</td>
@@ -56,8 +69,8 @@ export const CompetitorTable: React.FC<CompetitorTableProps> = ({ onNavigateToMo
             </tr>
 
             {/* Row 3 */}
-            <tr className="hover:bg-[#0B0F19]/30 transition-colors">
-              <td className="p-4 font-headline font-semibold text-white">NDAA / US Grant Compliance</td>
+            <tr className="hover:bg-[#0B0F19]/40 transition-colors group">
+              <td className="p-4 font-headline font-semibold text-white group-hover:text-[#00E5FF] transition-colors">NDAA / US Grant Compliance</td>
               <td className="p-4 text-red-400">
                 <span className="flex items-center gap-1">
                   <span className="material-symbols-outlined text-[16px]">cancel</span>
@@ -78,15 +91,15 @@ export const CompetitorTable: React.FC<CompetitorTableProps> = ({ onNavigateToMo
               </td>
               <td className="p-4 text-emerald-400 font-semibold bg-[#00E5FF]/10 border-x border-[#00E5FF]/30">
                 <span className="flex items-center gap-1">
-                  <span className="material-symbols-outlined text-[16px]">verified</span>
+                  <span className="material-symbols-outlined text-[16px] animate-pulse">verified</span>
                   100% Compliant / Blue UAS
                 </span>
               </td>
             </tr>
 
             {/* Row 4 */}
-            <tr className="hover:bg-[#0B0F19]/30 transition-colors">
-              <td className="p-4 font-headline font-semibold text-white">Piloting Model</td>
+            <tr className="hover:bg-[#0B0F19]/40 transition-colors group">
+              <td className="p-4 font-headline font-semibold text-white group-hover:text-[#00E5FF] transition-colors">Piloting Model</td>
               <td className="p-4 text-slate-400">On-Site VO Required</td>
               <td className="p-4 text-slate-400">Semi-Autonomous</td>
               <td className="p-4 text-slate-400">Enterprise ROC</td>
@@ -104,7 +117,7 @@ export const CompetitorTable: React.FC<CompetitorTableProps> = ({ onNavigateToMo
               <td className="p-4 text-[#00E5FF] font-bold bg-[#00E5FF]/20 border-x border-[#00E5FF]/30 text-base">
                 <div className="flex items-center justify-between">
                   <span>$59,000</span>
-                  <span className="text-xs px-2 py-0.5 rounded bg-[#00E5FF] text-[#0B0F19] font-bold ml-2">
+                  <span className="text-xs px-2 py-0.5 rounded bg-[#00E5FF] text-[#0B0F19] font-bold ml-2 shadow-[0_0_8px_rgba(0,229,255,0.4)]">
                     46% Lower
                   </span>
                 </div>
@@ -112,7 +125,7 @@ export const CompetitorTable: React.FC<CompetitorTableProps> = ({ onNavigateToMo
             </tr>
           </tbody>
         </table>
-      </div>
+      </motion.div>
 
       <div className="mt-4 flex flex-col sm:flex-row items-center justify-between text-xs font-mono text-slate-400 gap-2">
         <span>* TCO reflects baseline single-enclosure deployment with sensor package and standard cloud SLA over 36 months.</span>
@@ -126,3 +139,4 @@ export const CompetitorTable: React.FC<CompetitorTableProps> = ({ onNavigateToMo
     </section>
   );
 };
+

@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'motion/react';
 
 interface MacroMetricsStripProps {
   onOpenPart108: () => void;
@@ -13,10 +14,17 @@ export const MacroMetricsStrip: React.FC<MacroMetricsStripProps> = ({
     <section className="px-4 sm:px-6 lg:px-12 max-w-7xl mx-auto w-full mb-20 sm:mb-24">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Card 1 */}
-        <div className="bg-[#161F30] border border-[#2A374F] p-6 rounded-xl relative overflow-hidden group hover:border-[#00E5FF] transition-colors">
-          <div className="absolute top-0 right-0 w-24 h-24 bg-[#00E5FF]/5 rounded-bl-full pointer-events-none"></div>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-40px' }}
+          transition={{ duration: 0.5, delay: 0.05 }}
+          whileHover={{ y: -6, transition: { type: 'spring', stiffness: 350 } }}
+          className="bg-[#161F30] border border-[#2A374F] p-6 rounded-xl relative overflow-hidden group hover:border-[#00E5FF] transition-colors shadow-lg"
+        >
+          <div className="absolute top-0 right-0 w-24 h-24 bg-[#00E5FF]/5 rounded-bl-full pointer-events-none group-hover:scale-110 transition-transform duration-500"></div>
           <div className="flex items-center gap-3 mb-3">
-            <span className="material-symbols-outlined text-[#00E5FF] text-[28px]">
+            <span className="material-symbols-outlined text-[#00E5FF] text-[28px] group-hover:scale-110 transition-transform">
               route
             </span>
             <span className="text-xs font-mono text-[#00E5FF] uppercase tracking-wider">
@@ -29,16 +37,21 @@ export const MacroMetricsStrip: React.FC<MacroMetricsStripProps> = ({
           <p className="text-sm text-slate-400 font-mono leading-relaxed">
             Servicing the 75% of US landmass managed by member-owned rural electric cooperatives.
           </p>
-        </div>
+        </motion.div>
 
         {/* Card 2 */}
-        <div
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-40px' }}
+          transition={{ duration: 0.5, delay: 0.15 }}
+          whileHover={{ y: -6, transition: { type: 'spring', stiffness: 350 } }}
           onClick={onNavigateToModeler}
-          className="bg-[#161F30] border border-[#2A374F] p-6 rounded-xl relative overflow-hidden group hover:border-[#F59E0B] transition-colors cursor-pointer"
+          className="bg-[#161F30] border border-[#2A374F] p-6 rounded-xl relative overflow-hidden group hover:border-[#F59E0B] transition-colors cursor-pointer shadow-lg"
         >
-          <div className="absolute top-0 right-0 w-24 h-24 bg-[#F59E0B]/5 rounded-bl-full pointer-events-none"></div>
+          <div className="absolute top-0 right-0 w-24 h-24 bg-[#F59E0B]/5 rounded-bl-full pointer-events-none group-hover:scale-110 transition-transform duration-500"></div>
           <div className="flex items-center gap-3 mb-3">
-            <span className="material-symbols-outlined text-[#F59E0B] text-[28px]">
+            <span className="material-symbols-outlined text-[#F59E0B] text-[28px] group-hover:scale-110 transition-transform">
               payments
             </span>
             <span className="text-xs font-mono text-[#F59E0B] uppercase tracking-wider">
@@ -54,16 +67,21 @@ export const MacroMetricsStrip: React.FC<MacroMetricsStripProps> = ({
               Model grant offset &rarr;
             </span>
           </p>
-        </div>
+        </motion.div>
 
         {/* Card 3 */}
-        <div
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-40px' }}
+          transition={{ duration: 0.5, delay: 0.25 }}
+          whileHover={{ y: -6, transition: { type: 'spring', stiffness: 350 } }}
           onClick={onOpenPart108}
-          className="bg-[#161F30] border border-[#2A374F] p-6 rounded-xl relative overflow-hidden group hover:border-emerald-400 transition-colors cursor-pointer"
+          className="bg-[#161F30] border border-[#2A374F] p-6 rounded-xl relative overflow-hidden group hover:border-emerald-400 transition-colors cursor-pointer shadow-lg"
         >
-          <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-400/5 rounded-bl-full pointer-events-none"></div>
+          <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-400/5 rounded-bl-full pointer-events-none group-hover:scale-110 transition-transform duration-500"></div>
           <div className="flex items-center gap-3 mb-3">
-            <span className="material-symbols-outlined text-emerald-400 text-[28px]">
+            <span className="material-symbols-outlined text-emerald-400 text-[28px] group-hover:scale-110 transition-transform">
               verified
             </span>
             <span className="text-xs font-mono text-emerald-400 uppercase tracking-wider">
@@ -79,8 +97,9 @@ export const MacroMetricsStrip: React.FC<MacroMetricsStripProps> = ({
               Read whitepaper &rarr;
             </span>
           </p>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
 };
+

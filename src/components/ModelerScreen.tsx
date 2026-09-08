@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { InfrastructureProfile, ThreatVector } from '../types';
 
 interface ModelerScreenProps {
@@ -377,9 +378,17 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = ({
               <div className="text-xs font-mono uppercase text-slate-400">
                 Net 3-Year Operational Savings
               </div>
-              <div className="text-4xl lg:text-5xl font-headline font-bold text-[#00E5FF] mt-1 tracking-tight">
-                ${calculations.netSavings.toLocaleString()}
-              </div>
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={calculations.netSavings}
+                  initial={{ opacity: 0.7, scale: 0.98 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.15 }}
+                  className="text-4xl lg:text-5xl font-headline font-bold text-[#00E5FF] mt-1 tracking-tight"
+                >
+                  ${calculations.netSavings.toLocaleString()}
+                </motion.div>
+              </AnimatePresence>
               <div className="text-xs text-slate-400 mt-1 flex items-center gap-1.5 font-mono">
                 <span className="text-emerald-400 font-bold">
                   {calculations.savingsPct}% cost reduction
@@ -520,7 +529,11 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = ({
         {/* Comparative Visual Bars */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
           {/* Card 1: Contracted Helicopter Crews */}
-          <div className="bg-[#0B0F19] border border-[#2A374F] rounded-xl p-5 flex flex-col justify-between">
+          <motion.div
+            whileHover={{ y: -4 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+            className="bg-[#0B0F19] border border-[#2A374F] rounded-xl p-5 flex flex-col justify-between"
+          >
             <div>
               <div className="flex items-center justify-between mb-3">
                 <span className="text-xs font-mono text-red-400 uppercase font-bold">
@@ -559,10 +572,14 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = ({
             <div className="mt-4 pt-3 border-t border-[#2A374F] text-[11px] font-mono text-slate-500">
               Carbon index: 480 kg CO₂ / inspection
             </div>
-          </div>
+          </motion.div>
 
           {/* Card 2: Manual Pilot Dispatches */}
-          <div className="bg-[#0B0F19] border border-[#2A374F] rounded-xl p-5 flex flex-col justify-between">
+          <motion.div
+            whileHover={{ y: -4 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+            className="bg-[#0B0F19] border border-[#2A374F] rounded-xl p-5 flex flex-col justify-between"
+          >
             <div>
               <div className="flex items-center justify-between mb-3">
                 <span className="text-xs font-mono text-amber-400 uppercase font-bold">
@@ -608,10 +625,14 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = ({
             <div className="mt-4 pt-3 border-t border-[#2A374F] text-[11px] font-mono text-slate-500">
               Labor volatility: High turnover risk
             </div>
-          </div>
+          </motion.div>
 
           {/* Card 3: AeroDock Autonomous DiaB */}
-          <div className="bg-[#0B0F19] border-2 border-[#00E5FF] rounded-xl p-5 flex flex-col justify-between shadow-[0_0_25px_rgba(0,229,255,0.15)] relative">
+          <motion.div
+            whileHover={{ y: -4, boxShadow: '0 0 35px rgba(0,229,255,0.25)' }}
+            transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+            className="bg-[#0B0F19] border-2 border-[#00E5FF] rounded-xl p-5 flex flex-col justify-between shadow-[0_0_25px_rgba(0,229,255,0.15)] relative"
+          >
             <div className="absolute -top-3 right-4 px-2.5 py-0.5 rounded-full bg-[#00E5FF] text-[#0B0F19] font-mono text-[10px] font-bold uppercase tracking-wider">
               Best TCO // 64% Lower
             </div>
@@ -661,7 +682,7 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = ({
                 {grantActive ? '75% Grant Offset Applied' : 'Standard Financing'}
               </span>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
 

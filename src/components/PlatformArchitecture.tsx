@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'motion/react';
 
 interface PlatformArchitectureProps {
   onOpenSpecs: () => void;
@@ -7,7 +8,13 @@ interface PlatformArchitectureProps {
 export const PlatformArchitecture: React.FC<PlatformArchitectureProps> = ({ onOpenSpecs }) => {
   return (
     <section className="px-4 sm:px-6 lg:px-12 max-w-7xl mx-auto w-full mb-20 sm:mb-24">
-      <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-12">
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-40px' }}
+        transition={{ duration: 0.5 }}
+        className="text-center max-w-3xl mx-auto mb-10 sm:mb-12"
+      >
         <span className="text-xs font-mono text-[#00E5FF] uppercase tracking-widest mb-3 block">
           HARDWARE INTEGRITY
         </span>
@@ -17,13 +24,20 @@ export const PlatformArchitecture: React.FC<PlatformArchitectureProps> = ({ onOp
         <p className="text-slate-400 text-sm sm:text-base font-mono">
           Engineered from the silicon up to guarantee zero foreign telemetry leaks and operational durability in extreme climates.
         </p>
-      </div>
+      </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Card 1 */}
-        <div className="bg-[#161F30] border border-[#2A374F] p-6 rounded-xl flex flex-col justify-between hover:border-[#00E5FF] transition-colors">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-40px' }}
+          transition={{ duration: 0.5, delay: 0.08 }}
+          whileHover={{ y: -6, transition: { type: 'spring', stiffness: 350 } }}
+          className="bg-[#161F30] border border-[#2A374F] p-6 rounded-xl flex flex-col justify-between hover:border-[#00E5FF] transition-colors shadow-lg group"
+        >
           <div>
-            <div className="w-12 h-12 rounded bg-[#0B0F19] border border-[#2A374F] flex items-center justify-center mb-6">
+            <div className="w-12 h-12 rounded bg-[#0B0F19] border border-[#2A374F] flex items-center justify-center mb-6 group-hover:border-[#00E5FF]/40 group-hover:scale-105 transition-all">
               <span className="material-symbols-outlined text-[#00E5FF] text-[24px]">
                 security
               </span>
@@ -39,12 +53,19 @@ export const PlatformArchitecture: React.FC<PlatformArchitectureProps> = ({ onOp
             <span>100% SECURE SUPPLY CHAIN</span>
             <span className="text-slate-500">NDAA SEC 884</span>
           </div>
-        </div>
+        </motion.div>
 
         {/* Card 2 */}
-        <div className="bg-[#161F30] border border-[#2A374F] p-6 rounded-xl flex flex-col justify-between hover:border-[#F59E0B] transition-colors">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-40px' }}
+          transition={{ duration: 0.5, delay: 0.16 }}
+          whileHover={{ y: -6, transition: { type: 'spring', stiffness: 350 } }}
+          className="bg-[#161F30] border border-[#2A374F] p-6 rounded-xl flex flex-col justify-between hover:border-[#F59E0B] transition-colors shadow-lg group"
+        >
           <div>
-            <div className="w-12 h-12 rounded bg-[#0B0F19] border border-[#2A374F] flex items-center justify-center mb-6">
+            <div className="w-12 h-12 rounded bg-[#0B0F19] border border-[#2A374F] flex items-center justify-center mb-6 group-hover:border-[#F59E0B]/40 group-hover:scale-105 transition-all">
               <span className="material-symbols-outlined text-[#F59E0B] text-[24px]">
                 ac_unit
               </span>
@@ -60,12 +81,19 @@ export const PlatformArchitecture: React.FC<PlatformArchitectureProps> = ({ onOp
             <span>-25°C TO 50°C RATED</span>
             <span className="text-slate-500">ALL-WEATHER</span>
           </div>
-        </div>
+        </motion.div>
 
         {/* Card 3 */}
-        <div className="bg-[#161F30] border border-[#2A374F] p-6 rounded-xl flex flex-col justify-between hover:border-emerald-400 transition-colors">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-40px' }}
+          transition={{ duration: 0.5, delay: 0.24 }}
+          whileHover={{ y: -6, transition: { type: 'spring', stiffness: 350 } }}
+          className="bg-[#161F30] border border-[#2A374F] p-6 rounded-xl flex flex-col justify-between hover:border-emerald-400 transition-colors shadow-lg group"
+        >
           <div>
-            <div className="w-12 h-12 rounded bg-[#0B0F19] border border-[#2A374F] flex items-center justify-center mb-6">
+            <div className="w-12 h-12 rounded bg-[#0B0F19] border border-[#2A374F] flex items-center justify-center mb-6 group-hover:border-emerald-400/40 group-hover:scale-105 transition-all">
               <span className="material-symbols-outlined text-emerald-400 text-[24px]">
                 satellite_alt
               </span>
@@ -81,11 +109,13 @@ export const PlatformArchitecture: React.FC<PlatformArchitectureProps> = ({ onOp
             <span>DUAL 5G + STARLINK FALLBACK</span>
             <span className="text-slate-500">ASTM F3442</span>
           </div>
-        </div>
+        </motion.div>
       </div>
 
       <div className="mt-8 text-center">
-        <button
+        <motion.button
+          whileHover={{ scale: 1.04 }}
+          whileTap={{ scale: 0.97 }}
           onClick={onOpenSpecs}
           className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg bg-[#161F30] border border-[#2A374F] hover:border-[#00E5FF] text-white font-mono text-xs font-semibold transition-all cursor-pointer"
         >
@@ -93,7 +123,7 @@ export const PlatformArchitecture: React.FC<PlatformArchitectureProps> = ({ onOp
             description
           </span>
           <span>View Complete Engineering Specification Sheet</span>
-        </button>
+        </motion.button>
       </div>
     </section>
   );

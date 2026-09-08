@@ -147,3 +147,54 @@ input[type=range]::-moz-range-thumb {
   border-radius: 3px;
 }
 
+/* Aerospace & Industrial HUD Animations */
+@keyframes scanline {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(1000%);
+  }
+}
+
+@keyframes radar-sweep {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes target-pulse {
+  0%, 100% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+}
+
+@keyframes laser-glow {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba(0, 229, 255, 0.4), inset 0 0 10px rgba(0, 229, 255, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 22px rgba(0, 229, 255, 0.8), inset 0 0 15px rgba(0, 229, 255, 0.4);
+  }
+}
+
+.animate-scanline {
+  animation: scanline 4s linear infinite;
+}
+
+.animate-target-pulse {
+  animation: target-pulse 3s ease-in-out infinite;
+}
+
+.animate-laser-glow {
+  animation: laser-glow 2.5s ease-in-out infinite;
+}
+

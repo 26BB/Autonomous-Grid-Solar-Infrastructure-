@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 
 interface EmbeddedCalculatorProps {
   onNavigateToFullModeler: () => void;
@@ -34,8 +35,14 @@ export const EmbeddedCalculator: React.FC<EmbeddedCalculatorProps> = ({
 
   return (
     <section className="px-4 sm:px-6 lg:px-12 max-w-5xl mx-auto w-full mb-20 sm:mb-24">
-      <div className="bg-[#161F30] border border-[#2A374F] rounded-2xl p-6 sm:p-8 lg:p-12 shadow-2xl relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-[#00E5FF]/5 rounded-full blur-3xl pointer-events-none"></div>
+      <motion.div
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-40px' }}
+        transition={{ duration: 0.5 }}
+        className="bg-[#161F30] border border-[#2A374F] rounded-2xl p-6 sm:p-8 lg:p-12 shadow-2xl relative overflow-hidden"
+      >
+        <div className="absolute top-0 right-0 w-96 h-96 bg-[#00E5FF]/5 rounded-full blur-3xl pointer-events-none animate-pulse"></div>
 
         <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-10">
           <span className="text-xs font-mono text-[#00E5FF] uppercase tracking-widest mb-2 block">
@@ -57,28 +64,32 @@ export const EmbeddedCalculator: React.FC<EmbeddedCalculatorProps> = ({
                 Infrastructure Profile
               </label>
               <div className="grid grid-cols-2 gap-3">
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                   type="button"
                   onClick={() => handleProfileChange('coop')}
                   className={`px-4 py-3 rounded-lg font-headline font-semibold text-sm transition-all text-center cursor-pointer ${
                     profile === 'coop'
-                      ? 'bg-[#00E5FF] text-[#0B0F19] shadow-[0_0_12px_rgba(0,229,255,0.4)]'
+                      ? 'bg-[#00E5FF] text-[#0B0F19] shadow-[0_0_15px_rgba(0,229,255,0.4)]'
                       : 'bg-[#0B0F19] border border-[#2A374F] text-white hover:border-slate-500'
                   }`}
                 >
                   Electric Co-op
-                </button>
-                <button
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                   type="button"
                   onClick={() => handleProfileChange('solar')}
                   className={`px-4 py-3 rounded-lg font-headline font-semibold text-sm transition-all text-center cursor-pointer ${
                     profile === 'solar'
-                      ? 'bg-[#00E5FF] text-[#0B0F19] shadow-[0_0_12px_rgba(0,229,255,0.4)]'
+                      ? 'bg-[#00E5FF] text-[#0B0F19] shadow-[0_0_15px_rgba(0,229,255,0.4)]'
                       : 'bg-[#0B0F19] border border-[#2A374F] text-white hover:border-slate-500'
                   }`}
                 >
                   Community Solar
-                </button>
+                </motion.button>
               </div>
             </div>
 
@@ -109,7 +120,7 @@ export const EmbeddedCalculator: React.FC<EmbeddedCalculatorProps> = ({
 
             <div className="p-4 rounded-lg bg-[#0B0F19] border border-[#2A374F] text-xs font-mono text-slate-400 space-y-1">
               <p className="text-white font-semibold flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
                 Federal Funding Eligibility Notes:
               </p>
               <p className="leading-relaxed">
@@ -124,9 +135,17 @@ export const EmbeddedCalculator: React.FC<EmbeddedCalculatorProps> = ({
               <span className="text-xs font-mono text-slate-400 uppercase tracking-wider block mb-1">
                 PROJECTED ANNUAL SAVINGS
               </span>
-              <div className="text-4xl sm:text-5xl font-headline font-bold text-[#00E5FF] tracking-tight">
-                ${annualSavings.toLocaleString()}
-              </div>
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={annualSavings}
+                  initial={{ opacity: 0.6, scale: 0.98 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.15 }}
+                  className="text-4xl sm:text-5xl font-headline font-bold text-[#00E5FF] tracking-tight"
+                >
+                  ${annualSavings.toLocaleString()}
+                </motion.div>
+              </AnimatePresence>
               <span className="text-xs text-slate-400 font-mono mt-1 block">
                 Calculated on automated daily aerial dispatch
               </span>
@@ -152,7 +171,9 @@ export const EmbeddedCalculator: React.FC<EmbeddedCalculatorProps> = ({
             </div>
 
             <div className="flex flex-col gap-2.5">
-              <button
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
                 type="button"
                 onClick={() =>
                   onOpenProposalModal({
@@ -164,7 +185,7 @@ export const EmbeddedCalculator: React.FC<EmbeddedCalculatorProps> = ({
                 className="w-full py-3 rounded bg-[#00E5FF] text-[#0B0F19] font-headline font-bold text-sm hover:bg-white hover:text-black transition-all text-center cursor-pointer shadow-[0_0_15px_rgba(0,229,255,0.3)]"
               >
                 Lock In Grant Proposal Package
-              </button>
+              </motion.button>
 
               <button
                 type="button"
@@ -177,7 +198,8 @@ export const EmbeddedCalculator: React.FC<EmbeddedCalculatorProps> = ({
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 };
+

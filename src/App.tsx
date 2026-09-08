@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { Header } from './components/Header';
 import { HeroTelemetryCard } from './components/HeroTelemetryCard';
 import { MacroMetricsStrip } from './components/MacroMetricsStrip';
@@ -191,143 +192,181 @@ export default function App() {
 
       {/* Main Content Area */}
       <main className="w-full flex-1 py-8 sm:py-12">
-        {currentView === 'home' ? (
-          <div className="flex flex-col gap-12">
-            {/* HERO SECTION */}
-            <section className="px-4 sm:px-6 lg:px-12 max-w-7xl mx-auto w-full pt-4 sm:pt-8 pb-8 flex flex-col lg:flex-row items-center gap-12">
-              <div className="flex-1 flex flex-col items-start z-10">
-                {/* Micro Badge */}
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#161F30] border border-[#F59E0B] text-xs font-mono text-[#F59E0B] mb-6">
-                  <span className="w-2 h-2 rounded-full bg-[#F59E0B] animate-pulse"></span>
-                  NORMALIZING LOW-ALTITUDE BVLOS INSPECTION
-                </div>
+        <AnimatePresence mode="wait">
+          {currentView === 'home' ? (
+            <motion.div
+              key="home-view"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.35, ease: 'easeInOut' }}
+              className="flex flex-col gap-12"
+            >
+              {/* HERO SECTION */}
+              <section className="px-4 sm:px-6 lg:px-12 max-w-7xl mx-auto w-full pt-4 sm:pt-8 pb-8 flex flex-col lg:flex-row items-center gap-12">
+                <motion.div
+                  initial={{ opacity: 0, x: -24 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.5, ease: 'easeOut' }}
+                  className="flex-1 flex flex-col items-start z-10"
+                >
+                  {/* Micro Badge */}
+                  <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#161F30] border border-[#F59E0B] text-xs font-mono text-[#F59E0B] mb-6 shadow-sm">
+                    <span className="w-2 h-2 rounded-full bg-[#F59E0B] animate-ping"></span>
+                    NORMALIZING LOW-ALTITUDE BVLOS INSPECTION
+                  </div>
 
-                <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-headline font-bold text-white tracking-tight leading-tight mb-6">
-                  Autonomous Grid &amp; Solar Infrastructure{' '}
-                  <span className="text-[#00E5FF]">— at 46% Lower Total Cost.</span>
-                </h1>
+                  <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-headline font-bold text-white tracking-tight leading-tight mb-6">
+                    Autonomous Grid &amp; Solar Infrastructure{' '}
+                    <span className="text-[#00E5FF]">— at 46% Lower Total Cost.</span>
+                  </h1>
 
-                <p className="text-sm sm:text-base lg:text-lg text-slate-400 max-w-2xl mb-8 leading-relaxed font-mono">
-                  Replace variable pilot dispatches with edge-docked aerial intelligence. Purpose-built for rural electric lines and distributed solar portfolios, fully fundable through DOE &amp; USDA infrastructure grants.
-                </p>
-
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto">
-                  <button
-                    onClick={() => {
-                      setCurrentView('home');
-                      setTimeout(() => handleScrollToSection('solutions'), 50);
-                    }}
-                    className="px-6 py-3.5 rounded-lg bg-[#00E5FF] text-[#0B0F19] font-headline font-bold text-sm hover:bg-white hover:text-black transition-all text-center shadow-lg shadow-[#00E5FF]/20 cursor-pointer"
-                  >
-                    Explore Tier-2 Solution Kits
-                  </button>
-                  <button
-                    onClick={() => setIsGrantChecklistOpen(true)}
-                    className="px-6 py-3.5 rounded-lg bg-[#161F30] border border-[#2A374F] hover:border-[#00E5FF] text-white font-headline font-semibold text-sm transition-all text-center flex items-center justify-center gap-2 cursor-pointer"
-                  >
-                    <span className="material-symbols-outlined text-[18px]">download</span>
-                    <span>Download USDA/GRIP Procurement Deck</span>
-                  </button>
-                </div>
-              </div>
-
-              {/* Live Telemetry Card */}
-              <HeroTelemetryCard />
-            </section>
-
-            {/* MACRO METRICS STRIP */}
-            <MacroMetricsStrip
-              onOpenPart108={() => setIsPart108Open(true)}
-              onNavigateToModeler={() => {
-                setCurrentView('modeler');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-            />
-
-            {/* TCO COMPARISON TABLE */}
-            <CompetitorTable
-              onNavigateToModeler={() => {
-                setCurrentView('modeler');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-            />
-
-            {/* SECTOR-SPECIFIC VERTICAL SOLUTIONS */}
-            <SolutionsSection
-              onSelectSolution={(solution) => {
-                setCurrentView('modeler');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-            />
-
-            {/* PLATFORM ARCHITECTURE & SUPPLY CHAIN */}
-            <PlatformArchitecture onOpenSpecs={() => setIsSpecsOpen(true)} />
-
-            {/* EMBEDDED QUICK CALCULATOR */}
-            <EmbeddedCalculator
-              onNavigateToFullModeler={() => {
-                setCurrentView('modeler');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-              onOpenProposalModal={handleOpenQuickProposal}
-            />
-
-            {/* INITIATE DEPLOYMENT ENTERPRISE CTA */}
-            <section className="px-4 sm:px-6 lg:px-12 max-w-7xl mx-auto w-full mb-12">
-              <div className="bg-gradient-to-r from-[#161F30] to-[#0B0F19] border border-[#2A374F] rounded-2xl p-8 lg:p-12 text-center relative overflow-hidden shadow-2xl">
-                <div className="absolute inset-0 bg-[radial-gradient(#00E5FF_1px,transparent_1px)] [background-size:16px_16px] opacity-10 pointer-events-none"></div>
-                <div className="relative z-10 max-w-2xl mx-auto">
-                  <span className="text-xs font-mono text-[#00E5FF] uppercase tracking-widest mb-3 block font-bold">
-                    INITIATE DEPLOYMENT
-                  </span>
-                  <h2 className="text-3xl lg:text-4xl font-headline font-bold text-white mb-4">
-                    Deploy Autonomous Asset Oversight on Your Infrastructure.
-                  </h2>
-                  <p className="text-slate-400 font-mono text-sm sm:text-base mb-8">
-                    Speak with our aerospace integration team to review your cooperative's GIS map data and secure your USDA grant allocation slot.
+                  <p className="text-sm sm:text-base lg:text-lg text-slate-400 max-w-2xl mb-8 leading-relaxed font-mono">
+                    Replace variable pilot dispatches with edge-docked aerial intelligence. Purpose-built for rural electric lines and distributed solar portfolios, fully fundable through DOE &amp; USDA infrastructure grants.
                   </p>
 
-                  <form
-                    onSubmit={handleDeploymentSubmit}
-                    className="flex flex-col sm:flex-row gap-3 justify-center max-w-md mx-auto"
-                  >
-                    <input
-                      type="email"
-                      required
-                      value={deploymentEmail}
-                      onChange={(e) => setDeploymentEmail(e.target.value)}
-                      placeholder="Enter corporate or co-op email..."
-                      className="bg-[#0B0F19] border border-[#2A374F] rounded-lg px-4 py-3 text-sm text-white font-mono placeholder-slate-500 focus:outline-none focus:border-[#00E5FF] flex-1"
-                    />
-                    <button
-                      type="submit"
-                      className="px-6 py-3 rounded-lg bg-[#00E5FF] text-[#0B0F19] font-headline font-bold text-sm hover:bg-white hover:text-black transition-all whitespace-nowrap shadow-lg cursor-pointer"
+                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto">
+                    <motion.button
+                      whileHover={{ scale: 1.04, boxShadow: '0 0 24px rgba(0,229,255,0.45)' }}
+                      whileTap={{ scale: 0.97 }}
+                      onClick={() => {
+                        setCurrentView('home');
+                        setTimeout(() => handleScrollToSection('solutions'), 50);
+                      }}
+                      className="px-6 py-3.5 rounded-lg bg-[#00E5FF] text-[#0B0F19] font-headline font-bold text-sm hover:bg-white hover:text-black transition-all text-center shadow-lg shadow-[#00E5FF]/20 cursor-pointer"
                     >
-                      Request Spec Sheet &amp; Grant Toolkit
-                    </button>
-                  </form>
+                      Explore Tier-2 Solution Kits
+                    </motion.button>
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => setIsGrantChecklistOpen(true)}
+                      className="px-6 py-3.5 rounded-lg bg-[#161F30] border border-[#2A374F] hover:border-[#00E5FF] text-white font-headline font-semibold text-sm transition-all text-center flex items-center justify-center gap-2 cursor-pointer shadow-md"
+                    >
+                      <span className="material-symbols-outlined text-[18px]">download</span>
+                      <span>Download USDA/GRIP Procurement Deck</span>
+                    </motion.button>
+                  </div>
+                </motion.div>
 
-                  {deploymentSubmitted && (
-                    <div className="mt-4 p-3 rounded-lg bg-emerald-950/90 border border-emerald-500 text-emerald-300 text-xs font-mono flex items-center justify-center gap-2">
-                      <span className="material-symbols-outlined text-[18px]">check_circle</span>
-                      <span>Toolkit dispatched! An AeroDock engineer has received your request.</span>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </section>
-          </div>
-        ) : (
-          /* DEDICATED MODELER SCREEN (Image 1) */
-          <div className="px-4 sm:px-6 lg:px-12 max-w-7xl mx-auto w-full">
-            <ModelerScreen
-              onOpenBoardBriefModal={handleOpenBoardBrief}
-              onOpenGrantChecklistModal={() => setIsGrantChecklistOpen(true)}
-              onOpenProposalPackageModal={handleOpenProposalPackage}
-            />
-          </div>
-        )}
+                {/* Live Telemetry Card */}
+                <HeroTelemetryCard />
+              </section>
+
+              {/* MACRO METRICS STRIP */}
+              <MacroMetricsStrip
+                onOpenPart108={() => setIsPart108Open(true)}
+                onNavigateToModeler={() => {
+                  setCurrentView('modeler');
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+              />
+
+              {/* TCO COMPARISON TABLE */}
+              <CompetitorTable
+                onNavigateToModeler={() => {
+                  setCurrentView('modeler');
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+              />
+
+              {/* SECTOR-SPECIFIC VERTICAL SOLUTIONS */}
+              <SolutionsSection
+                onSelectSolution={(solution) => {
+                  setCurrentView('modeler');
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+              />
+
+              {/* PLATFORM ARCHITECTURE & SUPPLY CHAIN */}
+              <PlatformArchitecture onOpenSpecs={() => setIsSpecsOpen(true)} />
+
+              {/* EMBEDDED QUICK CALCULATOR */}
+              <EmbeddedCalculator
+                onNavigateToFullModeler={() => {
+                  setCurrentView('modeler');
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                onOpenProposalModal={handleOpenQuickProposal}
+              />
+
+              {/* INITIATE DEPLOYMENT ENTERPRISE CTA */}
+              <section className="px-4 sm:px-6 lg:px-12 max-w-7xl mx-auto w-full mb-12">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: '-40px' }}
+                  transition={{ duration: 0.5 }}
+                  className="bg-gradient-to-r from-[#161F30] to-[#0B0F19] border border-[#2A374F] rounded-2xl p-8 lg:p-12 text-center relative overflow-hidden shadow-2xl"
+                >
+                  <div className="absolute inset-0 bg-[radial-gradient(#00E5FF_1px,transparent_1px)] [background-size:16px_16px] opacity-10 pointer-events-none"></div>
+                  <div className="relative z-10 max-w-2xl mx-auto">
+                    <span className="text-xs font-mono text-[#00E5FF] uppercase tracking-widest mb-3 block font-bold">
+                      INITIATE DEPLOYMENT
+                    </span>
+                    <h2 className="text-3xl lg:text-4xl font-headline font-bold text-white mb-4">
+                      Deploy Autonomous Asset Oversight on Your Infrastructure.
+                    </h2>
+                    <p className="text-slate-400 font-mono text-sm sm:text-base mb-8">
+                      Speak with our aerospace integration team to review your cooperative's GIS map data and secure your USDA grant allocation slot.
+                    </p>
+
+                    <form
+                      onSubmit={handleDeploymentSubmit}
+                      className="flex flex-col sm:flex-row gap-3 justify-center max-w-md mx-auto"
+                    >
+                      <input
+                        type="email"
+                        required
+                        value={deploymentEmail}
+                        onChange={(e) => setDeploymentEmail(e.target.value)}
+                        placeholder="Enter corporate or co-op email..."
+                        className="bg-[#0B0F19] border border-[#2A374F] rounded-lg px-4 py-3 text-sm text-white font-mono placeholder-slate-500 focus:outline-none focus:border-[#00E5FF] flex-1"
+                      />
+                      <motion.button
+                        whileHover={{ scale: 1.03 }}
+                        whileTap={{ scale: 0.97 }}
+                        type="submit"
+                        className="px-6 py-3 rounded-lg bg-[#00E5FF] text-[#0B0F19] font-headline font-bold text-sm hover:bg-white hover:text-black transition-all whitespace-nowrap shadow-lg cursor-pointer"
+                      >
+                        Request Spec Sheet &amp; Grant Toolkit
+                      </motion.button>
+                    </form>
+
+                    {deploymentSubmitted && (
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="mt-4 p-3 rounded-lg bg-emerald-950/90 border border-emerald-500 text-emerald-300 text-xs font-mono flex items-center justify-center gap-2"
+                      >
+                        <span className="material-symbols-outlined text-[18px]">check_circle</span>
+                        <span>Toolkit dispatched! An AeroDock engineer has received your request.</span>
+                      </motion.div>
+                    )}
+                  </div>
+                </motion.div>
+              </section>
+            </motion.div>
+          ) : (
+            /* DEDICATED MODELER SCREEN (Image 1) */
+            <motion.div
+              key="modeler-view"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.35, ease: 'easeInOut' }}
+              className="px-4 sm:px-6 lg:px-12 max-w-7xl mx-auto w-full"
+            >
+              <ModelerScreen
+                onOpenBoardBriefModal={handleOpenBoardBrief}
+                onOpenGrantChecklistModal={() => setIsGrantChecklistOpen(true)}
+                onOpenProposalPackageModal={handleOpenProposalPackage}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </main>
+
 
       {/* Global Modals */}
       <BoardBriefModal
