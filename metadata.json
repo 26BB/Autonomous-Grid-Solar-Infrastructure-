@@ -1,0 +1,6 @@
+{
+  "name": "AeroDock Systems Website",
+  "description": "Autonomous drone-in-a-box infrastructure for mission-critical industrial grid and solar inspection, featuring an interactive ROI and federal grant modeler.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
