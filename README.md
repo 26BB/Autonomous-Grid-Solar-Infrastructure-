@@ -1,6 +1,7 @@
 # AeroDock Systems — Autonomous Grid & Solar Infrastructure Platform
 ### Rapid 0-to-1 Product Architecture & Federal Grant Underwriting Modeler for Critical Energy Infrastructure
 
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://autonomous-grid-solar-infrastructur.vercel.app)
 [![React 19](https://img.shields.io/badge/React-19.0-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Vite 6](https://img.shields.io/badge/Vite-6.0-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
@@ -8,6 +9,8 @@
 [![NDAA Compliant](https://img.shields.io/badge/NDAA_Sec._884-100%25_Blue_UAS-10B981?style=for-the-badge&logo=shield&logoColor=white)](./docs/PRD.md)
 [![FAA Part 108](https://img.shields.io/badge/FAA_Part_108-BVLOS_Ready-00E5FF?style=for-the-badge)](./docs/PRD.md)
 [![BIL 40101d](https://img.shields.io/badge/DOE_BIL_§40101(d)-75%25_Grant_Offset-F59E0B?style=for-the-badge)](./docs/CASE_STUDY.md)
+
+> 🚀 **Live Interactive Application:** [https://autonomous-grid-solar-infrastructur.vercel.app](https://autonomous-grid-solar-infrastructur.vercel.app)
 
 ---
 
