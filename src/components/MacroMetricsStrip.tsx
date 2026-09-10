@@ -6,7 +6,8 @@ interface MacroMetricsStripProps {
   onNavigateToModeler: () => void;
 }
 
-export const MacroMetricsStrip: React.FC<MacroMetricsStripProps> = ({
+// Memoized to avoid re-rendering static macro cards when unrelated App state changes
+export const MacroMetricsStrip: React.FC<MacroMetricsStripProps> = React.memo(({
   onOpenPart108,
   onNavigateToModeler,
 }) => {
@@ -101,5 +102,7 @@ export const MacroMetricsStrip: React.FC<MacroMetricsStripProps> = ({
       </div>
     </section>
   );
-};
+});
+
+MacroMetricsStrip.displayName = 'MacroMetricsStrip';
 

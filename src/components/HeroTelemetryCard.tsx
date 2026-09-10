@@ -8,7 +8,8 @@ const DOCK_NODES = [
   { id: 'DOCK_NODE_03', location: 'Mountain Pass G&T Tie-Line', temp: 18.2, battery: 100, latency: 22, status: 'READY FOR DISPATCH' },
 ];
 
-export const HeroTelemetryCard: React.FC = () => {
+// Memoized to isolate telemetry updates to this card and prevent external parent re-renders from invalidating its internal timer
+export const HeroTelemetryCard: React.FC = React.memo(() => {
   const [activeNodeIndex, setActiveNodeIndex] = useState(0);
   const [tempJitter, setTempJitter] = useState(0);
   const [latencyJitter, setLatencyJitter] = useState(0);
@@ -225,5 +226,7 @@ export const HeroTelemetryCard: React.FC = () => {
       </div>
     </motion.div>
   );
-};
+});
+
+HeroTelemetryCard.displayName = 'HeroTelemetryCard';
 

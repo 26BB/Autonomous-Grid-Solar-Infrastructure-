@@ -24,7 +24,8 @@ interface ModelerScreenProps {
   }) => void;
 }
 
-export const ModelerScreen: React.FC<ModelerScreenProps> = ({
+// Memoized to isolate modeler calculations and slider interactions from external App state updates
+export const ModelerScreen: React.FC<ModelerScreenProps> = React.memo(({
   onOpenBoardBriefModal,
   onOpenGrantChecklistModal,
   onOpenProposalPackageModal,
@@ -853,4 +854,6 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = ({
       </div>
     </div>
   );
-};
+});
+
+ModelerScreen.displayName = 'ModelerScreen';

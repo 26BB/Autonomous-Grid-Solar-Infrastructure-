@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 
 interface BoardBriefModalProps {
   isOpen: boolean;
@@ -15,12 +15,18 @@ interface BoardBriefModalProps {
   } | null;
 }
 
-export const BoardBriefModal: React.FC<BoardBriefModalProps> = ({
+// Memoized to prevent re-rendering modal when hidden or when external state changes
+export const BoardBriefModal: React.FC<BoardBriefModalProps> = React.memo(({
   isOpen,
   onClose,
   data,
 }) => {
   const [downloaded, setDownloaded] = useState(false);
+
+  // Memoize random document ID so it doesn't recalculate on every render
+  const docRef = useMemo(() => {
+    return Math.floor(100000 + Math.random() * 900000);
+  }, []);
 
   if (!isOpen || !data) return null;
 
@@ -45,7 +51,7 @@ export const BoardBriefModal: React.FC<BoardBriefModalProps> = ({
                 Cooperative Board Economic Brief (PDF Preview)
               </h3>
               <p className="text-xs font-mono text-slate-400">
-                Document Ref: AERODOCK-BOD-{Math.floor(100000 + Math.random() * 900000)} // Prepared for {data.email}
+                Document Ref: AERODOCK-BOD-{docRef} // Prepared for {data.email}
               </p>
             </div>
           </div>
@@ -170,4 +176,6 @@ export const BoardBriefModal: React.FC<BoardBriefModalProps> = ({
       </div>
     </div>
   );
-};
+});
+
+BoardBriefModal.displayName = 'BoardBriefModal';

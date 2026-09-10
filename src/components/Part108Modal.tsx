@@ -7,7 +7,8 @@ interface Part108ModalProps {
   onOpenModeler: () => void;
 }
 
-export const Part108Modal: React.FC<Part108ModalProps> = ({
+// Memoized to prevent re-renders when modal is closed or unrelated App state changes
+export const Part108Modal: React.FC<Part108ModalProps> = React.memo(({
   isOpen,
   onClose,
   onOpenModeler,
@@ -106,4 +107,6 @@ export const Part108Modal: React.FC<Part108ModalProps> = ({
       </div>
     </div>
   );
-};
+});
+
+Part108Modal.displayName = 'Part108Modal';
