@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { motion } from 'motion/react';
 
 interface CompetitorTableProps {
   onNavigateToModeler: () => void;
 }
 
-export const CompetitorTable: React.FC<CompetitorTableProps> = ({ onNavigateToModeler }) => {
+// Memoize CompetitorTable component to prevent expensive table re-renders
+// during high-frequency parent state changes (e.g., slider changes or telemetry ticks).
+export const CompetitorTable: React.FC<CompetitorTableProps> = memo(({ onNavigateToModeler }) => {
   return (
     <section id="tco-table" className="px-4 sm:px-6 lg:px-12 max-w-7xl mx-auto w-full mb-20 sm:mb-24">
       <motion.div
@@ -138,5 +140,7 @@ export const CompetitorTable: React.FC<CompetitorTableProps> = ({ onNavigateToMo
       </div>
     </section>
   );
-};
+});
+
+CompetitorTable.displayName = 'CompetitorTable';
 

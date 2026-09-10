@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 
 interface HeaderProps {
   currentView: 'home' | 'modeler';
@@ -9,7 +9,9 @@ interface HeaderProps {
   onScrollToSection: (sectionId: string) => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({
+// Memoize Header component to prevent unnecessary re-renders on parent state updates
+// (such as telemetry timer ticks or modal state changes) when header props are stable.
+export const Header: React.FC<HeaderProps> = memo(({
   currentView,
   onNavigateView,
   onOpenSpecs,
@@ -123,4 +125,6 @@ export const Header: React.FC<HeaderProps> = ({
       </div>
     </header>
   );
-};
+});
+
+Header.displayName = 'Header';
