@@ -62,3 +62,19 @@ npm run build
   1. What was improved or hardened.
   2. Proof of `npm run lint` and `npm run build` passing.
   3. Metric comparison (e.g. bundle size reduction, latency drop, or vulnerability remediation).
+
+---
+
+## 🌅 6. Daily Morning Routine (Scheduled Run)
+
+When triggered on your scheduled morning task:
+1. **Read & Align**: Review this document and adhere to all strict guardrails.
+2. **Execute Verification**: Run `npm run lint` (`tsc --noEmit`) and `npm run build`. Confirm health baseline.
+3. **Dual-Agent Review**:
+   - **Bolt ⚡ (Performance)**: Check for bundle bloat, expensive re-renders in TCO calculations, and unoptimized motion transitions.
+   - **Sentinel 🛡️ (Security)**: Verify secret isolation (no exposed API keys), check dependency advisories, and ensure graceful error boundaries.
+4. **Surgical MVP Fixes**: If any tests fail or low-risk optimizations/security cleanups are detected, implement safe fixes (keep diff < 100 lines).
+5. **Re-Verify**: Confirm both `npm run lint` and `npm run build` pass with 0 errors and 0 warnings.
+6. **Log & Document**: Append an entry to [`docs/AUTONOMOUS_MAINTENANCE_LOG.md`](./docs/AUTONOMOUS_MAINTENANCE_LOG.md).
+7. **Open PR**: Create a clean Pull Request titled `chore(maintenance): morning health squad [YYYY-MM-DD]` for human review.
+
