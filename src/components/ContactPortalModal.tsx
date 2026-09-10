@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { isValidEmail } from '../utils/validation';
 
 interface ContactPortalModalProps {
   isOpen: boolean;
@@ -7,6 +8,7 @@ interface ContactPortalModalProps {
 
 export const ContactPortalModal: React.FC<ContactPortalModalProps> = ({ isOpen, onClose }) => {
   const [submitted, setSubmitted] = useState(false);
+  const [emailError, setEmailError] = useState('');
   const [formData, setFormData] = useState({
     name: '',
     utility: '',
@@ -19,6 +21,11 @@ export const ContactPortalModal: React.FC<ContactPortalModalProps> = ({ isOpen, 
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isValidEmail(formData.email)) {
+      setEmailError('Please enter a valid official email address.');
+      return;
+    }
+    setEmailError('');
     setSubmitted(true);
   };
 
@@ -51,7 +58,7 @@ export const ContactPortalModal: React.FC<ContactPortalModalProps> = ({ isOpen, 
         {/* Content */}
         <div className="p-6 font-mono text-xs">
           {!submitted ? (
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} noValidate className="space-y-4">
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1">
                   <label className="text-slate-300 uppercase text-[10px]">Your Name</label>
@@ -84,10 +91,16 @@ export const ContactPortalModal: React.FC<ContactPortalModalProps> = ({ isOpen, 
                     type="email"
                     required
                     value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    onChange={(e) => {
+                      setFormData({ ...formData, email: e.target.value });
+                      if (emailError) setEmailError('');
+                    }}
                     placeholder="sjenkins@ozarkelectric.coop"
-                    className="w-full bg-[#0B0F19] border border-[#2A374F] rounded px-3 py-2 text-white text-xs font-mono focus:border-[#00E5FF] focus:outline-none"
+                    className={`w-full bg-[#0B0F19] border ${emailError ? 'border-red-500' : 'border-[#2A374F]'} rounded px-3 py-2 text-white text-xs font-mono focus:border-[#00E5FF] focus:outline-none`}
                   />
+                  {emailError && (
+                    <p className="text-[10px] text-red-400 mt-0.5">{emailError}</p>
+                  )}
                 </div>
                 <div className="space-y-1">
                   <label className="text-slate-300 uppercase text-[10px]">Title / Role</label>

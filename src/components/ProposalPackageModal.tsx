@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { isValidEmail } from '../utils/validation';
 
 interface ProposalPackageModalProps {
   isOpen: boolean;
@@ -20,11 +21,17 @@ export const ProposalPackageModal: React.FC<ProposalPackageModalProps> = ({
 }) => {
   const [locked, setLocked] = useState(false);
   const [email, setEmail] = useState('');
+  const [emailError, setEmailError] = useState('');
 
   if (!isOpen || !data) return null;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isValidEmail(email)) {
+      setEmailError('Please enter a valid official email address.');
+      return;
+    }
+    setEmailError('');
     setLocked(true);
   };
 
@@ -57,7 +64,7 @@ export const ProposalPackageModal: React.FC<ProposalPackageModalProps> = ({
         {/* Content */}
         <div className="p-6 font-mono text-xs space-y-4">
           {!locked ? (
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} noValidate className="space-y-4">
               <div className="p-4 rounded-xl bg-[#0B0F19] border border-[#2A374F] space-y-2">
                 <span className="text-[10px] uppercase text-[#00E5FF] font-bold">
                   PACKAGE SPECIFICATIONS RESERVED
@@ -90,10 +97,16 @@ export const ProposalPackageModal: React.FC<ProposalPackageModalProps> = ({
                   type="email"
                   required
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    if (emailError) setEmailError('');
+                  }}
                   placeholder="e.g. jsmith@valleyelectric.coop"
-                  className="w-full bg-[#0B0F19] border border-[#2A374F] rounded-lg px-4 py-3 text-white text-xs font-mono focus:border-[#00E5FF] focus:outline-none"
+                  className={`w-full bg-[#0B0F19] border ${emailError ? 'border-red-500' : 'border-[#2A374F]'} rounded-lg px-4 py-3 text-white text-xs font-mono focus:border-[#00E5FF] focus:outline-none`}
                 />
+                {emailError && (
+                  <p className="text-[10px] text-red-400 mt-1">{emailError}</p>
+                )}
               </div>
 
               <div className="p-3 rounded-lg bg-[#0B0F19] border border-[#2A374F] text-[11px] text-slate-400 space-y-1">
