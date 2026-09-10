@@ -7,6 +7,7 @@ interface ContactPortalModalProps {
 
 export const ContactPortalModal: React.FC<ContactPortalModalProps> = ({ isOpen, onClose }) => {
   const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     name: '',
     utility: '',
@@ -19,6 +20,22 @@ export const ContactPortalModal: React.FC<ContactPortalModalProps> = ({ isOpen, 
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
+
+    // Basic email format validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email.trim())) {
+      setError('Please provide a valid email address.');
+      return;
+    }
+
+    setFormData({
+      name: formData.name.trim(),
+      utility: formData.utility.trim(),
+      role: formData.role.trim(),
+      email: formData.email.trim(),
+      message: formData.message.trim(),
+    });
     setSubmitted(true);
   };
 
@@ -111,6 +128,13 @@ export const ContactPortalModal: React.FC<ContactPortalModalProps> = ({ isOpen, 
                   className="w-full bg-[#0B0F19] border border-[#2A374F] rounded px-3 py-2 text-white text-xs font-mono focus:border-[#00E5FF] focus:outline-none"
                 />
               </div>
+
+              {error && (
+                <div className="p-2.5 rounded bg-red-950/80 border border-red-500/50 text-red-300 text-[11px] font-mono flex items-center gap-2">
+                  <span className="material-symbols-outlined text-[16px]">error</span>
+                  <span>{error}</span>
+                </div>
+              )}
 
               <div className="p-3 rounded bg-[#0B0F19] border border-[#2A374F] text-[11px] text-slate-400 flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
