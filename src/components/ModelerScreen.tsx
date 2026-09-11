@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { InfrastructureProfile, ThreatVector } from '../types';
 
@@ -24,6 +24,404 @@ interface ModelerScreenProps {
   }) => void;
 }
 
+// Optimization: Memoized sub-component for 3-Year Benchmark to avoid re-renders when email changes or when unrelated state updates
+const CostBenchmarkSection = React.memo<{
+  helicopter3Yr: number;
+  manualUav3Yr: number;
+  aeroDock3YrTotal: number;
+  effectiveCapex: number;
+  docks: number;
+  aeroDockBarPct: number;
+  grantActive: boolean;
+}>(({
+  helicopter3Yr,
+  manualUav3Yr,
+  aeroDock3YrTotal,
+  effectiveCapex,
+  docks,
+  aeroDockBarPct,
+  grantActive,
+}) => {
+  return (
+    <div id="benchmark-section" className="bg-[#161F30] border border-[#2A374F] rounded-xl p-6 lg:p-8 flex flex-col gap-6">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-[#2A374F] pb-4">
+        <div>
+          <span className="text-xs font-mono text-[#00E5FF] uppercase tracking-wider">
+            Financial Modeling // 36-Month Horizon
+          </span>
+          <h2 className="text-2xl font-headline font-bold text-white mt-1">
+            3-Year Cumulative Cost Benchmark
+          </h2>
+          <p className="text-xs md:text-sm text-slate-400 mt-1 font-mono">
+            Directly comparing contracted helicopter crews, manual pilot dispatches, and AeroDock autonomous infrastructure.
+          </p>
+        </div>
+        <div className="flex items-center gap-3 text-xs font-mono">
+          <span className="inline-flex items-center gap-1.5">
+            <span className="w-3 h-3 bg-red-400/80 rounded" />
+            Contracted Rotor
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            <span className="w-3 h-3 bg-amber-400/80 rounded" />
+            Manual UAV
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            <span className="w-3 h-3 bg-[#00E5FF] rounded" />
+            AeroDock DiaB
+          </span>
+        </div>
+      </div>
+
+      {/* Comparative Visual Bars */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
+        {/* Card 1: Contracted Helicopter Crews */}
+        <motion.div
+          whileHover={{ y: -4 }}
+          transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+          className="bg-[#0B0F19] border border-[#2A374F] rounded-xl p-5 flex flex-col justify-between"
+        >
+          <div>
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-xs font-mono text-red-400 uppercase font-bold">
+                Legacy Helicopter Crew
+              </span>
+              <span className="material-symbols-outlined text-red-400 text-[20px]">
+                flight
+              </span>
+            </div>
+            <div className="text-2xl font-headline font-bold text-white">
+              ${helicopter3Yr.toLocaleString()}
+            </div>
+            <div className="text-xs font-mono text-slate-400 mb-4">
+              ${Math.round(helicopter3Yr / 3).toLocaleString()} / year contracted
+            </div>
+
+            <div className="w-full bg-[#161F30] h-3 rounded-full overflow-hidden mb-4 border border-[#2A374F]">
+              <div className="bg-red-500/80 h-full w-full"></div>
+            </div>
+
+            <ul className="space-y-2 text-xs text-slate-400 border-t border-[#2A374F] pt-3 font-mono">
+              <li className="flex items-center gap-1.5">
+                <span className="text-red-400">✕</span> 1x annual inspection cadence
+              </li>
+              <li className="flex items-center gap-1.5">
+                <span className="text-red-400">✕</span> 4–6 week dispatch scheduling lag
+              </li>
+              <li className="flex items-center gap-1.5">
+                <span className="text-red-400">✕</span> Significant crew aviation hazard
+              </li>
+              <li className="flex items-center gap-1.5">
+                <span className="text-red-400">✕</span> Zero real-time post-storm data
+              </li>
+            </ul>
+          </div>
+          <div className="mt-4 pt-3 border-t border-[#2A374F] text-[11px] font-mono text-slate-500">
+            Carbon index: 480 kg CO₂ / inspection
+          </div>
+        </motion.div>
+
+        {/* Card 2: Manual Pilot Dispatches */}
+        <motion.div
+          whileHover={{ y: -4 }}
+          transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+          className="bg-[#0B0F19] border border-[#2A374F] rounded-xl p-5 flex flex-col justify-between"
+        >
+          <div>
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-xs font-mono text-amber-400 uppercase font-bold">
+                Manual Drone Contractors
+              </span>
+              <span className="material-symbols-outlined text-amber-400 text-[20px]">
+                person_pin_circle
+              </span>
+            </div>
+            <div className="text-2xl font-headline font-bold text-white">
+              ${manualUav3Yr.toLocaleString()}
+            </div>
+            <div className="text-xs font-mono text-slate-400 mb-4">
+              ${Math.round(manualUav3Yr / 3).toLocaleString()} / year pilot triage
+            </div>
+
+            <div className="w-full bg-[#161F30] h-3 rounded-full overflow-hidden mb-4 border border-[#2A374F]">
+              <div
+                className="bg-amber-500/80 h-full transition-all duration-500"
+                style={{
+                  width: `${Math.round(
+                    (manualUav3Yr / helicopter3Yr) * 100
+                  )}%`,
+                }}
+              ></div>
+            </div>
+
+            <ul className="space-y-2 text-xs text-slate-400 border-t border-[#2A374F] pt-3 font-mono">
+              <li className="flex items-center gap-1.5">
+                <span className="text-amber-400">△</span> Quarterly line patrol cadence
+              </li>
+              <li className="flex items-center gap-1.5">
+                <span className="text-red-400">✕</span> Truck roll &amp; travel per diem
+              </li>
+              <li className="flex items-center gap-1.5">
+                <span className="text-red-400">✕</span> Pilot availability bottleneck
+              </li>
+              <li className="flex items-center gap-1.5">
+                <span className="text-emerald-400">✓</span> High-res optical imagery
+              </li>
+            </ul>
+          </div>
+          <div className="mt-4 pt-3 border-t border-[#2A374F] text-[11px] font-mono text-slate-500">
+            Labor volatility: High turnover risk
+          </div>
+        </motion.div>
+
+        {/* Card 3: AeroDock Autonomous DiaB */}
+        <motion.div
+          whileHover={{ y: -4, boxShadow: '0 0 35px rgba(0,229,255,0.25)' }}
+          transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+          className="bg-[#0B0F19] border-2 border-[#00E5FF] rounded-xl p-5 flex flex-col justify-between shadow-[0_0_25px_rgba(0,229,255,0.15)] relative"
+        >
+          <div className="absolute -top-3 right-4 px-2.5 py-0.5 rounded-full bg-[#00E5FF] text-[#0B0F19] font-mono text-[10px] font-bold uppercase tracking-wider">
+            Best TCO // 64% Lower
+          </div>
+          <div>
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-xs font-mono text-[#00E5FF] uppercase font-bold">
+                AeroDock Autonomous DiaB
+              </span>
+              <span className="material-symbols-outlined text-[#00E5FF] text-[20px]">
+                smart_toy
+              </span>
+            </div>
+            <div className="text-2xl font-headline font-bold text-[#00E5FF]">
+              ${Math.round(aeroDock3YrTotal).toLocaleString()}
+            </div>
+            <div className="text-xs font-mono text-slate-400 mb-4">
+              ${Math.round(effectiveCapex).toLocaleString()} CapEx + $
+              {(docks * 8000).toLocaleString()}/yr SaaS ({docks}{' '}
+              {docks === 1 ? 'Dock' : 'Docks'})
+            </div>
+
+            <div className="w-full bg-[#161F30] h-3 rounded-full overflow-hidden mb-4 border border-[#2A374F]">
+              <div
+                className="bg-[#00E5FF] h-full transition-all duration-500"
+                style={{ width: `${aeroDockBarPct}%` }}
+              ></div>
+            </div>
+
+            <ul className="space-y-2 text-xs text-slate-300 border-t border-[#2A374F] pt-3 font-mono">
+              <li className="flex items-center gap-1.5">
+                <span className="text-emerald-400">✓</span> Daily autonomous patrols on schedule
+              </li>
+              <li className="flex items-center gap-1.5">
+                <span className="text-emerald-400">✓</span> 20-second automated storm re-dispatch
+              </li>
+              <li className="flex items-center gap-1.5">
+                <span className="text-emerald-400">✓</span> Zero human field hazard
+              </li>
+              <li className="flex items-center gap-1.5">
+                <span className="text-emerald-400">✓</span> 100% NDAA &amp; Blue UAS Compliant
+              </li>
+            </ul>
+          </div>
+          <div className="mt-4 pt-3 border-t border-[#2A374F] flex items-center justify-between text-[11px] font-mono">
+            <span className="text-slate-400">Federal Cost Share:</span>
+            <span className="text-[#00E5FF] font-bold">
+              {grantActive ? '75% Grant Offset Applied' : 'Standard Financing'}
+            </span>
+          </div>
+        </motion.div>
+      </div>
+    </div>
+  );
+});
+CostBenchmarkSection.displayName = 'CostBenchmarkSection';
+
+// Optimization: Memoized sub-component for Qualification Matrix (100% static content + callback)
+const QualificationMatrixSection = React.memo<{
+  onOpenGrantChecklistModal: () => void;
+}>(({ onOpenGrantChecklistModal }) => {
+  return (
+    <div id="grants-matrix" className="bg-[#161F30] border border-[#2A374F] rounded-xl p-6 lg:p-8 flex flex-col gap-6">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#2A374F] pb-4">
+        <div>
+          <div className="flex items-center gap-2">
+            <span className="material-symbols-outlined text-[#F59E0B]">
+              verified
+            </span>
+            <h2 className="text-2xl font-headline font-bold text-white">
+              USDA RUS &amp; BIL Section 40101(d) Qualification Matrix
+            </h2>
+          </div>
+          <p className="text-xs md:text-sm text-slate-400 mt-1 font-mono">
+            Pre-cleared regulatory documentation and non-dilutive federal capital qualification checklist for AeroDock deployments.
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={onOpenGrantChecklistModal}
+            className="px-4 py-2 rounded bg-[#0B0F19] border border-[#00E5FF]/40 text-[#00E5FF] text-xs font-mono font-semibold hover:bg-[#161F30] transition-colors flex items-center gap-1.5 cursor-pointer"
+          >
+            <span className="material-symbols-outlined text-[16px]">
+              file_download
+            </span>
+            <span>Download Grant Checklist (PDF)</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Checklist Items */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* Check 1 */}
+        <div className="p-4 bg-[#0B0F19] border border-[#2A374F] rounded-lg flex items-start gap-3">
+          <span className="material-symbols-outlined text-emerald-400 text-[22px] shrink-0 mt-0.5">
+            check_circle
+          </span>
+          <div className="flex flex-col gap-1">
+            <div className="flex items-center justify-between gap-2">
+              <span className="text-sm font-headline font-bold text-white">
+                BIL Sec. 40101(d) Formula Match
+              </span>
+              <span className="px-2 py-0.5 text-[10px] font-mono rounded bg-emerald-950 text-emerald-300 border border-emerald-800">
+                75% COST-SHARE
+              </span>
+            </div>
+            <p className="text-xs text-slate-400 font-mono leading-relaxed">
+              Covers 75% of capital outlays for small utility entities (&lt;4M MWh/yr) deploying advanced sensors, remote edge intelligence, and wildfire mitigation equipment.
+            </p>
+          </div>
+        </div>
+
+        {/* Check 2 */}
+        <div className="p-4 bg-[#0B0F19] border border-[#2A374F] rounded-lg flex items-start gap-3">
+          <span className="material-symbols-outlined text-emerald-400 text-[22px] shrink-0 mt-0.5">
+            check_circle
+          </span>
+          <div className="flex flex-col gap-1">
+            <div className="flex items-center justify-between gap-2">
+              <span className="text-sm font-headline font-bold text-white">
+                DOE GRIP (Grid Resilience &amp; Innovation)
+              </span>
+              <span className="px-2 py-0.5 text-[10px] font-mono rounded bg-[#00E5FF]/20 text-[#00E5FF] border border-[#00E5FF]/40">
+                TOOLKIT INCLUDED
+              </span>
+            </div>
+            <p className="text-xs text-slate-400 font-mono leading-relaxed">
+              Topic Area 1 eligible: High-risk extreme weather hardening, automated conductor damage triage, and autonomous restoration telemetry.
+            </p>
+          </div>
+        </div>
+
+        {/* Check 3 */}
+        <div className="p-4 bg-[#0B0F19] border border-[#2A374F] rounded-lg flex items-start gap-3">
+          <span className="material-symbols-outlined text-emerald-400 text-[22px] shrink-0 mt-0.5">
+            check_circle
+          </span>
+          <div className="flex flex-col gap-1">
+            <div className="flex items-center justify-between gap-2">
+              <span className="text-sm font-headline font-bold text-white">
+                USDA RUS Electric Infrastructure Loans
+              </span>
+              <span className="px-2 py-0.5 text-[10px] font-mono rounded bg-emerald-950 text-emerald-300 border border-emerald-800">
+                0% INTEREST TIER
+              </span>
+            </div>
+            <p className="text-xs text-slate-400 font-mono leading-relaxed">
+              Approved smart grid asset class. Amortize the non-grant hardware CapEx over 10 years with zero-interest or municipal index rate options.
+            </p>
+          </div>
+        </div>
+
+        {/* Check 4 */}
+        <div className="p-4 bg-[#0B0F19] border border-[#2A374F] rounded-lg flex items-start gap-3">
+          <span className="material-symbols-outlined text-emerald-400 text-[22px] shrink-0 mt-0.5">
+            check_circle
+          </span>
+          <div className="flex flex-col gap-1">
+            <div className="flex items-center justify-between gap-2">
+              <span className="text-sm font-headline font-bold text-white">
+                NDAA Sec. 884 &amp; Blue UAS Framework
+              </span>
+              <span className="px-2 py-0.5 text-[10px] font-mono rounded bg-[#F59E0B]/20 text-[#F59E0B] border border-[#F59E0B]/40">
+                100% CERTIFIED
+              </span>
+            </div>
+            <p className="text-xs text-slate-400 font-mono leading-relaxed">
+              Zero covered foreign silicon, avionics, or transmission chips. Federal grant rules strictly prohibit DJI / Da-Jiang Innovations hardware from federal funds.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Action Footer for Grants */}
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
+        <span className="text-xs font-mono text-slate-400">
+          Need grant application assistance? AeroDock provides complete turnkey Section 40101(d) filing templates.
+        </span>
+        <button
+          type="button"
+          onClick={onOpenGrantChecklistModal}
+          className="text-xs font-mono text-[#00E5FF] hover:underline flex items-center gap-1 font-bold shrink-0 cursor-pointer"
+        >
+          <span>Request Co-op Grant Template Kit &rarr;</span>
+        </button>
+      </div>
+    </div>
+  );
+});
+QualificationMatrixSection.displayName = 'QualificationMatrixSection';
+
+// Optimization: Memoized sub-component for Brief Download Form to isolate typing re-renders from slider state
+const ExecutiveBriefForm = React.memo<{
+  onSubmit: (email: string) => void;
+}>(({ onSubmit }) => {
+  const [emailInput, setEmailInput] = useState<string>('');
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSubmit(emailInput);
+  };
+
+  return (
+    <div
+      id="exec-summary-box"
+      className="bg-gradient-to-r from-[#161F30] to-[#0E1626] border-2 border-[#00E5FF]/40 rounded-xl p-6 sm:p-8 shadow-2xl flex flex-col lg:flex-row items-center justify-between gap-6"
+    >
+      <div className="max-w-2xl">
+        <span className="text-xs font-mono text-[#00E5FF] font-bold uppercase tracking-wider">
+          Board-Ready Deliverable
+        </span>
+        <h3 className="text-2xl font-headline font-bold text-white mt-1">
+          Generate Your Cooperative Board Economic Brief
+        </h3>
+        <p className="text-sm text-slate-300 mt-2 font-mono leading-relaxed">
+          Receive a customized 4-page PDF complete with your specific line mileage ROI breakdown, regulatory Part 108 readiness timeline, and pre-filled Section 40101(d) grant application worksheets.
+        </p>
+      </div>
+
+      <form
+        onSubmit={handleSubmit}
+        className="w-full lg:w-auto flex flex-col sm:flex-row items-stretch gap-3 shrink-0"
+      >
+        <input
+          type="email"
+          value={emailInput}
+          onChange={(e) => setEmailInput(e.target.value)}
+          placeholder="enter utility / co-op email"
+          required
+          className="bg-[#0B0F19] border border-[#2A374F] rounded-lg px-4 py-3 text-sm text-white font-mono focus:border-[#00E5FF] focus:outline-none min-w-[280px]"
+        />
+        <button
+          type="submit"
+          className="px-6 py-3 rounded-lg bg-[#00E5FF] text-[#0B0F19] font-headline font-bold text-sm hover:bg-white transition-all shadow-[0_0_15px_rgba(0,229,255,0.4)] whitespace-nowrap cursor-pointer"
+        >
+          Download PDF Brief
+        </button>
+      </form>
+    </div>
+  );
+});
+ExecutiveBriefForm.displayName = 'ExecutiveBriefForm';
+
 export const ModelerScreen: React.FC<ModelerScreenProps> = ({
   onOpenBoardBriefModal,
   onOpenGrantChecklistModal,
@@ -34,7 +432,6 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = ({
   const [spend, setSpend] = useState<number>(240000);
   const [threat, setThreat] = useState<ThreatVector>('vegetation');
   const [grantActive, setGrantActive] = useState<boolean>(true);
-  const [emailInput, setEmailInput] = useState<string>('');
 
   const handleProfileSelect = (p: InfrastructureProfile) => {
     setProfile(p);
@@ -131,8 +528,7 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = ({
   const maxMiles = profile === 'coop' ? 5000 : profile === 'solar' ? 300 : 10000;
   const stepMiles = profile === 'solar' ? 5 : 50;
 
-  const handleDownloadBriefSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleBriefSubmit = useCallback((email: string) => {
     onOpenBoardBriefModal({
       profile:
         profile === 'coop'
@@ -146,9 +542,9 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = ({
       paybackMonths: calculations.paybackMonths,
       grantOffset: calculations.grantOffset,
       docks: calculations.docks,
-      email: emailInput || 'director@rural-electric.coop',
+      email: email || 'director@rural-electric.coop',
     });
-  };
+  }, [profile, miles, spend, calculations, onOpenBoardBriefModal]);
 
   return (
     <div className="w-full flex flex-col gap-10">
@@ -496,361 +892,24 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = ({
         </div>
       </div>
 
-      {/* 3-Year Cumulative Cost Benchmark Section */}
-      <div id="benchmark-section" className="bg-[#161F30] border border-[#2A374F] rounded-xl p-6 lg:p-8 flex flex-col gap-6">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-[#2A374F] pb-4">
-          <div>
-            <span className="text-xs font-mono text-[#00E5FF] uppercase tracking-wider">
-              Financial Modeling // 36-Month Horizon
-            </span>
-            <h2 className="text-2xl font-headline font-bold text-white mt-1">
-              3-Year Cumulative Cost Benchmark
-            </h2>
-            <p className="text-xs md:text-sm text-slate-400 mt-1 font-mono">
-              Directly comparing contracted helicopter crews, manual pilot dispatches, and AeroDock autonomous infrastructure.
-            </p>
-          </div>
-          <div className="flex items-center gap-3 text-xs font-mono">
-            <span className="inline-flex items-center gap-1.5">
-              <span className="w-3 h-3 bg-red-400/80 rounded" />
-              Contracted Rotor
-            </span>
-            <span className="inline-flex items-center gap-1.5">
-              <span className="w-3 h-3 bg-amber-400/80 rounded" />
-              Manual UAV
-            </span>
-            <span className="inline-flex items-center gap-1.5">
-              <span className="w-3 h-3 bg-[#00E5FF] rounded" />
-              AeroDock DiaB
-            </span>
-          </div>
-        </div>
+      {/* 3-Year Cumulative Cost Benchmark Section (Memoized to prevent unnecessary re-rendering during user interactions) */}
+      <CostBenchmarkSection
+        helicopter3Yr={calculations.helicopter3Yr}
+        manualUav3Yr={calculations.manualUav3Yr}
+        aeroDock3YrTotal={calculations.aeroDock3YrTotal}
+        effectiveCapex={calculations.effectiveCapex}
+        docks={calculations.docks}
+        aeroDockBarPct={calculations.aeroDockBarPct}
+        grantActive={grantActive}
+      />
 
-        {/* Comparative Visual Bars */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
-          {/* Card 1: Contracted Helicopter Crews */}
-          <motion.div
-            whileHover={{ y: -4 }}
-            transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-            className="bg-[#0B0F19] border border-[#2A374F] rounded-xl p-5 flex flex-col justify-between"
-          >
-            <div>
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-xs font-mono text-red-400 uppercase font-bold">
-                  Legacy Helicopter Crew
-                </span>
-                <span className="material-symbols-outlined text-red-400 text-[20px]">
-                  flight
-                </span>
-              </div>
-              <div className="text-2xl font-headline font-bold text-white">
-                ${calculations.helicopter3Yr.toLocaleString()}
-              </div>
-              <div className="text-xs font-mono text-slate-400 mb-4">
-                ${Math.round(calculations.helicopter3Yr / 3).toLocaleString()} / year contracted
-              </div>
+      {/* Federal Funding & Grant Qualification Checklist (Memoized) */}
+      <QualificationMatrixSection
+        onOpenGrantChecklistModal={onOpenGrantChecklistModal}
+      />
 
-              <div className="w-full bg-[#161F30] h-3 rounded-full overflow-hidden mb-4 border border-[#2A374F]">
-                <div className="bg-red-500/80 h-full w-full"></div>
-              </div>
-
-              <ul className="space-y-2 text-xs text-slate-400 border-t border-[#2A374F] pt-3 font-mono">
-                <li className="flex items-center gap-1.5">
-                  <span className="text-red-400">✕</span> 1x annual inspection cadence
-                </li>
-                <li className="flex items-center gap-1.5">
-                  <span className="text-red-400">✕</span> 4–6 week dispatch scheduling lag
-                </li>
-                <li className="flex items-center gap-1.5">
-                  <span className="text-red-400">✕</span> Significant crew aviation hazard
-                </li>
-                <li className="flex items-center gap-1.5">
-                  <span className="text-red-400">✕</span> Zero real-time post-storm data
-                </li>
-              </ul>
-            </div>
-            <div className="mt-4 pt-3 border-t border-[#2A374F] text-[11px] font-mono text-slate-500">
-              Carbon index: 480 kg CO₂ / inspection
-            </div>
-          </motion.div>
-
-          {/* Card 2: Manual Pilot Dispatches */}
-          <motion.div
-            whileHover={{ y: -4 }}
-            transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-            className="bg-[#0B0F19] border border-[#2A374F] rounded-xl p-5 flex flex-col justify-between"
-          >
-            <div>
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-xs font-mono text-amber-400 uppercase font-bold">
-                  Manual Drone Contractors
-                </span>
-                <span className="material-symbols-outlined text-amber-400 text-[20px]">
-                  person_pin_circle
-                </span>
-              </div>
-              <div className="text-2xl font-headline font-bold text-white">
-                ${calculations.manualUav3Yr.toLocaleString()}
-              </div>
-              <div className="text-xs font-mono text-slate-400 mb-4">
-                ${Math.round(calculations.manualUav3Yr / 3).toLocaleString()} / year pilot triage
-              </div>
-
-              <div className="w-full bg-[#161F30] h-3 rounded-full overflow-hidden mb-4 border border-[#2A374F]">
-                <div
-                  className="bg-amber-500/80 h-full transition-all duration-500"
-                  style={{
-                    width: `${Math.round(
-                      (calculations.manualUav3Yr / calculations.helicopter3Yr) * 100
-                    )}%`,
-                  }}
-                ></div>
-              </div>
-
-              <ul className="space-y-2 text-xs text-slate-400 border-t border-[#2A374F] pt-3 font-mono">
-                <li className="flex items-center gap-1.5">
-                  <span className="text-amber-400">△</span> Quarterly line patrol cadence
-                </li>
-                <li className="flex items-center gap-1.5">
-                  <span className="text-red-400">✕</span> Truck roll &amp; travel per diem
-                </li>
-                <li className="flex items-center gap-1.5">
-                  <span className="text-red-400">✕</span> Pilot availability bottleneck
-                </li>
-                <li className="flex items-center gap-1.5">
-                  <span className="text-emerald-400">✓</span> High-res optical imagery
-                </li>
-              </ul>
-            </div>
-            <div className="mt-4 pt-3 border-t border-[#2A374F] text-[11px] font-mono text-slate-500">
-              Labor volatility: High turnover risk
-            </div>
-          </motion.div>
-
-          {/* Card 3: AeroDock Autonomous DiaB */}
-          <motion.div
-            whileHover={{ y: -4, boxShadow: '0 0 35px rgba(0,229,255,0.25)' }}
-            transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-            className="bg-[#0B0F19] border-2 border-[#00E5FF] rounded-xl p-5 flex flex-col justify-between shadow-[0_0_25px_rgba(0,229,255,0.15)] relative"
-          >
-            <div className="absolute -top-3 right-4 px-2.5 py-0.5 rounded-full bg-[#00E5FF] text-[#0B0F19] font-mono text-[10px] font-bold uppercase tracking-wider">
-              Best TCO // 64% Lower
-            </div>
-            <div>
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-xs font-mono text-[#00E5FF] uppercase font-bold">
-                  AeroDock Autonomous DiaB
-                </span>
-                <span className="material-symbols-outlined text-[#00E5FF] text-[20px]">
-                  smart_toy
-                </span>
-              </div>
-              <div className="text-2xl font-headline font-bold text-[#00E5FF]">
-                ${Math.round(calculations.aeroDock3YrTotal).toLocaleString()}
-              </div>
-              <div className="text-xs font-mono text-slate-400 mb-4">
-                ${Math.round(calculations.effectiveCapex).toLocaleString()} CapEx + $
-                {(calculations.docks * 8000).toLocaleString()}/yr SaaS ({calculations.docks}{' '}
-                {calculations.docks === 1 ? 'Dock' : 'Docks'})
-              </div>
-
-              <div className="w-full bg-[#161F30] h-3 rounded-full overflow-hidden mb-4 border border-[#2A374F]">
-                <div
-                  className="bg-[#00E5FF] h-full transition-all duration-500"
-                  style={{ width: `${calculations.aeroDockBarPct}%` }}
-                ></div>
-              </div>
-
-              <ul className="space-y-2 text-xs text-slate-300 border-t border-[#2A374F] pt-3 font-mono">
-                <li className="flex items-center gap-1.5">
-                  <span className="text-emerald-400">✓</span> Daily autonomous patrols on schedule
-                </li>
-                <li className="flex items-center gap-1.5">
-                  <span className="text-emerald-400">✓</span> 20-second automated storm re-dispatch
-                </li>
-                <li className="flex items-center gap-1.5">
-                  <span className="text-emerald-400">✓</span> Zero human field hazard
-                </li>
-                <li className="flex items-center gap-1.5">
-                  <span className="text-emerald-400">✓</span> 100% NDAA &amp; Blue UAS Compliant
-                </li>
-              </ul>
-            </div>
-            <div className="mt-4 pt-3 border-t border-[#2A374F] flex items-center justify-between text-[11px] font-mono">
-              <span className="text-slate-400">Federal Cost Share:</span>
-              <span className="text-[#00E5FF] font-bold">
-                {grantActive ? '75% Grant Offset Applied' : 'Standard Financing'}
-              </span>
-            </div>
-          </motion.div>
-        </div>
-      </div>
-
-      {/* Federal Funding & Grant Qualification Checklist */}
-      <div id="grants-matrix" className="bg-[#161F30] border border-[#2A374F] rounded-xl p-6 lg:p-8 flex flex-col gap-6">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#2A374F] pb-4">
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="material-symbols-outlined text-[#F59E0B]">
-                verified
-              </span>
-              <h2 className="text-2xl font-headline font-bold text-white">
-                USDA RUS &amp; BIL Section 40101(d) Qualification Matrix
-              </h2>
-            </div>
-            <p className="text-xs md:text-sm text-slate-400 mt-1 font-mono">
-              Pre-cleared regulatory documentation and non-dilutive federal capital qualification checklist for AeroDock deployments.
-            </p>
-          </div>
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={onOpenGrantChecklistModal}
-              className="px-4 py-2 rounded bg-[#0B0F19] border border-[#00E5FF]/40 text-[#00E5FF] text-xs font-mono font-semibold hover:bg-[#161F30] transition-colors flex items-center gap-1.5 cursor-pointer"
-            >
-              <span className="material-symbols-outlined text-[16px]">
-                file_download
-              </span>
-              <span>Download Grant Checklist (PDF)</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Checklist Items */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Check 1 */}
-          <div className="p-4 bg-[#0B0F19] border border-[#2A374F] rounded-lg flex items-start gap-3">
-            <span className="material-symbols-outlined text-emerald-400 text-[22px] shrink-0 mt-0.5">
-              check_circle
-            </span>
-            <div className="flex flex-col gap-1">
-              <div className="flex items-center justify-between gap-2">
-                <span className="text-sm font-headline font-bold text-white">
-                  BIL Sec. 40101(d) Formula Match
-                </span>
-                <span className="px-2 py-0.5 text-[10px] font-mono rounded bg-emerald-950 text-emerald-300 border border-emerald-800">
-                  75% COST-SHARE
-                </span>
-              </div>
-              <p className="text-xs text-slate-400 font-mono leading-relaxed">
-                Covers 75% of capital outlays for small utility entities (&lt;4M MWh/yr) deploying advanced sensors, remote edge intelligence, and wildfire mitigation equipment.
-              </p>
-            </div>
-          </div>
-
-          {/* Check 2 */}
-          <div className="p-4 bg-[#0B0F19] border border-[#2A374F] rounded-lg flex items-start gap-3">
-            <span className="material-symbols-outlined text-emerald-400 text-[22px] shrink-0 mt-0.5">
-              check_circle
-            </span>
-            <div className="flex flex-col gap-1">
-              <div className="flex items-center justify-between gap-2">
-                <span className="text-sm font-headline font-bold text-white">
-                  DOE GRIP (Grid Resilience &amp; Innovation)
-                </span>
-                <span className="px-2 py-0.5 text-[10px] font-mono rounded bg-[#00E5FF]/20 text-[#00E5FF] border border-[#00E5FF]/40">
-                  TOOLKIT INCLUDED
-                </span>
-              </div>
-              <p className="text-xs text-slate-400 font-mono leading-relaxed">
-                Topic Area 1 eligible: High-risk extreme weather hardening, automated conductor damage triage, and autonomous restoration telemetry.
-              </p>
-            </div>
-          </div>
-
-          {/* Check 3 */}
-          <div className="p-4 bg-[#0B0F19] border border-[#2A374F] rounded-lg flex items-start gap-3">
-            <span className="material-symbols-outlined text-emerald-400 text-[22px] shrink-0 mt-0.5">
-              check_circle
-            </span>
-            <div className="flex flex-col gap-1">
-              <div className="flex items-center justify-between gap-2">
-                <span className="text-sm font-headline font-bold text-white">
-                  USDA RUS Electric Infrastructure Loans
-                </span>
-                <span className="px-2 py-0.5 text-[10px] font-mono rounded bg-emerald-950 text-emerald-300 border border-emerald-800">
-                  0% INTEREST TIER
-                </span>
-              </div>
-              <p className="text-xs text-slate-400 font-mono leading-relaxed">
-                Approved smart grid asset class. Amortize the non-grant hardware CapEx over 10 years with zero-interest or municipal index rate options.
-              </p>
-            </div>
-          </div>
-
-          {/* Check 4 */}
-          <div className="p-4 bg-[#0B0F19] border border-[#2A374F] rounded-lg flex items-start gap-3">
-            <span className="material-symbols-outlined text-emerald-400 text-[22px] shrink-0 mt-0.5">
-              check_circle
-            </span>
-            <div className="flex flex-col gap-1">
-              <div className="flex items-center justify-between gap-2">
-                <span className="text-sm font-headline font-bold text-white">
-                  NDAA Sec. 884 &amp; Blue UAS Framework
-                </span>
-                <span className="px-2 py-0.5 text-[10px] font-mono rounded bg-[#F59E0B]/20 text-[#F59E0B] border border-[#F59E0B]/40">
-                  100% CERTIFIED
-                </span>
-              </div>
-              <p className="text-xs text-slate-400 font-mono leading-relaxed">
-                Zero covered foreign silicon, avionics, or transmission chips. Federal grant rules strictly prohibit DJI / Da-Jiang Innovations hardware from federal funds.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Action Footer for Grants */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
-          <span className="text-xs font-mono text-slate-400">
-            Need grant application assistance? AeroDock provides complete turnkey Section 40101(d) filing templates.
-          </span>
-          <button
-            type="button"
-            onClick={onOpenGrantChecklistModal}
-            className="text-xs font-mono text-[#00E5FF] hover:underline flex items-center gap-1 font-bold shrink-0 cursor-pointer"
-          >
-            <span>Request Co-op Grant Template Kit &rarr;</span>
-          </button>
-        </div>
-      </div>
-
-      {/* Executive Summary & Board Deck Generator CTA */}
-      <div
-        id="exec-summary-box"
-        className="bg-gradient-to-r from-[#161F30] to-[#0E1626] border-2 border-[#00E5FF]/40 rounded-xl p-6 sm:p-8 shadow-2xl flex flex-col lg:flex-row items-center justify-between gap-6"
-      >
-        <div className="max-w-2xl">
-          <span className="text-xs font-mono text-[#00E5FF] font-bold uppercase tracking-wider">
-            Board-Ready Deliverable
-          </span>
-          <h3 className="text-2xl font-headline font-bold text-white mt-1">
-            Generate Your Cooperative Board Economic Brief
-          </h3>
-          <p className="text-sm text-slate-300 mt-2 font-mono leading-relaxed">
-            Receive a customized 4-page PDF complete with your specific line mileage ROI breakdown, regulatory Part 108 readiness timeline, and pre-filled Section 40101(d) grant application worksheets.
-          </p>
-        </div>
-
-        <form
-          onSubmit={handleDownloadBriefSubmit}
-          className="w-full lg:w-auto flex flex-col sm:flex-row items-stretch gap-3 shrink-0"
-        >
-          <input
-            type="email"
-            value={emailInput}
-            onChange={(e) => setEmailInput(e.target.value)}
-            placeholder="enter utility / co-op email"
-            required
-            className="bg-[#0B0F19] border border-[#2A374F] rounded-lg px-4 py-3 text-sm text-white font-mono focus:border-[#00E5FF] focus:outline-none min-w-[280px]"
-          />
-          <button
-            type="submit"
-            className="px-6 py-3 rounded-lg bg-[#00E5FF] text-[#0B0F19] font-headline font-bold text-sm hover:bg-white transition-all shadow-[0_0_15px_rgba(0,229,255,0.4)] whitespace-nowrap cursor-pointer"
-          >
-            Download PDF Brief
-          </button>
-        </form>
-      </div>
+      {/* Executive Summary & Board Deck Generator CTA (Memoized with isolated form input state) */}
+      <ExecutiveBriefForm onSubmit={handleBriefSubmit} />
     </div>
   );
 };
