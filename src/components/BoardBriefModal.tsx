@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 
 interface BoardBriefModalProps {
   isOpen: boolean;
@@ -21,6 +21,14 @@ export const BoardBriefModal: React.FC<BoardBriefModalProps> = ({
   data,
 }) => {
   const [downloaded, setDownloaded] = useState(false);
+
+  // Security: Use Web Crypto API instead of Math.random() (CWE-338) for cryptographically secure ID generation
+  const docRefId = useMemo(() => {
+    const array = new Uint32Array(1);
+    window.crypto.getRandomValues(array);
+    const random6Digit = 100000 + (array[0] % 900000);
+    return `AERODOCK-BOD-${random6Digit}`;
+  }, []);
 
   if (!isOpen || !data) return null;
 
@@ -45,7 +53,7 @@ export const BoardBriefModal: React.FC<BoardBriefModalProps> = ({
                 Cooperative Board Economic Brief (PDF Preview)
               </h3>
               <p className="text-xs font-mono text-slate-400">
-                Document Ref: AERODOCK-BOD-{Math.floor(100000 + Math.random() * 900000)} // Prepared for {data.email}
+                Document Ref: {docRefId} // Prepared for {data.email}
               </p>
             </div>
           </div>
