@@ -8,7 +8,7 @@ interface FooterProps {
   onOpenGrantChecklist: () => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({
+export const Footer: React.FC<FooterProps> = React.memo(({
   onNavigateView,
   onOpenSpecs,
   onOpenPart108,
@@ -178,4 +178,5 @@ export const Footer: React.FC<FooterProps> = ({
       </div>
     </footer>
   );
-};
+});
+Footer.displayName = 'Footer';

@@ -5,7 +5,7 @@ interface CompetitorTableProps {
   onNavigateToModeler: () => void;
 }
 
-export const CompetitorTable: React.FC<CompetitorTableProps> = ({ onNavigateToModeler }) => {
+export const CompetitorTable: React.FC<CompetitorTableProps> = React.memo(({ onNavigateToModeler }) => {
   return (
     <section id="tco-table" className="px-4 sm:px-6 lg:px-12 max-w-7xl mx-auto w-full mb-20 sm:mb-24">
       <motion.div
@@ -138,5 +138,6 @@ export const CompetitorTable: React.FC<CompetitorTableProps> = ({ onNavigateToMo
       </div>
     </section>
   );
-};
+});
+CompetitorTable.displayName = 'CompetitorTable';
 

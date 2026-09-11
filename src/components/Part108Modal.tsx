@@ -7,7 +7,7 @@ interface Part108ModalProps {
   onOpenModeler: () => void;
 }
 
-export const Part108Modal: React.FC<Part108ModalProps> = ({
+export const Part108Modal: React.FC<Part108ModalProps> = React.memo(({
   isOpen,
   onClose,
   onOpenModeler,
@@ -106,4 +106,5 @@ export const Part108Modal: React.FC<Part108ModalProps> = ({
       </div>
     </div>
   );
-};
+});
+Part108Modal.displayName = 'Part108Modal';

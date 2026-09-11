@@ -15,7 +15,7 @@ interface BoardBriefModalProps {
   } | null;
 }
 
-export const BoardBriefModal: React.FC<BoardBriefModalProps> = ({
+export const BoardBriefModal: React.FC<BoardBriefModalProps> = React.memo(({
   isOpen,
   onClose,
   data,
@@ -170,4 +170,5 @@ export const BoardBriefModal: React.FC<BoardBriefModalProps> = ({
       </div>
     </div>
   );
-};
+});
+BoardBriefModal.displayName = 'BoardBriefModal';

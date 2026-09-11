@@ -5,7 +5,7 @@ interface ContactPortalModalProps {
   onClose: () => void;
 }
 
-export const ContactPortalModal: React.FC<ContactPortalModalProps> = ({ isOpen, onClose }) => {
+export const ContactPortalModal: React.FC<ContactPortalModalProps> = React.memo(({ isOpen, onClose }) => {
   const [submitted, setSubmitted] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
@@ -149,4 +149,5 @@ export const ContactPortalModal: React.FC<ContactPortalModalProps> = ({ isOpen, 
       </div>
     </div>
   );
-};
+});
+ContactPortalModal.displayName = 'ContactPortalModal';

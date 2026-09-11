@@ -6,7 +6,7 @@ interface PlatformSpecsModalProps {
   onClose: () => void;
 }
 
-export const PlatformSpecsModal: React.FC<PlatformSpecsModalProps> = ({ isOpen, onClose }) => {
+export const PlatformSpecsModal: React.FC<PlatformSpecsModalProps> = React.memo(({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
@@ -81,4 +81,5 @@ export const PlatformSpecsModal: React.FC<PlatformSpecsModalProps> = ({ isOpen, 
       </div>
     </div>
   );
-};
+});
+PlatformSpecsModal.displayName = 'PlatformSpecsModal';

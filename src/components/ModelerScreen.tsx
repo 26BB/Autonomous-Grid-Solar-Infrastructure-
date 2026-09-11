@@ -24,7 +24,7 @@ interface ModelerScreenProps {
   }) => void;
 }
 
-export const ModelerScreen: React.FC<ModelerScreenProps> = ({
+export const ModelerScreen: React.FC<ModelerScreenProps> = React.memo(({
   onOpenBoardBriefModal,
   onOpenGrantChecklistModal,
   onOpenProposalPackageModal,
@@ -853,4 +853,5 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = ({
       </div>
     </div>
   );
-};
+});
+ModelerScreen.displayName = 'ModelerScreen';

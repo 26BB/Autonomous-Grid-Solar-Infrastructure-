@@ -9,7 +9,7 @@ interface HeaderProps {
   onScrollToSection: (sectionId: string) => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({
+export const Header: React.FC<HeaderProps> = React.memo(({
   currentView,
   onNavigateView,
   onOpenSpecs,
@@ -123,4 +123,5 @@ export const Header: React.FC<HeaderProps> = ({
       </div>
     </header>
   );
-};
+});
+Header.displayName = 'Header';

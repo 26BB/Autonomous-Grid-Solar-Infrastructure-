@@ -5,7 +5,7 @@ interface PlatformArchitectureProps {
   onOpenSpecs: () => void;
 }
 
-export const PlatformArchitecture: React.FC<PlatformArchitectureProps> = ({ onOpenSpecs }) => {
+export const PlatformArchitecture: React.FC<PlatformArchitectureProps> = React.memo(({ onOpenSpecs }) => {
   return (
     <section className="px-4 sm:px-6 lg:px-12 max-w-7xl mx-auto w-full mb-20 sm:mb-24">
       <motion.div
@@ -127,4 +127,5 @@ export const PlatformArchitecture: React.FC<PlatformArchitectureProps> = ({ onOp
       </div>
     </section>
   );
-};
+});
+PlatformArchitecture.displayName = 'PlatformArchitecture';

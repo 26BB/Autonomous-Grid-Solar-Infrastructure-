@@ -13,7 +13,7 @@ interface ProposalPackageModalProps {
   } | null;
 }
 
-export const ProposalPackageModal: React.FC<ProposalPackageModalProps> = ({
+export const ProposalPackageModal: React.FC<ProposalPackageModalProps> = React.memo(({
   isOpen,
   onClose,
   data,
@@ -142,4 +142,5 @@ export const ProposalPackageModal: React.FC<ProposalPackageModalProps> = ({
       </div>
     </div>
   );
-};
+});
+ProposalPackageModal.displayName = 'ProposalPackageModal';

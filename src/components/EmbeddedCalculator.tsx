@@ -6,7 +6,7 @@ interface EmbeddedCalculatorProps {
   onOpenProposalModal: (summary: { profile: string; size: string; savings: string }) => void;
 }
 
-export const EmbeddedCalculator: React.FC<EmbeddedCalculatorProps> = ({
+export const EmbeddedCalculator: React.FC<EmbeddedCalculatorProps> = React.memo(({
   onNavigateToFullModeler,
   onOpenProposalModal,
 }) => {
@@ -201,5 +201,6 @@ export const EmbeddedCalculator: React.FC<EmbeddedCalculatorProps> = ({
       </motion.div>
     </section>
   );
-};
+});
+EmbeddedCalculator.displayName = 'EmbeddedCalculator';
 

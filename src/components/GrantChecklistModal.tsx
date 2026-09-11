@@ -40,7 +40,7 @@ const CHECKLIST_STEPS = [
   }
 ];
 
-export const GrantChecklistModal: React.FC<GrantChecklistModalProps> = ({ isOpen, onClose }) => {
+export const GrantChecklistModal: React.FC<GrantChecklistModalProps> = React.memo(({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
@@ -129,4 +129,5 @@ export const GrantChecklistModal: React.FC<GrantChecklistModalProps> = ({ isOpen
       </div>
     </div>
   );
-};
+});
+GrantChecklistModal.displayName = 'GrantChecklistModal';
