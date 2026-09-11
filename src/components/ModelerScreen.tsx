@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { InfrastructureProfile, ThreatVector } from '../types';
+import { isValidEmail } from '../utils/security';
 
 interface ModelerScreenProps {
   onOpenBoardBriefModal: (data: {
@@ -133,6 +134,9 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = ({
 
   const handleDownloadBriefSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const validEmail = isValidEmail(emailInput)
+      ? emailInput.trim()
+      : 'director@rural-electric.coop';
     onOpenBoardBriefModal({
       profile:
         profile === 'coop'
@@ -146,7 +150,7 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = ({
       paybackMonths: calculations.paybackMonths,
       grantOffset: calculations.grantOffset,
       docks: calculations.docks,
-      email: emailInput || 'director@rural-electric.coop',
+      email: validEmail,
     });
   };
 

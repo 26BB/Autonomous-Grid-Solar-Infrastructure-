@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { isValidEmail } from '../utils/security';
 
 interface ProposalPackageModalProps {
   isOpen: boolean;
@@ -20,11 +21,18 @@ export const ProposalPackageModal: React.FC<ProposalPackageModalProps> = ({
 }) => {
   const [locked, setLocked] = useState(false);
   const [email, setEmail] = useState('');
+  const [error, setError] = useState('');
 
   if (!isOpen || !data) return null;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isValidEmail(email)) {
+      setError('Please enter a valid official email address.');
+      return;
+    }
+    setError('');
+    setEmail(email.trim());
     setLocked(true);
   };
 
@@ -94,6 +102,9 @@ export const ProposalPackageModal: React.FC<ProposalPackageModalProps> = ({
                   placeholder="e.g. jsmith@valleyelectric.coop"
                   className="w-full bg-[#0B0F19] border border-[#2A374F] rounded-lg px-4 py-3 text-white text-xs font-mono focus:border-[#00E5FF] focus:outline-none"
                 />
+                {error && (
+                  <p className="text-red-400 text-[11px] font-mono mt-1">{error}</p>
+                )}
               </div>
 
               <div className="p-3 rounded-lg bg-[#0B0F19] border border-[#2A374F] text-[11px] text-slate-400 space-y-1">

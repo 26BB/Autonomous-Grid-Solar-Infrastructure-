@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { isValidEmail, sanitizeInput } from '../utils/security';
 
 interface ContactPortalModalProps {
   isOpen: boolean;
@@ -7,6 +8,7 @@ interface ContactPortalModalProps {
 
 export const ContactPortalModal: React.FC<ContactPortalModalProps> = ({ isOpen, onClose }) => {
   const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState('');
   const [formData, setFormData] = useState({
     name: '',
     utility: '',
@@ -19,6 +21,18 @@ export const ContactPortalModal: React.FC<ContactPortalModalProps> = ({ isOpen, 
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isValidEmail(formData.email)) {
+      setError('Please provide a valid official email address.');
+      return;
+    }
+    setError('');
+    setFormData({
+      name: sanitizeInput(formData.name),
+      utility: sanitizeInput(formData.utility),
+      role: sanitizeInput(formData.role),
+      email: formData.email.trim(),
+      message: sanitizeInput(formData.message)
+    });
     setSubmitted(true);
   };
 
@@ -111,6 +125,12 @@ export const ContactPortalModal: React.FC<ContactPortalModalProps> = ({ isOpen, 
                   className="w-full bg-[#0B0F19] border border-[#2A374F] rounded px-3 py-2 text-white text-xs font-mono focus:border-[#00E5FF] focus:outline-none"
                 />
               </div>
+
+              {error && (
+                <div className="p-2.5 rounded bg-red-950/80 border border-red-500/60 text-red-300 text-xs font-mono">
+                  {error}
+                </div>
+              )}
 
               <div className="p-3 rounded bg-[#0B0F19] border border-[#2A374F] text-[11px] text-slate-400 flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>

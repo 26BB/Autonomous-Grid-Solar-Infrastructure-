@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { isValidEmail } from './utils/security';
 import { Header } from './components/Header';
 import { HeroTelemetryCard } from './components/HeroTelemetryCard';
 import { MacroMetricsStrip } from './components/MacroMetricsStrip';
@@ -100,7 +101,7 @@ export default function App() {
 
   const handleDeploymentSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!deploymentEmail) return;
+    if (!isValidEmail(deploymentEmail)) return;
     setDeploymentSubmitted(true);
     setTimeout(() => {
       setDeploymentSubmitted(false);
