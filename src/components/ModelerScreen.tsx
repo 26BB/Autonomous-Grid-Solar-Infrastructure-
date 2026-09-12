@@ -25,8 +25,13 @@ interface ModelerScreenProps {
   }) => void;
 }
 
+ chore/morning-health-squad-2026-09-12-2327107234442411562
 export const ModelerScreen: React.FC<ModelerScreenProps> = ({
   initialProfile,
+
+// Memoized to isolate modeler calculations and slider interactions from external App state updates
+export const ModelerScreen: React.FC<ModelerScreenProps> = React.memo(({
+ main
   onOpenBoardBriefModal,
   onOpenGrantChecklistModal,
   onOpenProposalPackageModal,
@@ -861,4 +866,6 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = ({
       </div>
     </div>
   );
-};
+});
+
+ModelerScreen.displayName = 'ModelerScreen';

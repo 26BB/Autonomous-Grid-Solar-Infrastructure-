@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Header } from './components/Header';
 import { HeroTelemetryCard } from './components/HeroTelemetryCard';
@@ -52,52 +52,92 @@ export default function App() {
   const [deploymentEmail, setDeploymentEmail] = useState('');
   const [deploymentSubmitted, setDeploymentSubmitted] = useState(false);
 
-  const handleScrollToSection = (sectionId: string) => {
+  // Memoized handlers to prevent unnecessary component re-renders
+  const handleScrollToSection = useCallback((sectionId: string) => {
     const el = document.getElementById(sectionId);
     if (el) {
       el.scrollIntoView({ behavior: 'smooth' });
     }
-  };
+  }, []);
 
-  const handleOpenBoardBrief = (data: {
-    profile: string;
-    milesOrCapacity: number;
-    annualSpend: number;
-    savings: number;
-    paybackMonths: string;
-    grantOffset: number;
-    docks: number;
-    email: string;
-  }) => {
-    setBoardBriefData(data);
-    setIsBoardBriefOpen(true);
-  };
+  const handleNavigateView = useCallback((view: 'home' | 'modeler') => {
+    setCurrentView(view);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
 
-  const handleOpenProposalPackage = (data: {
-    profile: string;
-    miles: number;
-    savings: number;
-    docks: number;
-    grantOffset: number;
-    effectiveCapex: number;
-  }) => {
-    setProposalPackageData(data);
-    setIsProposalPackageOpen(true);
-  };
+  const handleOpenSpecs = useCallback(() => setIsSpecsOpen(true), []);
+  const handleCloseSpecs = useCallback(() => setIsSpecsOpen(false), []);
 
-  const handleOpenQuickProposal = (summary: { profile: string; size: string; savings: string }) => {
-    const numericSavings = parseInt(summary.savings.replace(/[^0-9]/g, '')) * 3 || 420000;
-    const numericSize = parseInt(summary.size.replace(/[^0-9]/g, '')) || 1500;
-    setProposalPackageData({
-      profile: summary.profile,
-      miles: numericSize,
-      savings: numericSavings,
-      docks: Math.max(1, Math.round(numericSize / 950)),
-      grantOffset: Math.max(1, Math.round(numericSize / 950)) * 35000 * 0.75,
-      effectiveCapex: Math.max(1, Math.round(numericSize / 950)) * 35000 * 0.25,
-    });
-    setIsProposalPackageOpen(true);
-  };
+  const handleOpenPart108 = useCallback(() => setIsPart108Open(true), []);
+  const handleClosePart108 = useCallback(() => setIsPart108Open(false), []);
+
+  const handleOpenContact = useCallback(() => setIsContactOpen(true), []);
+  const handleCloseContact = useCallback(() => setIsContactOpen(false), []);
+
+  const handleOpenGrantChecklist = useCallback(() => setIsGrantChecklistOpen(true), []);
+  const handleCloseGrantChecklist = useCallback(() => setIsGrantChecklistOpen(false), []);
+
+  const handleCloseBoardBrief = useCallback(() => setIsBoardBriefOpen(false), []);
+  const handleCloseProposalPackage = useCallback(() => setIsProposalPackageOpen(false), []);
+
+  const handleOpenBoardBrief = useCallback(
+    (data: {
+      profile: string;
+      milesOrCapacity: number;
+      annualSpend: number;
+      savings: number;
+      paybackMonths: string;
+      grantOffset: number;
+      docks: number;
+      email: string;
+    }) => {
+      setBoardBriefData(data);
+      setIsBoardBriefOpen(true);
+    },
+    []
+  );
+
+  const handleOpenProposalPackage = useCallback(
+    (data: {
+      profile: string;
+      miles: number;
+      savings: number;
+      docks: number;
+      grantOffset: number;
+      effectiveCapex: number;
+    }) => {
+      setProposalPackageData(data);
+      setIsProposalPackageOpen(true);
+    },
+    []
+  );
+
+  const handleOpenQuickProposal = useCallback(
+    (summary: { profile: string; size: string; savings: string }) => {
+      const numericSavings = parseInt(summary.savings.replace(/[^0-9]/g, '')) * 3 || 420000;
+      const numericSize = parseInt(summary.size.replace(/[^0-9]/g, '')) || 1500;
+      setProposalPackageData({
+        profile: summary.profile,
+        miles: numericSize,
+        savings: numericSavings,
+        docks: Math.max(1, Math.round(numericSize / 950)),
+        grantOffset: Math.max(1, Math.round(numericSize / 950)) * 35000 * 0.75,
+        effectiveCapex: Math.max(1, Math.round(numericSize / 950)) * 35000 * 0.25,
+      });
+      setIsProposalPackageOpen(true);
+    },
+    []
+  );
+
+  const handleNavigateToModelerAndScroll = useCallback(() => {
+    setCurrentView('modeler');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
+  const handleSolutionSelect = useCallback((solution: 'coop' | 'solar') => {
+    setCurrentView('modeler');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
 
   const handleDeploymentSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -128,13 +168,10 @@ export default function App() {
       {/* Persistent Navigation Header */}
       <Header
         currentView={currentView}
-        onNavigateView={(view) => {
-          setCurrentView(view);
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }}
-        onOpenSpecs={() => setIsSpecsOpen(true)}
-        onOpenPart108={() => setIsPart108Open(true)}
-        onOpenContact={() => setIsContactOpen(true)}
+        onNavigateView={handleNavigateView}
+        onOpenSpecs={handleOpenSpecs}
+        onOpenPart108={handleOpenPart108}
+        onOpenContact={handleOpenContact}
         onScrollToSection={handleScrollToSection}
       />
 
@@ -147,10 +184,7 @@ export default function App() {
             </span>
             <div className="inline-flex rounded-lg p-1 bg-[#0B0F19] border border-[#2A374F]">
               <button
-                onClick={() => {
-                  setCurrentView('home');
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }}
+                onClick={() => handleNavigateView('home')}
                 className={`px-3 py-1 rounded text-xs font-mono transition-all cursor-pointer ${
                   currentView === 'home'
                     ? 'bg-[#161F30] text-[#00E5FF] font-bold border border-[#00E5FF]/40 shadow-sm'
@@ -160,10 +194,7 @@ export default function App() {
                 Website Overview
               </button>
               <button
-                onClick={() => {
-                  setCurrentView('modeler');
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }}
+                onClick={() => handleNavigateView('modeler')}
                 className={`px-3 py-1 rounded text-xs font-mono transition-all cursor-pointer ${
                   currentView === 'modeler'
                     ? 'bg-[#161F30] text-[#00E5FF] font-bold border border-[#00E5FF]/40 shadow-sm'
@@ -182,7 +213,7 @@ export default function App() {
             </span>
             <span className="hidden sm:inline">|</span>
             <button
-              onClick={() => setIsGrantChecklistOpen(true)}
+              onClick={handleOpenGrantChecklist}
               className="text-[#00E5FF] hover:underline cursor-pointer"
             >
               Filing Checklist (PDF) &rarr;
@@ -241,7 +272,7 @@ export default function App() {
                     <motion.button
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
-                      onClick={() => setIsGrantChecklistOpen(true)}
+                      onClick={handleOpenGrantChecklist}
                       className="px-6 py-3.5 rounded-lg bg-[#161F30] border border-[#2A374F] hover:border-[#00E5FF] text-white font-headline font-semibold text-sm transition-all text-center flex items-center justify-center gap-2 cursor-pointer shadow-md"
                     >
                       <span className="material-symbols-outlined text-[18px]">download</span>
@@ -256,39 +287,34 @@ export default function App() {
 
               {/* MACRO METRICS STRIP */}
               <MacroMetricsStrip
-                onOpenPart108={() => setIsPart108Open(true)}
-                onNavigateToModeler={() => {
-                  setCurrentView('modeler');
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }}
+                onOpenPart108={handleOpenPart108}
+                onNavigateToModeler={handleNavigateToModelerAndScroll}
               />
 
               {/* TCO COMPARISON TABLE */}
               <CompetitorTable
-                onNavigateToModeler={() => {
-                  setCurrentView('modeler');
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }}
+                onNavigateToModeler={handleNavigateToModelerAndScroll}
               />
 
               {/* SECTOR-SPECIFIC VERTICAL SOLUTIONS */}
               <SolutionsSection
+ chore/morning-health-squad-2026-09-12-2327107234442411562
                 onSelectSolution={(solution) => {
                   setSelectedProfile(solution);
                   setCurrentView('modeler');
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
+
+                onSelectSolution={handleSolutionSelect}
+ main
               />
 
               {/* PLATFORM ARCHITECTURE & SUPPLY CHAIN */}
-              <PlatformArchitecture onOpenSpecs={() => setIsSpecsOpen(true)} />
+              <PlatformArchitecture onOpenSpecs={handleOpenSpecs} />
 
               {/* EMBEDDED QUICK CALCULATOR */}
               <EmbeddedCalculator
-                onNavigateToFullModeler={() => {
-                  setCurrentView('modeler');
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }}
+                onNavigateToFullModeler={handleNavigateToModelerAndScroll}
                 onOpenProposalModal={handleOpenQuickProposal}
               />
 
@@ -362,7 +388,7 @@ export default function App() {
               <ModelerScreen
                 initialProfile={selectedProfile}
                 onOpenBoardBriefModal={handleOpenBoardBrief}
-                onOpenGrantChecklistModal={() => setIsGrantChecklistOpen(true)}
+              onOpenGrantChecklistModal={handleOpenGrantChecklist}
                 onOpenProposalPackageModal={handleOpenProposalPackage}
               />
             </motion.div>
@@ -374,50 +400,44 @@ export default function App() {
       {/* Global Modals */}
       <BoardBriefModal
         isOpen={isBoardBriefOpen}
-        onClose={() => setIsBoardBriefOpen(false)}
+        onClose={handleCloseBoardBrief}
         data={boardBriefData}
       />
 
       <GrantChecklistModal
         isOpen={isGrantChecklistOpen}
-        onClose={() => setIsGrantChecklistOpen(false)}
+        onClose={handleCloseGrantChecklist}
       />
 
       <PlatformSpecsModal
         isOpen={isSpecsOpen}
-        onClose={() => setIsSpecsOpen(false)}
+        onClose={handleCloseSpecs}
       />
 
       <Part108Modal
         isOpen={isPart108Open}
-        onClose={() => setIsPart108Open(false)}
-        onOpenModeler={() => {
-          setCurrentView('modeler');
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }}
+        onClose={handleClosePart108}
+        onOpenModeler={handleNavigateToModelerAndScroll}
       />
 
       <ProposalPackageModal
         isOpen={isProposalPackageOpen}
-        onClose={() => setIsProposalPackageOpen(false)}
+        onClose={handleCloseProposalPackage}
         data={proposalPackageData}
       />
 
       <ContactPortalModal
         isOpen={isContactOpen}
-        onClose={() => setIsContactOpen(false)}
+        onClose={handleCloseContact}
       />
 
       {/* Persistent Footer */}
       <Footer
-        onNavigateView={(view) => {
-          setCurrentView(view);
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }}
-        onOpenSpecs={() => setIsSpecsOpen(true)}
-        onOpenPart108={() => setIsPart108Open(true)}
-        onOpenContact={() => setIsContactOpen(true)}
-        onOpenGrantChecklist={() => setIsGrantChecklistOpen(true)}
+        onNavigateView={handleNavigateView}
+        onOpenSpecs={handleOpenSpecs}
+        onOpenPart108={handleOpenPart108}
+        onOpenContact={handleOpenContact}
+        onOpenGrantChecklist={handleOpenGrantChecklist}
       />
     </div>
   );
