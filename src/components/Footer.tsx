@@ -8,7 +8,8 @@ interface FooterProps {
   onOpenGrantChecklist: () => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({
+// Memoized to prevent static footer re-rendering on parent state changes
+export const Footer: React.FC<FooterProps> = React.memo(({
   onNavigateView,
   onOpenSpecs,
   onOpenPart108,
@@ -178,4 +179,6 @@ export const Footer: React.FC<FooterProps> = ({
       </div>
     </footer>
   );
-};
+});
+
+Footer.displayName = 'Footer';

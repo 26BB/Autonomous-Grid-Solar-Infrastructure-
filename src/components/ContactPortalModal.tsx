@@ -5,7 +5,8 @@ interface ContactPortalModalProps {
   onClose: () => void;
 }
 
-export const ContactPortalModal: React.FC<ContactPortalModalProps> = ({ isOpen, onClose }) => {
+// Memoized to prevent re-renders when modal is closed or unrelated App state changes
+export const ContactPortalModal: React.FC<ContactPortalModalProps> = React.memo(({ isOpen, onClose }) => {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
@@ -173,4 +174,6 @@ export const ContactPortalModal: React.FC<ContactPortalModalProps> = ({ isOpen, 
       </div>
     </div>
   );
-};
+});
+
+ContactPortalModal.displayName = 'ContactPortalModal';

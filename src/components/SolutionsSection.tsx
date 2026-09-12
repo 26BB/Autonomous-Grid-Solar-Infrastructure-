@@ -5,7 +5,8 @@ interface SolutionsSectionProps {
   onSelectSolution: (solutionKey: 'coop' | 'solar') => void;
 }
 
-export const SolutionsSection: React.FC<SolutionsSectionProps> = ({ onSelectSolution }) => {
+// Memoized to avoid re-rendering sector solution cards with scanline animations on unrelated state changes
+export const SolutionsSection: React.FC<SolutionsSectionProps> = React.memo(({ onSelectSolution }) => {
   return (
     <section id="solutions" className="px-4 sm:px-6 lg:px-12 max-w-7xl mx-auto w-full mb-20 sm:mb-24">
       <motion.div
@@ -173,5 +174,7 @@ export const SolutionsSection: React.FC<SolutionsSectionProps> = ({ onSelectSolu
       </div>
     </section>
   );
-};
+});
+
+SolutionsSection.displayName = 'SolutionsSection';
 
