@@ -18,6 +18,7 @@ import { Footer } from './components/Footer';
 
 export default function App() {
   const [currentView, setCurrentView] = useState<'home' | 'modeler'>('home');
+  const [selectedProfile, setSelectedProfile] = useState<'coop' | 'solar' | 'iou'>('coop');
 
   // Modal states
   const [isBoardBriefOpen, setIsBoardBriefOpen] = useState(false);
@@ -297,7 +298,11 @@ export default function App() {
 
               {/* SECTOR-SPECIFIC VERTICAL SOLUTIONS */}
               <SolutionsSection
-                onSelectSolution={handleSolutionSelect}
+                onSelectSolution={(solution) => {
+                  setSelectedProfile(solution);
+                  setCurrentView('modeler');
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
               />
 
               {/* PLATFORM ARCHITECTURE & SUPPLY CHAIN */}
@@ -377,6 +382,7 @@ export default function App() {
               className="px-4 sm:px-6 lg:px-12 max-w-7xl mx-auto w-full"
             >
               <ModelerScreen
+                initialProfile={selectedProfile}
                 onOpenBoardBriefModal={handleOpenBoardBrief}
               onOpenGrantChecklistModal={handleOpenGrantChecklist}
                 onOpenProposalPackageModal={handleOpenProposalPackage}

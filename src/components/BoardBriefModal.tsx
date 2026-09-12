@@ -23,9 +23,11 @@ export const BoardBriefModal: React.FC<BoardBriefModalProps> = React.memo(({
 }) => {
   const [downloaded, setDownloaded] = useState(false);
 
-  // Memoize random document ID so it doesn't recalculate on every render
+  // Security: Use Web Crypto API instead of Math.random() (CWE-338) for cryptographically secure ID generation
   const docRef = useMemo(() => {
-    return Math.floor(100000 + Math.random() * 900000);
+    const array = new Uint32Array(1);
+    window.crypto.getRandomValues(array);
+    return 100000 + (array[0] % 900000);
   }, []);
 
   if (!isOpen || !data) return null;

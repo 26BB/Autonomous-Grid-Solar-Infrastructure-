@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { isValidEmail } from '../utils/security';
 
 interface ProposalPackageModalProps {
   isOpen: boolean;
