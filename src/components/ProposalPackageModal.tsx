@@ -22,11 +22,19 @@ export const ProposalPackageModal: React.FC<ProposalPackageModalProps> = React.m
 }) => {
   const [locked, setLocked] = useState(false);
   const [email, setEmail] = useState('');
+  const [error, setError] = useState<string | null>(null);
 
   if (!isOpen || !data) return null;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
+
+    if (!isValidEmail(email)) {
+      setError('Please enter a valid email address.');
+      return;
+    }
+
     setLocked(true);
   };
 
@@ -97,6 +105,13 @@ export const ProposalPackageModal: React.FC<ProposalPackageModalProps> = React.m
                   className="w-full bg-[#0B0F19] border border-[#2A374F] rounded-lg px-4 py-3 text-white text-xs font-mono focus:border-[#00E5FF] focus:outline-none"
                 />
               </div>
+
+              {error && (
+                <div className="p-2.5 rounded bg-red-950/80 border border-red-500/50 text-red-300 text-[11px] font-mono flex items-center gap-2">
+                  <span className="material-symbols-outlined text-[16px]">error</span>
+                  <span>{error}</span>
+                </div>
+              )}
 
               <div className="p-3 rounded-lg bg-[#0B0F19] border border-[#2A374F] text-[11px] text-slate-400 space-y-1">
                 <p className="text-slate-200 font-bold">Included in Your Package:</p>
