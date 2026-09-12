@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { InfrastructureProfile, ThreatVector } from '../types';
 
 interface ModelerScreenProps {
+  initialProfile?: InfrastructureProfile;
   onOpenBoardBriefModal: (data: {
     profile: string;
     milesOrCapacity: number;
@@ -25,11 +26,18 @@ interface ModelerScreenProps {
 }
 
 export const ModelerScreen: React.FC<ModelerScreenProps> = ({
+  initialProfile,
   onOpenBoardBriefModal,
   onOpenGrantChecklistModal,
   onOpenProposalPackageModal,
 }) => {
-  const [profile, setProfile] = useState<InfrastructureProfile>('coop');
+  const [profile, setProfile] = useState<InfrastructureProfile>(initialProfile || 'coop');
+
+  React.useEffect(() => {
+    if (initialProfile) {
+      handleProfileSelect(initialProfile);
+    }
+  }, [initialProfile]);
   const [miles, setMiles] = useState<number>(1850);
   const [spend, setSpend] = useState<number>(240000);
   const [threat, setThreat] = useState<ThreatVector>('vegetation');
