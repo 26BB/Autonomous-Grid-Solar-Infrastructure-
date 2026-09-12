@@ -15,6 +15,7 @@ import { Part108Modal } from './components/Part108Modal';
 import { ProposalPackageModal } from './components/ProposalPackageModal';
 import { ContactPortalModal } from './components/ContactPortalModal';
 import { Footer } from './components/Footer';
+import { sanitizeInput } from './utils/security';
 
 export default function App() {
   const [currentView, setCurrentView] = useState<'home' | 'modeler'>('home');
@@ -135,13 +136,15 @@ export default function App() {
   }, []);
 
   const handleSolutionSelect = useCallback((solution: 'coop' | 'solar') => {
+    setSelectedProfile(solution);
     setCurrentView('modeler');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
   const handleDeploymentSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!deploymentEmail) return;
+    const cleanEmail = sanitizeInput(deploymentEmail);
+    if (!cleanEmail) return;
     setDeploymentSubmitted(true);
     setTimeout(() => {
       setDeploymentSubmitted(false);
@@ -298,11 +301,7 @@ export default function App() {
 
               {/* SECTOR-SPECIFIC VERTICAL SOLUTIONS */}
               <SolutionsSection
-                onSelectSolution={(solution) => {
-                  setSelectedProfile(solution);
-                  setCurrentView('modeler');
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }}
+                onSelectSolution={handleSolutionSelect}
               />
 
               {/* PLATFORM ARCHITECTURE & SUPPLY CHAIN */}
