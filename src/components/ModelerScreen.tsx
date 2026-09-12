@@ -24,6 +24,7 @@ interface ModelerScreenProps {
   }) => void;
 }
 
+ bolt/memoize-modeler-screen-subcomponents-18212683154379650630
 // Optimization: Memoized sub-component for 3-Year Benchmark to avoid re-renders when email changes or when unrelated state updates
 const CostBenchmarkSection = React.memo<{
   helicopter3Yr: number;
@@ -423,6 +424,10 @@ const ExecutiveBriefForm = React.memo<{
 ExecutiveBriefForm.displayName = 'ExecutiveBriefForm';
 
 export const ModelerScreen: React.FC<ModelerScreenProps> = ({
+
+// Memoized to isolate modeler calculations and slider interactions from external App state updates
+export const ModelerScreen: React.FC<ModelerScreenProps> = React.memo(({
+ main
   onOpenBoardBriefModal,
   onOpenGrantChecklistModal,
   onOpenProposalPackageModal,
@@ -912,4 +917,6 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = ({
       <ExecutiveBriefForm onSubmit={handleBriefSubmit} />
     </div>
   );
-};
+});
+
+ModelerScreen.displayName = 'ModelerScreen';
