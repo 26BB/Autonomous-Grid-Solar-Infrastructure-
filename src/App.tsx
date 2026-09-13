@@ -134,12 +134,21 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
+  // Performance optimization: Memoized solution selector callback to preserve SolutionsSection React.memo isolation
   const handleSolutionSelect = useCallback((solution: 'coop' | 'solar') => {
+    setSelectedProfile(solution);
     setCurrentView('modeler');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
-  const handleDeploymentSubmit = (e: React.FormEvent) => {
+  // Performance optimization: Memoized button handler for Hero section scroll navigation
+  const handleExploreSolutions = useCallback(() => {
+    setCurrentView('home');
+    setTimeout(() => handleScrollToSection('solutions'), 50);
+  }, [handleScrollToSection]);
+
+  // Performance optimization: Memoized deployment form submission handler
+  const handleDeploymentSubmit = useCallback((e: React.FormEvent) => {
     e.preventDefault();
     if (!deploymentEmail) return;
     setDeploymentSubmitted(true);
@@ -147,7 +156,7 @@ export default function App() {
       setDeploymentSubmitted(false);
       setDeploymentEmail('');
     }, 4500);
-  };
+  }, [deploymentEmail]);
 
   return (
     <div className="min-h-screen bg-[#0B0F19] text-[#F8FAFC] flex flex-col justify-between selection:bg-[#00E5FF] selection:text-[#0B0F19]">
@@ -261,10 +270,7 @@ export default function App() {
                     <motion.button
                       whileHover={{ scale: 1.04, boxShadow: '0 0 24px rgba(0,229,255,0.45)' }}
                       whileTap={{ scale: 0.97 }}
-                      onClick={() => {
-                        setCurrentView('home');
-                        setTimeout(() => handleScrollToSection('solutions'), 50);
-                      }}
+                      onClick={handleExploreSolutions}
                       className="px-6 py-3.5 rounded-lg bg-[#00E5FF] text-[#0B0F19] font-headline font-bold text-sm hover:bg-white hover:text-black transition-all text-center shadow-lg shadow-[#00E5FF]/20 cursor-pointer"
                     >
                       Explore Tier-2 Solution Kits
@@ -298,11 +304,7 @@ export default function App() {
 
               {/* SECTOR-SPECIFIC VERTICAL SOLUTIONS */}
               <SolutionsSection
-                onSelectSolution={(solution) => {
-                  setSelectedProfile(solution);
-                  setCurrentView('modeler');
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }}
+                onSelectSolution={handleSolutionSelect}
               />
 
               {/* PLATFORM ARCHITECTURE & SUPPLY CHAIN */}
