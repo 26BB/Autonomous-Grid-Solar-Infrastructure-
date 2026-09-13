@@ -24,9 +24,7 @@ export const ContactPortalModal: React.FC<ContactPortalModalProps> = React.memo(
     e.preventDefault();
     setError(null);
 
-    // Basic email format validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email.trim())) {
+    if (!isValidEmail(formData.email)) {
       setError('Please provide a valid email address.');
       return;
     }
