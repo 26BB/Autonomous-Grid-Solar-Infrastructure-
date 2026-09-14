@@ -30,11 +30,11 @@ export const ContactPortalModal: React.FC<ContactPortalModalProps> = React.memo(
     }
 
     setFormData({
-      name: formData.name.trim(),
-      utility: formData.utility.trim(),
-      role: formData.role.trim(),
-      email: formData.email.trim(),
-      message: formData.message.trim(),
+      name: sanitizeInput(formData.name),
+      utility: sanitizeInput(formData.utility),
+      role: sanitizeInput(formData.role),
+      email: sanitizeInput(formData.email),
+      message: sanitizeInput(formData.message),
     });
     setSubmitted(true);
   };

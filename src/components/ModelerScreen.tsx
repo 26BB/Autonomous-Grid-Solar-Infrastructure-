@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { InfrastructureProfile, ThreatVector } from '../types';
+import { sanitizeInput } from '../utils/security';
 
 interface ModelerScreenProps {
   initialProfile?: InfrastructureProfile;
@@ -154,6 +155,7 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = React.memo(({
 
   const handleDownloadBriefSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const cleanEmail = sanitizeInput(emailInput);
     onOpenBoardBriefModal({
       profile:
         profile === 'coop'
@@ -167,7 +169,7 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = React.memo(({
       paybackMonths: calculations.paybackMonths,
       grantOffset: calculations.grantOffset,
       docks: calculations.docks,
-      email: emailInput || 'director@rural-electric.coop',
+      email: cleanEmail || 'director@rural-electric.coop',
     });
   };
 
