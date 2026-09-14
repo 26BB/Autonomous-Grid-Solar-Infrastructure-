@@ -3,3 +3,9 @@
 **Learning:** In a single-page dashboard app with multiple modal states and form inputs at the top level (`App.tsx`), keystroke updates or modal state toggles cause every child section (`HeroTelemetryCard`, `CompetitorTable`, `SolutionsSection`, etc.) to re-render. These sections contain animated `motion` elements and background images, causing unnecessary DOM reconciliation and animation layout calculations.
 
 **Action:** Wrap presentational sections and modals in `React.memo` and memoize parent callback props with `useCallback` to isolate render scopes.
+
+## 2025-05-19 - AnimatePresence Key-Swapping on Continuous Inputs Causes DOM Node Thrashing
+
+**Learning:** Wrapping rapidly changing state variables (such as range slider numbers like `netSavings` or `annualSavings`) in `AnimatePresence` with `key={value}` forces Framer Motion to unmount, destroy, recreate, and mount new DOM nodes on every mousemove tick (60–120Hz), creating severe main-thread jank and DOM node thrashing during slider dragging.
+
+**Action:** Avoid using `AnimatePresence` with dynamic numeric keys on interactive slider outputs; render the formatted numeric string directly within the element for butter-smooth 60fps slider updates.
