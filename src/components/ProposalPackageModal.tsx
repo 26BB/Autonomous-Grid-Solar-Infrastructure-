@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { isValidEmail } from '../utils/security';
+import { isValidEmail, sanitizeInput } from '../utils/security';
 
 interface ProposalPackageModalProps {
   isOpen: boolean;
@@ -30,11 +30,14 @@ export const ProposalPackageModal: React.FC<ProposalPackageModalProps> = React.m
     e.preventDefault();
     setError(null);
 
-    if (!isValidEmail(email)) {
+    const sanitizedEmail = sanitizeInput(email);
+
+    if (!isValidEmail(sanitizedEmail)) {
       setError('Please enter a valid email address.');
       return;
     }
 
+    setEmail(sanitizedEmail);
     setLocked(true);
   };
 
