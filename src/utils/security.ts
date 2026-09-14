@@ -15,7 +15,7 @@ export function isValidEmail(email: string): boolean {
  * Sanitizes input text by trimming whitespace and escaping HTML special characters.
  */
 export function sanitizeInput(input: string): string {
-  if (!input) return '';
+  if (!input || typeof input !== 'string') return '';
   return input
     .trim()
     .replace(/&/g, '&amp;')
