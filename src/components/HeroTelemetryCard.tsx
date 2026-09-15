@@ -141,24 +141,16 @@ export const HeroTelemetryCard: React.FC = React.memo(() => {
 
         {/* Telemetry Metrics Readout Grid with subtle transitions */}
         <div className="grid grid-cols-3 gap-2.5 sm:gap-3 text-center">
+          {/* Performance Optimization: Direct text rendering instead of AnimatePresence key-swapping to avoid DOM node unmounting/re-creation thrashing every 2.8s */}
           <motion.div
             whileHover={{ y: -2 }}
             transition={{ type: 'spring', stiffness: 400 }}
             className="p-2.5 sm:p-3 bg-[#0B0F19] rounded border border-[#2A374F] hover:border-[#00E5FF]/50 transition-colors"
           >
             <p className="text-[10px] text-slate-400 font-mono mb-1">INTERNAL TEMP</p>
-            <AnimatePresence mode="wait">
-              <motion.p
-                key={currentTemp}
-                initial={{ opacity: 0.6, y: -2 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0.6, y: 2 }}
-                transition={{ duration: 0.2 }}
-                className="text-sm sm:text-base font-headline font-bold text-white tracking-wide"
-              >
-                {currentTemp}°C
-              </motion.p>
-            </AnimatePresence>
+            <p className="text-sm sm:text-base font-headline font-bold text-white tracking-wide">
+              {currentTemp}°C
+            </p>
           </motion.div>
 
           <motion.div
@@ -167,18 +159,9 @@ export const HeroTelemetryCard: React.FC = React.memo(() => {
             className="p-2.5 sm:p-3 bg-[#0B0F19] rounded border border-[#2A374F] hover:border-[#00E5FF]/50 transition-colors"
           >
             <p className="text-[10px] text-slate-400 font-mono mb-1">BATTERY HEALTH</p>
-            <AnimatePresence mode="wait">
-              <motion.p
-                key={activeNode.battery}
-                initial={{ opacity: 0.6, y: -2 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0.6, y: 2 }}
-                transition={{ duration: 0.2 }}
-                className="text-sm sm:text-base font-headline font-bold text-[#00E5FF] tracking-wide"
-              >
-                {activeNode.battery}%
-              </motion.p>
-            </AnimatePresence>
+            <p className="text-sm sm:text-base font-headline font-bold text-[#00E5FF] tracking-wide">
+              {activeNode.battery}%
+            </p>
           </motion.div>
 
           <motion.div
@@ -187,18 +170,9 @@ export const HeroTelemetryCard: React.FC = React.memo(() => {
             className="p-2.5 sm:p-3 bg-[#0B0F19] rounded border border-[#2A374F] hover:border-[#00E5FF]/50 transition-colors"
           >
             <p className="text-[10px] text-slate-400 font-mono mb-1">LINK LATENCY</p>
-            <AnimatePresence mode="wait">
-              <motion.p
-                key={currentLatency}
-                initial={{ opacity: 0.6, y: -2 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0.6, y: 2 }}
-                transition={{ duration: 0.2 }}
-                className="text-sm sm:text-base font-headline font-bold text-emerald-400 tracking-wide"
-              >
-                {currentLatency}ms
-              </motion.p>
-            </AnimatePresence>
+            <p className="text-sm sm:text-base font-headline font-bold text-emerald-400 tracking-wide">
+              {currentLatency}ms
+            </p>
           </motion.div>
         </div>
 
