@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion } from 'motion/react';
 
 interface EmbeddedCalculatorProps {
   onNavigateToFullModeler: () => void;
@@ -136,17 +136,10 @@ export const EmbeddedCalculator: React.FC<EmbeddedCalculatorProps> = React.memo(
               <span className="text-xs font-mono text-slate-400 uppercase tracking-wider block mb-1">
                 PROJECTED ANNUAL SAVINGS
               </span>
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={annualSavings}
-                  initial={{ opacity: 0.6, scale: 0.98 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.15 }}
-                  className="text-4xl sm:text-5xl font-headline font-bold text-[#00E5FF] tracking-tight"
-                >
-                  ${annualSavings.toLocaleString()}
-                </motion.div>
-              </AnimatePresence>
+              {/* Performance optimization: Direct text rendering avoids AnimatePresence node destruction/re-creation on slider input */}
+              <div className="text-4xl sm:text-5xl font-headline font-bold text-[#00E5FF] tracking-tight">
+                ${annualSavings.toLocaleString()}
+              </div>
               <span className="text-xs text-slate-400 font-mono mt-1 block">
                 Calculated on automated daily aerial dispatch
               </span>

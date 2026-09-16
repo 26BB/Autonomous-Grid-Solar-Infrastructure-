@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { InfrastructureProfile, ThreatVector } from '../types';
+import { sanitizeInput } from '../utils/security';
 
 interface ModelerScreenProps {
   initialProfile?: InfrastructureProfile;
@@ -26,15 +27,24 @@ interface ModelerScreenProps {
 }
 
 // Memoized to isolate modeler calculations and slider interactions from external App state updates
+// Helper to derive profile default values on initial state creation
+const getInitialDefaults = (p: InfrastructureProfile = 'coop') => {
+  if (p === 'solar') return { miles: 45, spend: 160000 };
+  if (p === 'iou') return { miles: 3600, spend: 480000 };
+  return { miles: 1850, spend: 240000 };
+};
+
+// Memoized to isolate modeler calculations and slider interactions from external App state updates
 export const ModelerScreen: React.FC<ModelerScreenProps> = React.memo(({
   initialProfile,
   onOpenBoardBriefModal,
   onOpenGrantChecklistModal,
   onOpenProposalPackageModal,
 }) => {
+  // Performance optimization: Lazily initialize state to match initialProfile prop, eliminating redundant initial mount re-renders
   const [profile, setProfile] = useState<InfrastructureProfile>(initialProfile || 'coop');
-  const [miles, setMiles] = useState<number>(1850);
-  const [spend, setSpend] = useState<number>(240000);
+  const [miles, setMiles] = useState<number>(() => getInitialDefaults(initialProfile).miles);
+  const [spend, setSpend] = useState<number>(() => getInitialDefaults(initialProfile).spend);
   const [threat, setThreat] = useState<ThreatVector>('vegetation');
   const [grantActive, setGrantActive] = useState<boolean>(true);
   const [emailInput, setEmailInput] = useState<string>('');
@@ -53,8 +63,11 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = React.memo(({
     }
   };
 
+  // Performance optimization: Only execute handleProfileSelect when initialProfile changes post-mount
+  const prevInitialProfileRef = React.useRef(initialProfile);
   React.useEffect(() => {
-    if (initialProfile) {
+    if (initialProfile && initialProfile !== prevInitialProfileRef.current) {
+      prevInitialProfileRef.current = initialProfile;
       handleProfileSelect(initialProfile);
     }
   }, [initialProfile]);
@@ -142,6 +155,7 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = React.memo(({
 
   const handleDownloadBriefSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const cleanEmail = sanitizeInput(emailInput);
     onOpenBoardBriefModal({
       profile:
         profile === 'coop'
@@ -155,7 +169,7 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = React.memo(({
       paybackMonths: calculations.paybackMonths,
       grantOffset: calculations.grantOffset,
       docks: calculations.docks,
-      email: emailInput || 'director@rural-electric.coop',
+      email: cleanEmail || 'director@rural-electric.coop',
     });
   };
 
@@ -387,17 +401,10 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = React.memo(({
               <div className="text-xs font-mono uppercase text-slate-400">
                 Net 3-Year Operational Savings
               </div>
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={calculations.netSavings}
-                  initial={{ opacity: 0.7, scale: 0.98 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.15 }}
-                  className="text-4xl lg:text-5xl font-headline font-bold text-[#00E5FF] mt-1 tracking-tight"
-                >
-                  ${calculations.netSavings.toLocaleString()}
-                </motion.div>
-              </AnimatePresence>
+              {/* Performance optimization: Render numeric text directly without AnimatePresence key-swapping to eliminate DOM node destruction/re-creation on slider drag */}
+              <div className="text-4xl lg:text-5xl font-headline font-bold text-[#00E5FF] mt-1 tracking-tight">
+                ${calculations.netSavings.toLocaleString()}
+              </div>
               <div className="text-xs text-slate-400 mt-1 flex items-center gap-1.5 font-mono">
                 <span className="text-emerald-400 font-bold">
                   {calculations.savingsPct}% cost reduction
