@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { InfrastructureProfile, ThreatVector } from '../types';
-import { sanitizeInput } from '../utils/security';
+import { isValidEmail, sanitizeInput } from '../utils/security';
 
 interface ModelerScreenProps {
   initialProfile?: InfrastructureProfile;
@@ -155,6 +155,7 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = React.memo(({
 
   const handleDownloadBriefSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (emailInput && !isValidEmail(emailInput)) return;
     const cleanEmail = sanitizeInput(emailInput);
     onOpenBoardBriefModal({
       profile:
