@@ -109,7 +109,7 @@ export const EmbeddedCalculator: React.FC<EmbeddedCalculatorProps> = React.memo(
                 max={profile === 'coop' ? 8000 : 100}
                 step={profile === 'coop' ? 100 : 5}
                 value={sliderVal}
-                onChange={(e) => setSliderVal(parseInt(e.target.value))}
+                onChange={(e) => setSliderVal(parseInt(e.target.value, 10) || (profile === 'coop' ? 200 : 5))}
                 className="w-full accent-[#00E5FF] bg-[#0B0F19] h-2 rounded-lg cursor-pointer"
               />
               <div className="flex justify-between text-[11px] font-mono text-slate-500 mt-1">
