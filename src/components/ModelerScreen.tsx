@@ -48,6 +48,7 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = React.memo(({
   const [threat, setThreat] = useState<ThreatVector>('vegetation');
   const [grantActive, setGrantActive] = useState<boolean>(true);
   const [emailInput, setEmailInput] = useState<string>('');
+  const [emailError, setEmailError] = useState<string | null>(null);
 
   const handleProfileSelect = (p: InfrastructureProfile) => {
     setProfile(p);
@@ -155,8 +156,12 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = React.memo(({
 
   const handleDownloadBriefSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (emailInput && !isValidEmail(emailInput)) return;
+    setEmailError(null);
     const cleanEmail = sanitizeInput(emailInput);
+    if (!isValidEmail(cleanEmail)) {
+      setEmailError('Please enter a valid utility or co-op email address.');
+      return;
+    }
     onOpenBoardBriefModal({
       profile:
         profile === 'coop'
@@ -170,7 +175,7 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = React.memo(({
       paybackMonths: calculations.paybackMonths,
       grantOffset: calculations.grantOffset,
       docks: calculations.docks,
-      email: cleanEmail || 'director@rural-electric.coop',
+      email: cleanEmail,
     });
   };
 
@@ -271,7 +276,7 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = React.memo(({
               max={maxMiles}
               step={stepMiles}
               value={miles}
-              onChange={(e) => setMiles(parseInt(e.target.value))}
+              onChange={(e) => setMiles(parseInt(e.target.value, 10) || minMiles)}
               className="w-full"
             />
             <div className="flex justify-between text-[11px] font-mono text-slate-500">
@@ -302,7 +307,7 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = React.memo(({
               max={600000}
               step={10000}
               value={spend}
-              onChange={(e) => setSpend(parseInt(e.target.value))}
+              onChange={(e) => setSpend(parseInt(e.target.value, 10) || 50000)}
               className="w-full"
             />
             <div className="flex justify-between text-[11px] font-mono text-slate-500">
@@ -850,22 +855,33 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = React.memo(({
 
         <form
           onSubmit={handleDownloadBriefSubmit}
-          className="w-full lg:w-auto flex flex-col sm:flex-row items-stretch gap-3 shrink-0"
+          className="w-full lg:w-auto flex flex-col items-stretch gap-2 shrink-0"
         >
-          <input
-            type="email"
-            value={emailInput}
-            onChange={(e) => setEmailInput(e.target.value)}
-            placeholder="enter utility / co-op email"
-            required
-            className="bg-[#0B0F19] border border-[#2A374F] rounded-lg px-4 py-3 text-sm text-white font-mono focus:border-[#00E5FF] focus:outline-none min-w-[280px]"
-          />
-          <button
-            type="submit"
-            className="px-6 py-3 rounded-lg bg-[#00E5FF] text-[#0B0F19] font-headline font-bold text-sm hover:bg-white transition-all shadow-[0_0_15px_rgba(0,229,255,0.4)] whitespace-nowrap cursor-pointer"
-          >
-            Download PDF Brief
-          </button>
+          <div className="flex flex-col sm:flex-row items-stretch gap-3">
+            <input
+              type="email"
+              value={emailInput}
+              onChange={(e) => {
+                setEmailInput(e.target.value);
+                if (emailError) setEmailError(null);
+              }}
+              placeholder="enter utility / co-op email"
+              required
+              className="bg-[#0B0F19] border border-[#2A374F] rounded-lg px-4 py-3 text-sm text-white font-mono focus:border-[#00E5FF] focus:outline-none min-w-[280px]"
+            />
+            <button
+              type="submit"
+              className="px-6 py-3 rounded-lg bg-[#00E5FF] text-[#0B0F19] font-headline font-bold text-sm hover:bg-white transition-all shadow-[0_0_15px_rgba(0,229,255,0.4)] whitespace-nowrap cursor-pointer"
+            >
+              Download PDF Brief
+            </button>
+          </div>
+          {emailError && (
+            <div className="p-2 rounded bg-red-950/80 border border-red-500/50 text-red-300 text-xs font-mono flex items-center gap-1.5">
+              <span className="material-symbols-outlined text-[16px]">error</span>
+              <span>{emailError}</span>
+            </div>
+          )}
         </form>
       </div>
     </div>
