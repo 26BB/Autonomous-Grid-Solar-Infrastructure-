@@ -6,12 +6,18 @@ describe('security utilities', () => {
     it('returns true for valid email addresses', () => {
       expect(isValidEmail('user@example.com')).toBe(true);
       expect(isValidEmail('jsmith@valleyelectric.coop')).toBe(true);
+      expect(isValidEmail('admin.test@sub.domain.co.uk')).toBe(true);
+      expect(isValidEmail('  director@rural-electric.coop  ')).toBe(true);
     });
 
-    it('returns false for invalid email addresses', () => {
+    it('returns false for invalid email addresses and edge cases', () => {
       expect(isValidEmail('invalid-email')).toBe(false);
+      expect(isValidEmail('user@')).toBe(false);
       expect(isValidEmail('@example.com')).toBe(false);
       expect(isValidEmail('user@.com')).toBe(false);
+      expect(isValidEmail('user@domain..com')).toBe(false);
+      expect(isValidEmail('user@domain')).toBe(false);
+      expect(isValidEmail('a'.repeat(255) + '@example.com')).toBe(false);
     });
 
     it('returns false for non-string or empty inputs', () => {

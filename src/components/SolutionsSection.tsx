@@ -76,12 +76,8 @@ export const SolutionsSection: React.FC<SolutionsSectionProps> = React.memo(({ o
               }}
             >
               <div className="absolute inset-0 bg-gradient-to-t from-[#0B0F19]/80 via-transparent to-transparent"></div>
-              {/* Animated scanline on image */}
-              <motion.div
-                className="absolute inset-x-0 h-8 pointer-events-none opacity-20 bg-gradient-to-b from-transparent via-[#00E5FF] to-transparent"
-                animate={{ y: ['-100%', '550%'] }}
-                transition={{ duration: 3.5, repeat: Infinity, ease: 'linear' }}
-              />
+              {/* Performance optimization: Use GPU-accelerated CSS animation for continuous scanline sweep instead of main-thread JS animation loop */}
+              <div className="absolute inset-x-0 h-8 pointer-events-none opacity-20 bg-gradient-to-b from-transparent via-[#00E5FF] to-transparent animate-scanline" />
               <div className="absolute bottom-3 left-3 text-[11px] font-mono text-white bg-[#0B0F19]/85 px-2.5 py-1 rounded border border-[#2A374F] flex items-center gap-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#00E5FF] animate-ping"></span>
                 <span>Telemetry Feed: Feeder 14 Pole #82A Insulator Audit</span>
@@ -148,12 +144,8 @@ export const SolutionsSection: React.FC<SolutionsSectionProps> = React.memo(({ o
               }}
             >
               <div className="absolute inset-0 bg-gradient-to-t from-[#0B0F19]/80 via-transparent to-transparent"></div>
-              {/* Animated scanline on image */}
-              <motion.div
-                className="absolute inset-x-0 h-8 pointer-events-none opacity-20 bg-gradient-to-b from-transparent via-[#F59E0B] to-transparent"
-                animate={{ y: ['-100%', '550%'] }}
-                transition={{ duration: 3.5, repeat: Infinity, ease: 'linear' }}
-              />
+              {/* Performance optimization: Use GPU-accelerated CSS animation for continuous scanline sweep instead of main-thread JS animation loop */}
+              <div className="absolute inset-x-0 h-8 pointer-events-none opacity-20 bg-gradient-to-b from-transparent via-[#F59E0B] to-transparent animate-scanline" />
               <div className="absolute bottom-3 left-3 text-[11px] font-mono text-white bg-[#0B0F19]/85 px-2.5 py-1 rounded border border-[#2A374F] flex items-center gap-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#F59E0B] animate-ping"></span>
                 <span>Thermal Ingress: Greenfield Array 4B Hotspot Detected</span>

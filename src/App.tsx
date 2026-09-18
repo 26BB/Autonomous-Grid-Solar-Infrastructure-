@@ -15,7 +15,7 @@ import { Part108Modal } from './components/Part108Modal';
 import { ProposalPackageModal } from './components/ProposalPackageModal';
 import { ContactPortalModal } from './components/ContactPortalModal';
 import { Footer } from './components/Footer';
-import { sanitizeInput } from './utils/security';
+import { isValidEmail, sanitizeInput } from './utils/security';
 
 export default function App() {
   const [currentView, setCurrentView] = useState<'home' | 'modeler'>('home');
@@ -151,6 +151,7 @@ export default function App() {
   // Performance optimization: Memoized deployment form submission handler
   const handleDeploymentSubmit = useCallback((e: React.FormEvent) => {
     e.preventDefault();
+    if (!isValidEmail(deploymentEmail)) return;
     const cleanEmail = sanitizeInput(deploymentEmail);
     if (!cleanEmail) return;
     setDeploymentSubmitted(true);
