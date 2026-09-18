@@ -10,7 +10,7 @@ export function isValidEmail(email: string): boolean {
   const trimmed = email.trim();
   if (trimmed.length === 0 || trimmed.length > 254) return false;
   // Security: Ensure domain has valid TLD structure and prevent consecutive dots or leading/trailing dashes in domain labels
-  const emailRegex = /^[a-zA-Z0-9._%+-]+@([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/;
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/;
   if (!emailRegex.test(trimmed)) return false;
   // Extra safeguard against consecutive dots in local part or domain
   if (trimmed.includes('..')) return false;
