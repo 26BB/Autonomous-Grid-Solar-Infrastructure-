@@ -43,4 +43,11 @@ describe('sanitizeInput', () => {
   it('handles empty input gracefully', () => {
     expect(sanitizeInput('')).toBe('');
   });
+
+  it('sanitizes event handler attributes and multi-line markup', () => {
+    const payload = '<img src="x" onerror="alert(1)" />\n<b class="test">Safe Text</b>';
+    const sanitized = sanitizeInput(payload);
+    expect(sanitized).not.toContain('<img');
+    expect(sanitized).toContain('&lt;img src=&quot;x&quot; onerror=&quot;alert(1)&quot; /&gt;');
+  });
 });
