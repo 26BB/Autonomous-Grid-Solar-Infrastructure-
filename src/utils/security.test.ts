@@ -22,11 +22,22 @@ describe('isValidEmail', () => {
 });
 
 describe('sanitizeInput', () => {
-  it('escapes dangerous HTML special characters', () => {
-    const dangerous = '<script>alert("xss")</script> & \'quote\'';
+  it('escapes dangerous HTML special characters and backticks', () => {
+    const dangerous = '<script>alert("xss")</script> & \'quote\' `backtick`';
     const sanitized = sanitizeInput(dangerous);
     expect(sanitized).not.toContain('<script>');
-    expect(sanitized).toBe('&lt;script&gt;alert(&quot;xss&quot;)&lt;/script&gt; &amp; &#x27;quote&#x27;');
+    expect(sanitized).toBe('&lt;script&gt;alert(&quot;xss&quot;)&lt;/script&gt; &amp; &#x27;quote&#x27; &#x60;backtick&#x60;');
+  });
+
+  it('strips null byte characters', () => {
+    const nullByteInput = 'admin\0@domain.com';
+    expect(sanitizeInput(nullByteInput)).toBe('admin@domain.com');
+  });
+
+  it('handles non-string inputs safely without throwing', () => {
+    expect(sanitizeInput(12345 as unknown as string)).toBe('');
+    expect(sanitizeInput(null as unknown as string)).toBe('');
+    expect(sanitizeInput(undefined as unknown as string)).toBe('');
   });
 
   it('handles empty input gracefully', () => {

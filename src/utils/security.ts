@@ -18,15 +18,17 @@ export function isValidEmail(email: string): boolean {
 }
 
 /**
- * Sanitizes input text by trimming whitespace and escaping HTML special characters.
+ * Sanitizes input text by checking type safety, trimming whitespace, removing null bytes, and escaping HTML/template special characters.
  */
 export function sanitizeInput(input: string): string {
-  if (!input) return '';
+  if (!input || typeof input !== 'string') return '';
   return input
     .trim()
+    .replace(/\0/g, '')
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#x27;');
+    .replace(/'/g, '&#x27;')
+    .replace(/`/g, '&#x60;');
 }
