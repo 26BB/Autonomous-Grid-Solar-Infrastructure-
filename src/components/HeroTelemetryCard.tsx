@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion } from 'motion/react';
 
 const DOCK_NODES = [
   { id: 'DOCK_NODE_04', location: 'Elm Creek Substation #3', temp: 21.4, battery: 99.8, latency: 14, status: 'DOCKED / CHARGED' },
@@ -77,26 +77,15 @@ export const HeroTelemetryCard: React.FC = React.memo(() => {
         >
           <div className="absolute inset-0 bg-gradient-to-t from-[#0B0F19]/95 via-transparent to-black/30 pointer-events-none"></div>
 
-          {/* Animated High-Tech Scanline Sweep */}
-          <motion.div
-            className="absolute inset-x-0 h-10 pointer-events-none z-10 opacity-30 bg-gradient-to-b from-transparent via-[#00E5FF]/40 to-transparent"
-            animate={{ y: ['-100%', '650%'] }}
-            transition={{
-              duration: 4.5,
-              repeat: Infinity,
-              ease: 'linear',
-            }}
-          />
+          {/* Performance optimization: Use GPU-accelerated CSS animation for continuous scanline sweep instead of main-thread JS animation loop */}
+          <div className="absolute inset-x-0 h-10 pointer-events-none z-10 opacity-30 bg-gradient-to-b from-transparent via-[#00E5FF]/40 to-transparent animate-scanline" />
 
           {/* Animated Targeting Crosshair / Reticle */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
-            <motion.div
-              animate={{ rotate: [0, 90, 180, 270, 360], scale: [0.98, 1.02, 0.98] }}
-              transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-              className="w-20 h-20 border border-[#00E5FF]/30 rounded-full flex items-center justify-center"
-            >
+            {/* Performance optimization: Use GPU-accelerated CSS keyframe animations (animate-radar-sweep, animate-target-pulse) instead of Framer Motion JS main-thread animation loop */}
+            <div className="w-20 h-20 border border-[#00E5FF]/30 rounded-full flex items-center justify-center animate-radar-sweep animate-target-pulse">
               <div className="w-10 h-10 border border-dashed border-[#F59E0B]/40 rounded-full"></div>
-            </motion.div>
+            </div>
             <div className="absolute w-2 h-2 bg-[#00E5FF]/80 rounded-full animate-ping"></div>
           </div>
 
@@ -139,26 +128,19 @@ export const HeroTelemetryCard: React.FC = React.memo(() => {
           </div>
         </div>
 
-        {/* Telemetry Metrics Readout Grid with subtle transitions */}
+        {/* Telemetry Metrics Readout Grid */}
+        {/* Performance optimization: Direct text node rendering avoids AnimatePresence key-swapping DOM unmounting/remounting on 2.8s jitter ticks */}
         <div className="grid grid-cols-3 gap-2.5 sm:gap-3 text-center">
+          {/* Performance Optimization: Direct text rendering instead of AnimatePresence key-swapping to avoid DOM node unmounting/re-creation thrashing every 2.8s */}
           <motion.div
             whileHover={{ y: -2 }}
             transition={{ type: 'spring', stiffness: 400 }}
             className="p-2.5 sm:p-3 bg-[#0B0F19] rounded border border-[#2A374F] hover:border-[#00E5FF]/50 transition-colors"
           >
             <p className="text-[10px] text-slate-400 font-mono mb-1">INTERNAL TEMP</p>
-            <AnimatePresence mode="wait">
-              <motion.p
-                key={currentTemp}
-                initial={{ opacity: 0.6, y: -2 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0.6, y: 2 }}
-                transition={{ duration: 0.2 }}
-                className="text-sm sm:text-base font-headline font-bold text-white tracking-wide"
-              >
-                {currentTemp}°C
-              </motion.p>
-            </AnimatePresence>
+            <p className="text-sm sm:text-base font-headline font-bold text-white tracking-wide">
+              {currentTemp}°C
+            </p>
           </motion.div>
 
           <motion.div
@@ -167,18 +149,9 @@ export const HeroTelemetryCard: React.FC = React.memo(() => {
             className="p-2.5 sm:p-3 bg-[#0B0F19] rounded border border-[#2A374F] hover:border-[#00E5FF]/50 transition-colors"
           >
             <p className="text-[10px] text-slate-400 font-mono mb-1">BATTERY HEALTH</p>
-            <AnimatePresence mode="wait">
-              <motion.p
-                key={activeNode.battery}
-                initial={{ opacity: 0.6, y: -2 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0.6, y: 2 }}
-                transition={{ duration: 0.2 }}
-                className="text-sm sm:text-base font-headline font-bold text-[#00E5FF] tracking-wide"
-              >
-                {activeNode.battery}%
-              </motion.p>
-            </AnimatePresence>
+            <p className="text-sm sm:text-base font-headline font-bold text-[#00E5FF] tracking-wide">
+              {activeNode.battery}%
+            </p>
           </motion.div>
 
           <motion.div
@@ -187,18 +160,9 @@ export const HeroTelemetryCard: React.FC = React.memo(() => {
             className="p-2.5 sm:p-3 bg-[#0B0F19] rounded border border-[#2A374F] hover:border-[#00E5FF]/50 transition-colors"
           >
             <p className="text-[10px] text-slate-400 font-mono mb-1">LINK LATENCY</p>
-            <AnimatePresence mode="wait">
-              <motion.p
-                key={currentLatency}
-                initial={{ opacity: 0.6, y: -2 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0.6, y: 2 }}
-                transition={{ duration: 0.2 }}
-                className="text-sm sm:text-base font-headline font-bold text-emerald-400 tracking-wide"
-              >
-                {currentLatency}ms
-              </motion.p>
-            </AnimatePresence>
+            <p className="text-sm sm:text-base font-headline font-bold text-emerald-400 tracking-wide">
+              {currentLatency}ms
+            </p>
           </motion.div>
         </div>
 
