@@ -188,10 +188,17 @@ input[type=range]::-moz-range-thumb {
 
 .animate-scanline {
   animation: scanline 4s linear infinite;
+  will-change: transform;
+}
+
+.animate-radar-sweep {
+  animation: radar-sweep 10s linear infinite;
+  will-change: transform;
 }
 
 .animate-target-pulse {
   animation: target-pulse 3s ease-in-out infinite;
+  will-change: transform;
 }
 
 .animate-laser-glow {

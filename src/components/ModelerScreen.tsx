@@ -619,8 +619,9 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = React.memo(({
               </div>
 
               <div className="w-full bg-[#161F30] h-3 rounded-full overflow-hidden mb-4 border border-[#2A374F]">
+                {/* Performance optimization: transition-[width] isolates CSS transition strictly to width property, preventing layout thrashing during range slider dragging */}
                 <div
-                  className="bg-amber-500/80 h-full transition-all duration-500"
+                  className="bg-amber-500/80 h-full transition-[width] duration-300"
                   style={{
                     width: `${Math.round(
                       (calculations.manualUav3Yr / calculations.helicopter3Yr) * 100
@@ -677,8 +678,9 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = React.memo(({
               </div>
 
               <div className="w-full bg-[#161F30] h-3 rounded-full overflow-hidden mb-4 border border-[#2A374F]">
+                {/* Performance optimization: transition-[width] isolates CSS transition strictly to width property, preventing layout thrashing during range slider dragging */}
                 <div
-                  className="bg-[#00E5FF] h-full transition-all duration-500"
+                  className="bg-[#00E5FF] h-full transition-[width] duration-300"
                   style={{ width: `${calculations.aeroDockBarPct}%` }}
                 ></div>
               </div>
