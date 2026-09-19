@@ -21,3 +21,9 @@
 **Learning:** Continuous 60fps CSS keyframe animations (like HUD scanlines and radar sweeps) without `will-change: transform` cause main-thread paint invalidation on every frame. Additionally, applying `transition-all` to elements whose `width` is updated continuously at 60–120Hz during slider dragging forces browser style tracking overhead across all CSS properties.
 
 **Action:** Add `will-change: transform` to continuous HUD keyframe classes to promote them to GPU compositor layers, and isolate dynamic bar width transitions using `transition-[width]`.
+
+## 2025-05-22 - Callback Memoization for Native DOM Elements and State-Dependent Handlers Adds Overhead Without Performance Gain
+
+**Learning:** Wrapping event handlers in `useCallback` when passed directly to native HTML elements (like `<button>`) or when the handler depends on rapidly changing input state does not prevent re-renders. Native DOM elements do not check prop equality, and state dependencies cause `useCallback` to invalidate on every keystroke anyway, adding hook tracking overhead without rendering benefits.
+
+**Action:** Only wrap callback functions in `useCallback` when passing them as props to memoized custom components (`React.memo`), and ensure their dependency array does not invalidate on every user input event.
