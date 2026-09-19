@@ -15,3 +15,9 @@
 **Learning:** Using `AnimatePresence` with dynamic keys on interval-based state changes (like live telemetry readouts) causes unnecessary unmounting/re-mounting of DOM nodes on every interval tick. Similarly, continuous infinite loop animations (like scanline sweeps) driven by JS Framer Motion inline styles create continuous main-thread JS frame updates.
 
 **Action:** Render dynamic telemetry values directly in standard HTML elements and replace continuous JS motion loops with GPU-accelerated CSS keyframe animations.
+
+## 2025-05-21 - Un-promoted Continuous CSS Keyframes and Broad Property Transitions Cause Main-Thread Paint & Layout Churn
+
+**Learning:** Continuous 60fps CSS keyframe animations (like HUD scanlines and radar sweeps) without `will-change: transform` cause main-thread paint invalidation on every frame. Additionally, applying `transition-all` to elements whose `width` is updated continuously at 60–120Hz during slider dragging forces browser style tracking overhead across all CSS properties.
+
+**Action:** Add `will-change: transform` to continuous HUD keyframe classes to promote them to GPU compositor layers, and isolate dynamic bar width transitions using `transition-[width]`.
