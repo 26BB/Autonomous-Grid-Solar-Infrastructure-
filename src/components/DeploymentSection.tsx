@@ -6,12 +6,20 @@ import { isValidEmail, sanitizeInput } from '../utils/security';
 export const DeploymentSection: React.FC = React.memo(() => {
   const [deploymentEmail, setDeploymentEmail] = useState('');
   const [deploymentSubmitted, setDeploymentSubmitted] = useState(false);
+  const [deploymentError, setDeploymentError] = useState<string | null>(null);
 
   const handleDeploymentSubmit = useCallback((e: React.FormEvent) => {
     e.preventDefault();
-    if (!isValidEmail(deploymentEmail)) return;
+    setDeploymentError(null);
+    if (!isValidEmail(deploymentEmail)) {
+      setDeploymentError('Please enter a valid corporate or co-op email address.');
+      return;
+    }
     const cleanEmail = sanitizeInput(deploymentEmail);
-    if (!cleanEmail) return;
+    if (!cleanEmail) {
+      setDeploymentError('Invalid input provided.');
+      return;
+    }
     setDeploymentSubmitted(true);
     setTimeout(() => {
       setDeploymentSubmitted(false);
@@ -48,7 +56,10 @@ export const DeploymentSection: React.FC = React.memo(() => {
               type="email"
               required
               value={deploymentEmail}
-              onChange={(e) => setDeploymentEmail(e.target.value)}
+              onChange={(e) => {
+                setDeploymentEmail(e.target.value);
+                if (deploymentError) setDeploymentError(null);
+              }}
               placeholder="Enter corporate or co-op email..."
               className="bg-[#0B0F19] border border-[#2A374F] rounded-lg px-4 py-3 text-sm text-white font-mono placeholder-slate-500 focus:outline-none focus:border-[#00E5FF] flex-1"
             />
@@ -62,11 +73,22 @@ export const DeploymentSection: React.FC = React.memo(() => {
             </motion.button>
           </form>
 
+          {deploymentError && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="mt-4 p-3 rounded-lg bg-red-950/90 border border-red-500/50 text-red-300 text-xs font-mono flex items-center justify-center gap-2 max-w-md mx-auto"
+            >
+              <span className="material-symbols-outlined text-[18px]">error</span>
+              <span>{deploymentError}</span>
+            </motion.div>
+          )}
+
           {deploymentSubmitted && (
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="mt-4 p-3 rounded-lg bg-emerald-950/90 border border-emerald-500 text-emerald-300 text-xs font-mono flex items-center justify-center gap-2"
+              className="mt-4 p-3 rounded-lg bg-emerald-950/90 border border-emerald-500 text-emerald-300 text-xs font-mono flex items-center justify-center gap-2 max-w-md mx-auto"
             >
               <span className="material-symbols-outlined text-[18px]">check_circle</span>
               <span>Toolkit dispatched! An AeroDock engineer has received your request.</span>
