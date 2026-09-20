@@ -157,11 +157,11 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = React.memo(({
   const handleDownloadBriefSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setEmailError(null);
-    const cleanEmail = sanitizeInput(emailInput);
-    if (!isValidEmail(cleanEmail)) {
+    if (!isValidEmail(emailInput)) {
       setEmailError('Please enter a valid utility or co-op email address.');
       return;
     }
+    const cleanEmail = sanitizeInput(emailInput);
     onOpenBoardBriefModal({
       profile:
         profile === 'coop'

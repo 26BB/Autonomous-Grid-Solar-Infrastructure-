@@ -26,6 +26,13 @@ describe('isValidEmail', () => {
     assert.equal(isValidEmail('user@-sub.domain.com'), false);
     assert.equal(isValidEmail('user@sub-.domain.com'), false);
   });
+
+  it('rejects email addresses with CRLF injection or control characters', () => {
+    assert.equal(isValidEmail('user@domain.com\r\nBcc: evil@attacker.com'), false);
+    assert.equal(isValidEmail('user\n@domain.com'), false);
+    assert.equal(isValidEmail('user\r@domain.com'), false);
+    assert.equal(isValidEmail('user\x00@domain.com'), false);
+  });
 });
 
 describe('sanitizeInput', () => {

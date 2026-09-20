@@ -9,6 +9,8 @@ export function isValidEmail(email: string): boolean {
   if (!email || typeof email !== 'string') return false;
   const trimmed = email.trim();
   if (trimmed.length === 0 || trimmed.length > 254) return false;
+  // Security: Prevent CRLF injection and control characters in email input
+  if (/[\r\n\x00-\x1f\x7f]/.test(trimmed)) return false;
   // Security: Ensure domain has valid TLD structure and prevent consecutive dots or leading/trailing dashes in domain labels
   const emailRegex = /^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/;
   if (!emailRegex.test(trimmed)) return false;
