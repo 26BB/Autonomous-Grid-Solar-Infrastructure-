@@ -27,3 +27,9 @@
 **Learning:** Wrapping event handlers in `useCallback` when passed directly to native HTML elements (like `<button>`) or when the handler depends on rapidly changing input state does not prevent re-renders. Native DOM elements do not check prop equality, and state dependencies cause `useCallback` to invalidate on every keystroke anyway, adding hook tracking overhead without rendering benefits.
 
 **Action:** Only wrap callback functions in `useCallback` when passing them as props to memoized custom components (`React.memo`), and ensure their dependency array does not invalidate on every user input event.
+
+## 2025-05-23 - Co-locating Form Email State in Heavy Interactive Calculator Screens Prevents Keystroke Reconciliation Churn
+
+**Learning:** Declaring form input state (`emailInput`) at the root level of a large interactive screen component (`ModelerScreen.tsx`) causes every keystroke in a bottom CTA form to trigger full VDOM diffing and re-renders across all child sections (financial modelers, comparative benchmark cards, qualification checklists, and motion elements).
+
+**Action:** Isolate input form state into a dedicated memoized sub-component (`BoardBriefForm`) and pass a memoized `useCallback` handler to isolate keystroke re-renders strictly to the form element.
