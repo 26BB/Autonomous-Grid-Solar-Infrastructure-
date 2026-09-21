@@ -36,9 +36,9 @@ describe('sanitizeInput', () => {
     assert.equal(sanitized, '&lt;script&gt;alert(&quot;xss&quot;)&lt;/script&gt; &amp; &#x27;quote&#x27; &#x60;backtick&#x60;');
   });
 
-  it('strips null byte characters', () => {
-    const nullByteInput = 'admin\0@domain.com';
-    assert.equal(sanitizeInput(nullByteInput), 'admin@domain.com');
+  it('strips null bytes and non-printable ASCII control characters', () => {
+    const controlCharInput = 'admin\0\x07\x1B@domain.com\nline2';
+    assert.equal(sanitizeInput(controlCharInput), 'admin@domain.com\nline2');
   });
 
   it('handles non-string inputs safely without throwing', () => {
