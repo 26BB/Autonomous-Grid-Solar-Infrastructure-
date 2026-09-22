@@ -24,7 +24,8 @@ export const ContactPortalModal: React.FC<ContactPortalModalProps> = React.memo(
     e.preventDefault();
     setError(null);
 
-    if (!isValidEmail(formData.email)) {
+    const cleanEmail = sanitizeInput(formData.email);
+    if (!isValidEmail(cleanEmail)) {
       setError('Please provide a valid email address.');
       return;
     }
@@ -33,7 +34,7 @@ export const ContactPortalModal: React.FC<ContactPortalModalProps> = React.memo(
       name: sanitizeInput(formData.name),
       utility: sanitizeInput(formData.utility),
       role: sanitizeInput(formData.role),
-      email: sanitizeInput(formData.email),
+      email: cleanEmail,
       message: sanitizeInput(formData.message),
     });
     setSubmitted(true);

@@ -49,6 +49,14 @@ describe('sanitizeInput', () => {
     assert.equal(sanitizeInput(controlCharsInput), 'helloworldtest');
   });
 
+  it('strips Unicode zero-width and BiDi override control characters', () => {
+    const bidiInput = 'user\u202E@domain.com\u200B';
+    assert.equal(sanitizeInput(bidiInput), 'user@domain.com');
+
+    const bomInput = '\uFEFFadmin@domain.com';
+    assert.equal(sanitizeInput(bomInput), 'admin@domain.com');
+  });
+
   it('enforces maxLength parameter truncation', () => {
     const longInput = 'a'.repeat(3000);
     const sanitizedDefault = sanitizeInput(longInput);

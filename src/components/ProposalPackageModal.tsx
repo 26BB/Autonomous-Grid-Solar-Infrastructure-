@@ -30,12 +30,13 @@ export const ProposalPackageModal: React.FC<ProposalPackageModalProps> = React.m
     e.preventDefault();
     setError(null);
 
-    if (!isValidEmail(email)) {
+    const cleanEmail = sanitizeInput(email);
+    if (!isValidEmail(cleanEmail)) {
       setError('Please enter a valid email address.');
       return;
     }
 
-    setEmail(sanitizeInput(email));
+    setEmail(cleanEmail);
     setLocked(true);
   };
 
