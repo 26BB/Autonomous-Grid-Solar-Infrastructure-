@@ -33,3 +33,9 @@
 **Learning:** Declaring form input state (`emailInput`) at the root level of a large interactive screen component (`ModelerScreen.tsx`) causes every keystroke in a bottom CTA form to trigger full VDOM diffing and re-renders across all child sections (financial modelers, comparative benchmark cards, qualification checklists, and motion elements).
 
 **Action:** Isolate input form state into a dedicated memoized sub-component (`BoardBriefForm`) and pass a memoized `useCallback` handler to isolate keystroke re-renders strictly to the form element.
+
+## 2025-05-24 - Dynamic State Dependencies in Callbacks Defeat Child Component Memoization During High-Frequency Events
+
+**Learning:** Passing a `useCallback` handler with dynamic state dependencies (like `miles`, `spend`, `calculations`) to a memoized child component (`BoardBriefForm`) invalidates the callback reference on every 60–120Hz range slider drag tick. This causes the child component to bypass `React.memo` and re-render every frame during interactive slider adjustments.
+
+**Action:** Maintain a `useRef` holding current model state to keep the callback reference strictly stable (`deps: []`) when passed to memoized child components, preserving full `React.memo` render isolation during high-frequency input events.
