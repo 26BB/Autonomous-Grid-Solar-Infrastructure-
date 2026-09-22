@@ -12,19 +12,19 @@ export function isValidEmail(email: string): boolean {
   // Security: Ensure domain has valid TLD structure and prevent consecutive dots or leading/trailing dashes in domain labels
   const emailRegex = /^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/;
   if (!emailRegex.test(trimmed)) return false;
-  // Extra safeguard against consecutive dots in local part or domain
-  if (trimmed.includes('..')) return false;
+  // Extra safeguard against consecutive dots or leading/trailing dots in local part
+  if (trimmed.includes('..') || trimmed.startsWith('.') || trimmed.split('@')[0]?.endsWith('.')) return false;
   return true;
 }
 
 /**
- * Sanitizes input text by checking type safety, trimming whitespace, removing ASCII control characters, and escaping HTML/template special characters.
+ * Sanitizes input text by checking type safety, enforcing max length limits, stripping ASCII control characters, and escaping HTML special characters.
  */
-export function sanitizeInput(input: string): string {
+export function sanitizeInput(input: string, maxLength: number = 2000): string {
   if (!input || typeof input !== 'string') return '';
-  return input
-    .trim()
-    .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g, '')
+  const trimmed = input.trim().slice(0, maxLength);
+  return trimmed
+    .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '')
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
