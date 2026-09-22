@@ -34,6 +34,62 @@ const getInitialDefaults = (p: InfrastructureProfile = 'coop') => {
   return { miles: 1850, spend: 240000 };
 };
 
+// Performance optimization: Memoized component isolates email input keystrokes from top-level ModelerScreen state to prevent full-screen re-renders on every keystroke
+interface BoardBriefFormProps {
+  onSubmit: (cleanEmail: string) => void;
+}
+
+const BoardBriefForm: React.FC<BoardBriefFormProps> = React.memo(({ onSubmit }) => {
+  const [emailInput, setEmailInput] = useState('');
+  const [emailError, setEmailError] = useState<string | null>(null);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setEmailError(null);
+    if (!isValidEmail(emailInput)) {
+      setEmailError('Please enter a valid utility or co-op email address.');
+      return;
+    }
+    const cleanEmail = sanitizeInput(emailInput);
+    onSubmit(cleanEmail);
+  };
+
+  return (
+    <form
+      onSubmit={handleSubmit}
+      className="w-full lg:w-auto flex flex-col items-stretch gap-2 shrink-0"
+    >
+      <div className="flex flex-col sm:flex-row items-stretch gap-3">
+        <input
+          type="email"
+          value={emailInput}
+          onChange={(e) => {
+            setEmailInput(e.target.value);
+            if (emailError) setEmailError(null);
+          }}
+          placeholder="enter utility / co-op email"
+          required
+          className="bg-[#0B0F19] border border-[#2A374F] rounded-lg px-4 py-3 text-sm text-white font-mono focus:border-[#00E5FF] focus:outline-none min-w-[280px]"
+        />
+        <button
+          type="submit"
+          className="px-6 py-3 rounded-lg bg-[#00E5FF] text-[#0B0F19] font-headline font-bold text-sm hover:bg-white transition-all shadow-[0_0_15px_rgba(0,229,255,0.4)] whitespace-nowrap cursor-pointer"
+        >
+          Download PDF Brief
+        </button>
+      </div>
+      {emailError && (
+        <div className="p-2 rounded bg-red-950/80 border border-red-500/50 text-red-300 text-xs font-mono flex items-center gap-1.5">
+          <span className="material-symbols-outlined text-[16px]">error</span>
+          <span>{emailError}</span>
+        </div>
+      )}
+    </form>
+  );
+});
+
+BoardBriefForm.displayName = 'BoardBriefForm';
+
 // Memoized to isolate modeler calculations and slider interactions from external App state updates
 export const ModelerScreen: React.FC<ModelerScreenProps> = React.memo(({
   initialProfile,
@@ -47,8 +103,6 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = React.memo(({
   const [spend, setSpend] = useState<number>(() => getInitialDefaults(initialProfile).spend);
   const [threat, setThreat] = useState<ThreatVector>('vegetation');
   const [grantActive, setGrantActive] = useState<boolean>(true);
-  const [emailInput, setEmailInput] = useState<string>('');
-  const [emailError, setEmailError] = useState<string | null>(null);
 
   const handleProfileSelect = (p: InfrastructureProfile) => {
     setProfile(p);
@@ -154,14 +208,7 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = React.memo(({
   const maxMiles = profile === 'coop' ? 5000 : profile === 'solar' ? 300 : 10000;
   const stepMiles = profile === 'solar' ? 5 : 50;
 
-  const handleDownloadBriefSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setEmailError(null);
-    if (!isValidEmail(emailInput)) {
-      setEmailError('Please enter a valid utility or co-op email address.');
-      return;
-    }
-    const cleanEmail = sanitizeInput(emailInput);
+  const handleDownloadBriefSubmit = React.useCallback((cleanEmail: string) => {
     onOpenBoardBriefModal({
       profile:
         profile === 'coop'
@@ -177,7 +224,7 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = React.memo(({
       docks: calculations.docks,
       email: cleanEmail,
     });
-  };
+  }, [profile, miles, spend, calculations, onOpenBoardBriefModal]);
 
   return (
     <div className="w-full flex flex-col gap-10">
@@ -855,36 +902,7 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = React.memo(({
           </p>
         </div>
 
-        <form
-          onSubmit={handleDownloadBriefSubmit}
-          className="w-full lg:w-auto flex flex-col items-stretch gap-2 shrink-0"
-        >
-          <div className="flex flex-col sm:flex-row items-stretch gap-3">
-            <input
-              type="email"
-              value={emailInput}
-              onChange={(e) => {
-                setEmailInput(e.target.value);
-                if (emailError) setEmailError(null);
-              }}
-              placeholder="enter utility / co-op email"
-              required
-              className="bg-[#0B0F19] border border-[#2A374F] rounded-lg px-4 py-3 text-sm text-white font-mono focus:border-[#00E5FF] focus:outline-none min-w-[280px]"
-            />
-            <button
-              type="submit"
-              className="px-6 py-3 rounded-lg bg-[#00E5FF] text-[#0B0F19] font-headline font-bold text-sm hover:bg-white transition-all shadow-[0_0_15px_rgba(0,229,255,0.4)] whitespace-nowrap cursor-pointer"
-            >
-              Download PDF Brief
-            </button>
-          </div>
-          {emailError && (
-            <div className="p-2 rounded bg-red-950/80 border border-red-500/50 text-red-300 text-xs font-mono flex items-center gap-1.5">
-              <span className="material-symbols-outlined text-[16px]">error</span>
-              <span>{emailError}</span>
-            </div>
-          )}
-        </form>
+        <BoardBriefForm onSubmit={handleDownloadBriefSubmit} />
       </div>
     </div>
   );

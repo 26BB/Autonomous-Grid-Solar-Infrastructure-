@@ -27,6 +27,11 @@ describe('isValidEmail', () => {
     assert.equal(isValidEmail('user@sub-.domain.com'), false);
   });
 
+  it('rejects email addresses with leading or trailing dots in local part', () => {
+    assert.equal(isValidEmail('.user@example.com'), false);
+    assert.equal(isValidEmail('user.@example.com'), false);
+  });
+
   it('rejects email addresses with CRLF injection or control characters', () => {
     assert.equal(isValidEmail('user@domain.com\r\nBcc: evil@attacker.com'), false);
     assert.equal(isValidEmail('user\n@domain.com'), false);
@@ -43,9 +48,22 @@ describe('sanitizeInput', () => {
     assert.equal(sanitized, '&lt;script&gt;alert(&quot;xss&quot;)&lt;/script&gt; &amp; &#x27;quote&#x27; &#x60;backtick&#x60;');
   });
 
-  it('strips null byte characters', () => {
+  it('strips null byte and ASCII control characters', () => {
     const nullByteInput = 'admin\0@domain.com';
     assert.equal(sanitizeInput(nullByteInput), 'admin@domain.com');
+
+    const controlCharsInput = 'hello\x07world\x1Ftest\x7F';
+    assert.equal(sanitizeInput(controlCharsInput), 'helloworldtest');
+  });
+
+  it('enforces maxLength parameter truncation', () => {
+    const longInput = 'a'.repeat(3000);
+    const sanitizedDefault = sanitizeInput(longInput);
+    assert.equal(sanitizedDefault.length, 2000);
+
+    const sanitizedCustom = sanitizeInput(longInput, 10);
+    assert.equal(sanitizedCustom.length, 10);
+    assert.equal(sanitizedCustom, 'a'.repeat(10));
   });
 
   it('handles non-string inputs safely without throwing', () => {
