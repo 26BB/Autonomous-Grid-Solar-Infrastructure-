@@ -25,6 +25,7 @@ export function sanitizeInput(input: string, maxLength: number = 2000): string {
   const trimmed = input.trim().slice(0, maxLength);
   return trimmed
     .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '')
+    .replace(/[\u200B-\u200D\u202A-\u202E\u2066-\u2069\uFEFF]/g, '')
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
