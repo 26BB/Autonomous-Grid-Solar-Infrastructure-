@@ -24,17 +24,18 @@ export const ContactPortalModal: React.FC<ContactPortalModalProps> = React.memo(
     e.preventDefault();
     setError(null);
 
-    if (!isValidEmail(formData.email)) {
+    const cleanEmail = sanitizeInput(formData.email, 254);
+    if (!isValidEmail(cleanEmail)) {
       setError('Please provide a valid email address.');
       return;
     }
 
     setFormData({
-      name: sanitizeInput(formData.name),
-      utility: sanitizeInput(formData.utility),
-      role: sanitizeInput(formData.role),
-      email: sanitizeInput(formData.email),
-      message: sanitizeInput(formData.message),
+      name: sanitizeInput(formData.name, 100),
+      utility: sanitizeInput(formData.utility, 100),
+      role: sanitizeInput(formData.role, 100),
+      email: cleanEmail,
+      message: sanitizeInput(formData.message, 1000),
     });
     setSubmitted(true);
   };
@@ -75,6 +76,7 @@ export const ContactPortalModal: React.FC<ContactPortalModalProps> = React.memo(
                   <input
                     type="text"
                     required
+                    maxLength={100}
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     placeholder="e.g. Sarah Jenkins"
@@ -86,6 +88,7 @@ export const ContactPortalModal: React.FC<ContactPortalModalProps> = React.memo(
                   <input
                     type="text"
                     required
+                    maxLength={100}
                     value={formData.utility}
                     onChange={(e) => setFormData({ ...formData, utility: e.target.value })}
                     placeholder="e.g. Ozark Electric"
@@ -100,6 +103,7 @@ export const ContactPortalModal: React.FC<ContactPortalModalProps> = React.memo(
                   <input
                     type="email"
                     required
+                    maxLength={254}
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     placeholder="sjenkins@ozarkelectric.coop"
@@ -110,6 +114,7 @@ export const ContactPortalModal: React.FC<ContactPortalModalProps> = React.memo(
                   <label className="text-slate-300 uppercase text-[10px]">Title / Role</label>
                   <input
                     type="text"
+                    maxLength={100}
                     value={formData.role}
                     onChange={(e) => setFormData({ ...formData, role: e.target.value })}
                     placeholder="VP Operations / GM"
@@ -122,6 +127,7 @@ export const ContactPortalModal: React.FC<ContactPortalModalProps> = React.memo(
                 <label className="text-slate-300 uppercase text-[10px]">Specific Infrastructure Needs</label>
                 <textarea
                   rows={3}
+                  maxLength={1000}
                   value={formData.message}
                   onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                   placeholder="Need flight feasibility study for 1,200 miles of 69kV transmission line and Section 40101(d) grant matching..."

@@ -75,4 +75,17 @@ describe('sanitizeInput', () => {
     assert.equal(sanitized.includes('<img'), false);
     assert.equal(sanitized.includes('&lt;img src=&quot;x&quot; onerror=&quot;alert(1)&quot; /&gt;'), true);
   });
+
+  it('correctly sanitizes and truncates form field values with specific maxLengths', () => {
+    const longName = 'Sarah Jenkins ' + 'x'.repeat(200);
+    const sanitizedName = sanitizeInput(longName, 100);
+    assert.equal(sanitizedName.length, 100);
+    assert.equal(sanitizedName.startsWith('Sarah Jenkins'), true);
+
+    const dangerousMessage = 'Urgent Inquiry\0\x07 ' + '<script>alert(1)</script> ' + 'a'.repeat(1500);
+    const sanitizedMessage = sanitizeInput(dangerousMessage, 1000);
+    assert.equal(sanitizedMessage.includes('<script>'), false);
+    assert.equal(sanitizedMessage.includes('\0'), false);
+    assert.equal(sanitizedMessage.includes('\x07'), false);
+  });
 });
