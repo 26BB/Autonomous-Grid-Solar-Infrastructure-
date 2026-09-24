@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { motion } from 'motion/react';
 
 interface EmbeddedCalculatorProps {
@@ -23,16 +23,21 @@ export const EmbeddedCalculator: React.FC<EmbeddedCalculatorProps> = React.memo(
     }
   };
 
-  const annualSavings =
-    profile === 'coop'
-      ? Math.round(sliderVal * 280)
-      : Math.round(sliderVal * 3500);
+  // Performance optimization: Memoize derived calculations and formatted strings to prevent redundant string formatting / allocations during slider interaction
+  const { annualSavings, riskReduction, sizeText } = useMemo(() => {
+    const annualSavings =
+      profile === 'coop'
+        ? Math.round(sliderVal * 280)
+        : Math.round(sliderVal * 3500);
 
-  const riskReduction = profile === 'coop' ? '94.2%' : '96.8%';
-  const sizeText =
-    profile === 'coop'
-      ? `${sliderVal.toLocaleString()} Miles`
-      : `${sliderVal.toLocaleString()} MW`;
+    const riskReduction = profile === 'coop' ? '94.2%' : '96.8%';
+    const sizeText =
+      profile === 'coop'
+        ? `${sliderVal.toLocaleString()} Miles`
+        : `${sliderVal.toLocaleString()} MW`;
+
+    return { annualSavings, riskReduction, sizeText };
+  }, [profile, sliderVal]);
 
   return (
     <section className="px-4 sm:px-6 lg:px-12 max-w-5xl mx-auto w-full mb-20 sm:mb-24">

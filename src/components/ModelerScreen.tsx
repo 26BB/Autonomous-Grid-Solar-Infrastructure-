@@ -173,6 +173,9 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = React.memo(({
       Math.max(14, Math.round((aeroDock3YrTotal / helicopter3Yr) * 100))
     );
 
+    // Performance optimization: Pre-compute manual UAV bar percentage inside useMemo to eliminate inline division during 60-120Hz slider movement
+    const manualUavBarPct = Math.round((manualUav3Yr / helicopter3Yr) * 100);
+
     return {
       docks,
       baseCapex,
@@ -189,6 +192,7 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = React.memo(({
       helicopter3Yr,
       manualUav3Yr,
       aeroDockBarPct,
+      manualUavBarPct,
     };
   }, [profile, miles, spend, threat, grantActive]);
 
@@ -669,11 +673,7 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = React.memo(({
                 {/* Performance optimization: transition-[width] isolates CSS transition strictly to width property, preventing layout thrashing during range slider dragging */}
                 <div
                   className="bg-amber-500/80 h-full transition-[width] duration-300"
-                  style={{
-                    width: `${Math.round(
-                      (calculations.manualUav3Yr / calculations.helicopter3Yr) * 100
-                    )}%`,
-                  }}
+                  style={{ width: `${calculations.manualUavBarPct}%` }}
                 ></div>
               </div>
 
