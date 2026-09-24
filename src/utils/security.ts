@@ -18,13 +18,14 @@ export function isValidEmail(email: string): boolean {
 }
 
 /**
- * Sanitizes input text by checking type safety, enforcing max length limits, stripping ASCII control characters, and escaping HTML special characters.
+ * Sanitizes input text by checking type safety, enforcing max length limits, stripping ASCII/C1 control characters and Trojan Source BIDI formatting, and escaping HTML special characters.
  */
 export function sanitizeInput(input: string, maxLength: number = 2000): string {
   if (!input || typeof input !== 'string') return '';
   const trimmed = input.trim().slice(0, maxLength);
   return trimmed
-    .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '')
+    // Security: Strip C0/C1 control characters, zero-width spaces, and Unicode BIDI formatting (Trojan Source attacks)
+    .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F\u0080-\u009F\u200B-\u200D\u200E\u200F\u202A-\u202E\u2066-\u2069\uFEFF]/g, '')
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
