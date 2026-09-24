@@ -49,6 +49,11 @@ describe('sanitizeInput', () => {
     assert.equal(sanitizeInput(controlCharsInput), 'helloworldtest');
   });
 
+  it('strips C1 control characters, zero-width spaces, and BIDI Trojan Source characters', () => {
+    const bidiInput = 'user\u202E@domain.com\u200B\u0085';
+    assert.equal(sanitizeInput(bidiInput), 'user@domain.com');
+  });
+
   it('enforces maxLength parameter truncation', () => {
     const longInput = 'a'.repeat(3000);
     const sanitizedDefault = sanitizeInput(longInput);
