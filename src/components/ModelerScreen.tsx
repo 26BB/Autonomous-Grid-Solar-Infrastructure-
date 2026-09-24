@@ -212,23 +212,35 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = React.memo(({
   const maxMiles = profile === 'coop' ? 5000 : profile === 'solar' ? 300 : 10000;
   const stepMiles = profile === 'solar' ? 5 : 50;
 
+  // Performance optimization: Ref to hold latest model state for stable callback reference to prevent BoardBriefForm re-renders during high-frequency range slider dragging
+  const modelDataRef = React.useRef({ profile, miles, spend, calculations, onOpenBoardBriefModal });
+  modelDataRef.current = { profile, miles, spend, calculations, onOpenBoardBriefModal };
+
   const handleDownloadBriefSubmit = React.useCallback((cleanEmail: string) => {
-    onOpenBoardBriefModal({
+    const {
+      profile: currentProfile,
+      miles: currentMiles,
+      spend: currentSpend,
+      calculations: currentCalcs,
+      onOpenBoardBriefModal: openModal,
+    } = modelDataRef.current;
+
+    openModal({
       profile:
-        profile === 'coop'
+        currentProfile === 'coop'
           ? 'Rural Electric Cooperative'
-          : profile === 'solar'
+          : currentProfile === 'solar'
           ? 'Community Solar Portfolio'
           : 'Investor-Owned / G&T Utility',
-      milesOrCapacity: miles,
-      annualSpend: spend,
-      savings: calculations.netSavings,
-      paybackMonths: calculations.paybackMonths,
-      grantOffset: calculations.grantOffset,
-      docks: calculations.docks,
+      milesOrCapacity: currentMiles,
+      annualSpend: currentSpend,
+      savings: currentCalcs.netSavings,
+      paybackMonths: currentCalcs.paybackMonths,
+      grantOffset: currentCalcs.grantOffset,
+      docks: currentCalcs.docks,
       email: cleanEmail,
     });
-  }, [profile, miles, spend, calculations, onOpenBoardBriefModal]);
+  }, []);
 
   return (
     <div className="w-full flex flex-col gap-10">
