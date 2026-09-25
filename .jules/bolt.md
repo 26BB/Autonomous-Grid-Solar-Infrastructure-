@@ -39,3 +39,9 @@
 **Learning:** Passing a `useCallback` handler with dynamic state dependencies (like `miles`, `spend`, `calculations`) to a memoized child component (`BoardBriefForm`) invalidates the callback reference on every 60–120Hz range slider drag tick. This causes the child component to bypass `React.memo` and re-render every frame during interactive slider adjustments.
 
 **Action:** Maintain a `useRef` holding current model state to keep the callback reference strictly stable (`deps: []`) when passed to memoized child components, preserving full `React.memo` render isolation during high-frequency input events.
+
+## 2025-05-25 - Extracting Unchanging Static UI Subtrees into React.memo Components Prevents VDOM Re-diffing During High-Frequency Events
+
+**Learning:** In interactive screens containing range sliders or real-time inputs (`ModelerScreen.tsx`), state updates triggered at 60–120Hz cause the parent component to re-render. Unmemoized static subtrees (such as hero headers, badge rows, and 100+ line qualification matrices) are re-created and diffed in the VDOM on every single frame, creating unnecessary main-thread overhead.
+
+**Action:** Extract static UI subtrees into separate sub-components wrapped in `React.memo` (and pass stable props if needed) so React skips VDOM creation and reconciliation for static subtrees during high-frequency user interactions.
