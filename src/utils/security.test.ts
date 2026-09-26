@@ -88,4 +88,14 @@ describe('sanitizeInput', () => {
     assert.equal(sanitizedMessage.includes('\0'), false);
     assert.equal(sanitizedMessage.includes('\x07'), false);
   });
+
+  it('sanitizes email input before passing to isValidEmail validation', () => {
+    const dangerousEmail = '<script>alert(1)</script>user@example.com';
+    const cleanEmail = sanitizeInput(dangerousEmail, 254);
+    assert.equal(isValidEmail(cleanEmail), false);
+
+    const validWithPadding = '  user@example.com  ';
+    const cleanValidEmail = sanitizeInput(validWithPadding, 254);
+    assert.equal(isValidEmail(cleanValidEmail), true);
+  });
 });

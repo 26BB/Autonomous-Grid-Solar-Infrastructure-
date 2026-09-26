@@ -11,15 +11,12 @@ export const DeploymentSection: React.FC = React.memo(() => {
   const handleDeploymentSubmit = useCallback((e: React.FormEvent) => {
     e.preventDefault();
     setDeploymentError(null);
-    if (!isValidEmail(deploymentEmail)) {
+    const cleanEmail = sanitizeInput(deploymentEmail, 254);
+    if (!isValidEmail(cleanEmail)) {
       setDeploymentError('Please enter a valid corporate or co-op email address.');
       return;
     }
-    const cleanEmail = sanitizeInput(deploymentEmail);
-    if (!cleanEmail) {
-      setDeploymentError('Invalid input provided.');
-      return;
-    }
+    setDeploymentEmail(cleanEmail);
     setDeploymentSubmitted(true);
     setTimeout(() => {
       setDeploymentSubmitted(false);
