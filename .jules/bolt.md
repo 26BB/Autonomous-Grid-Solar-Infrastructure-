@@ -39,3 +39,9 @@
 **Learning:** Passing a `useCallback` handler with dynamic state dependencies (like `miles`, `spend`, `calculations`) to a memoized child component (`BoardBriefForm`) invalidates the callback reference on every 60–120Hz range slider drag tick. This causes the child component to bypass `React.memo` and re-render every frame during interactive slider adjustments.
 
 **Action:** Maintain a `useRef` holding current model state to keep the callback reference strictly stable (`deps: []`) when passed to memoized child components, preserving full `React.memo` render isolation during high-frequency input events.
+
+## 2025-05-25 - Extracting Large Static JSX Blocks in Interactive Screens into Memoized Subcomponents Prevents High-Frequency VDOM Diffing
+
+**Learning:** Rendering large static markup blocks (such as complex matrix/checklist cards with multiple icons and buttons) directly inside interactive components (`ModelerScreen.tsx`) causes React to recreate and diff all those static VDOM nodes on every single 60–120Hz slider movement tick.
+
+**Action:** Extract large static JSX blocks into dedicated `React.memo` subcomponents (`GrantQualificationMatrix`), passing only stable callback props to isolate them completely from slider state updates during interactive dragging.
