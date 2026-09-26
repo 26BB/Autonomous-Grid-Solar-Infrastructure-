@@ -46,7 +46,7 @@ const BoardBriefForm: React.FC<BoardBriefFormProps> = React.memo(({ onSubmit }) 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setEmailError(null);
-    const cleanEmail = sanitizeInput(emailInput);
+    const cleanEmail = sanitizeInput(emailInput, 254);
     if (!isValidEmail(cleanEmail)) {
       setEmailError('Please enter a valid utility or co-op email address.');
       return;
