@@ -45,3 +45,9 @@
 **Learning:** Rendering large static markup blocks (such as complex matrix/checklist cards with multiple icons and buttons) directly inside interactive components (`ModelerScreen.tsx`) causes React to recreate and diff all those static VDOM nodes on every single 60–120Hz slider movement tick.
 
 **Action:** Extract large static JSX blocks into dedicated `React.memo` subcomponents (`GrantQualificationMatrix`), passing only stable callback props to isolate them completely from slider state updates during interactive dragging.
+
+## 2025-05-26 - Granular Subcomponent Extraction Isolates Independent Benchmark Cards from Unrelated High-Frequency Slider Adjustments
+
+**Learning:** Grouping multi-card comparison sections inside a single component forces all cards to re-render during state changes, even when specific cards only depend on a single slider parameter (e.g. `spend`) or primitive state.
+
+**Action:** Extract individual cards (`HelicopterCard`, `ManualUavCard`, `AeroDockCard`) into standalone `React.memo` components with primitive props so React can completely skip rendering cards whose underlying dependencies have not changed.
