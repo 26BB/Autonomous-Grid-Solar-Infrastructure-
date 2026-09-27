@@ -31,6 +31,14 @@ describe('isValidEmail', () => {
     assert.equal(isValidEmail('.user@example.com'), false);
     assert.equal(isValidEmail('user.@example.com'), false);
   });
+
+  it('enforces RFC 5321 max 64 character local part restriction', () => {
+    const valid64 = 'a'.repeat(64) + '@example.com';
+    assert.equal(isValidEmail(valid64), true);
+
+    const invalid65 = 'a'.repeat(65) + '@example.com';
+    assert.equal(isValidEmail(invalid65), false);
+  });
 });
 
 describe('sanitizeInput', () => {
