@@ -90,6 +90,146 @@ const BoardBriefForm: React.FC<BoardBriefFormProps> = React.memo(({ onSubmit }) 
 
 BoardBriefForm.displayName = 'BoardBriefForm';
 
+// Performance optimization: Memoized component isolates static grant qualification checklist from high-frequency range slider ticks (60–120Hz) in ModelerScreen
+interface GrantQualificationMatrixProps {
+  onOpenGrantChecklistModal: () => void;
+}
+
+const GrantQualificationMatrix: React.FC<GrantQualificationMatrixProps> = React.memo(({
+  onOpenGrantChecklistModal,
+}) => {
+  return (
+    <div id="grants-matrix" className="bg-[#161F30] border border-[#2A374F] rounded-xl p-6 lg:p-8 flex flex-col gap-6">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#2A374F] pb-4">
+        <div>
+          <div className="flex items-center gap-2">
+            <span className="material-symbols-outlined text-[#F59E0B]">
+              verified
+            </span>
+            <h2 className="text-2xl font-headline font-bold text-white">
+              USDA RUS &amp; BIL Section 40101(d) Qualification Matrix
+            </h2>
+          </div>
+          <p className="text-xs md:text-sm text-slate-400 mt-1 font-mono">
+            Pre-cleared regulatory documentation and non-dilutive federal capital qualification checklist for AeroDock deployments.
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={onOpenGrantChecklistModal}
+            className="px-4 py-2 rounded bg-[#0B0F19] border border-[#00E5FF]/40 text-[#00E5FF] text-xs font-mono font-semibold hover:bg-[#161F30] transition-colors flex items-center gap-1.5 cursor-pointer"
+          >
+            <span className="material-symbols-outlined text-[16px]">
+              file_download
+            </span>
+            <span>Download Grant Checklist (PDF)</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Checklist Items */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* Check 1 */}
+        <div className="p-4 bg-[#0B0F19] border border-[#2A374F] rounded-lg flex items-start gap-3">
+          <span className="material-symbols-outlined text-emerald-400 text-[22px] shrink-0 mt-0.5">
+            check_circle
+          </span>
+          <div className="flex flex-col gap-1">
+            <div className="flex items-center justify-between gap-2">
+              <span className="text-sm font-headline font-bold text-white">
+                BIL Sec. 40101(d) Formula Match
+              </span>
+              <span className="px-2 py-0.5 text-[10px] font-mono rounded bg-emerald-950 text-emerald-300 border border-emerald-800">
+                75% COST-SHARE
+              </span>
+            </div>
+            <p className="text-xs text-slate-400 font-mono leading-relaxed">
+              Covers 75% of capital outlays for small utility entities (&lt;4M MWh/yr) deploying advanced sensors, remote edge intelligence, and wildfire mitigation equipment.
+            </p>
+          </div>
+        </div>
+
+        {/* Check 2 */}
+        <div className="p-4 bg-[#0B0F19] border border-[#2A374F] rounded-lg flex items-start gap-3">
+          <span className="material-symbols-outlined text-emerald-400 text-[22px] shrink-0 mt-0.5">
+            check_circle
+          </span>
+          <div className="flex flex-col gap-1">
+            <div className="flex items-center justify-between gap-2">
+              <span className="text-sm font-headline font-bold text-white">
+                DOE GRIP (Grid Resilience &amp; Innovation)
+              </span>
+              <span className="px-2 py-0.5 text-[10px] font-mono rounded bg-[#00E5FF]/20 text-[#00E5FF] border border-[#00E5FF]/40">
+                TOOLKIT INCLUDED
+              </span>
+            </div>
+            <p className="text-xs text-slate-400 font-mono leading-relaxed">
+              Topic Area 1 eligible: High-risk extreme weather hardening, automated conductor damage triage, and autonomous restoration telemetry.
+            </p>
+          </div>
+        </div>
+
+        {/* Check 3 */}
+        <div className="p-4 bg-[#0B0F19] border border-[#2A374F] rounded-lg flex items-start gap-3">
+          <span className="material-symbols-outlined text-emerald-400 text-[22px] shrink-0 mt-0.5">
+            check_circle
+          </span>
+          <div className="flex flex-col gap-1">
+            <div className="flex items-center justify-between gap-2">
+              <span className="text-sm font-headline font-bold text-white">
+                USDA RUS Electric Infrastructure Loans
+              </span>
+              <span className="px-2 py-0.5 text-[10px] font-mono rounded bg-emerald-950 text-emerald-300 border border-emerald-800">
+                0% INTEREST TIER
+              </span>
+            </div>
+            <p className="text-xs text-slate-400 font-mono leading-relaxed">
+              Approved smart grid asset class. Amortize the non-grant hardware CapEx over 10 years with zero-interest or municipal index rate options.
+            </p>
+          </div>
+        </div>
+
+        {/* Check 4 */}
+        <div className="p-4 bg-[#0B0F19] border border-[#2A374F] rounded-lg flex items-start gap-3">
+          <span className="material-symbols-outlined text-emerald-400 text-[22px] shrink-0 mt-0.5">
+            check_circle
+          </span>
+          <div className="flex flex-col gap-1">
+            <div className="flex items-center justify-between gap-2">
+              <span className="text-sm font-headline font-bold text-white">
+                NDAA Sec. 884 &amp; Blue UAS Framework
+              </span>
+              <span className="px-2 py-0.5 text-[10px] font-mono rounded bg-[#F59E0B]/20 text-[#F59E0B] border border-[#F59E0B]/40">
+                100% CERTIFIED
+              </span>
+            </div>
+            <p className="text-xs text-slate-400 font-mono leading-relaxed">
+              Zero covered foreign silicon, avionics, or transmission chips. Federal grant rules strictly prohibit DJI / Da-Jiang Innovations hardware from federal funds.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Action Footer for Grants */}
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
+        <span className="text-xs font-mono text-slate-400">
+          Need grant application assistance? AeroDock provides complete turnkey Section 40101(d) filing templates.
+        </span>
+        <button
+          type="button"
+          onClick={onOpenGrantChecklistModal}
+          className="text-xs font-mono text-[#00E5FF] hover:underline flex items-center gap-1 font-bold shrink-0 cursor-pointer"
+        >
+          <span>Request Co-op Grant Template Kit &rarr;</span>
+        </button>
+      </div>
+    </div>
+  );
+});
+
+GrantQualificationMatrix.displayName = 'GrantQualificationMatrix';
+
 // Memoized to isolate modeler calculations and slider interactions from external App state updates
 export const ModelerScreen: React.FC<ModelerScreenProps> = React.memo(({
   initialProfile,
@@ -770,132 +910,7 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = React.memo(({
       </div>
 
       {/* Federal Funding & Grant Qualification Checklist */}
-      <div id="grants-matrix" className="bg-[#161F30] border border-[#2A374F] rounded-xl p-6 lg:p-8 flex flex-col gap-6">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#2A374F] pb-4">
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="material-symbols-outlined text-[#F59E0B]">
-                verified
-              </span>
-              <h2 className="text-2xl font-headline font-bold text-white">
-                USDA RUS &amp; BIL Section 40101(d) Qualification Matrix
-              </h2>
-            </div>
-            <p className="text-xs md:text-sm text-slate-400 mt-1 font-mono">
-              Pre-cleared regulatory documentation and non-dilutive federal capital qualification checklist for AeroDock deployments.
-            </p>
-          </div>
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={onOpenGrantChecklistModal}
-              className="px-4 py-2 rounded bg-[#0B0F19] border border-[#00E5FF]/40 text-[#00E5FF] text-xs font-mono font-semibold hover:bg-[#161F30] transition-colors flex items-center gap-1.5 cursor-pointer"
-            >
-              <span className="material-symbols-outlined text-[16px]">
-                file_download
-              </span>
-              <span>Download Grant Checklist (PDF)</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Checklist Items */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Check 1 */}
-          <div className="p-4 bg-[#0B0F19] border border-[#2A374F] rounded-lg flex items-start gap-3">
-            <span className="material-symbols-outlined text-emerald-400 text-[22px] shrink-0 mt-0.5">
-              check_circle
-            </span>
-            <div className="flex flex-col gap-1">
-              <div className="flex items-center justify-between gap-2">
-                <span className="text-sm font-headline font-bold text-white">
-                  BIL Sec. 40101(d) Formula Match
-                </span>
-                <span className="px-2 py-0.5 text-[10px] font-mono rounded bg-emerald-950 text-emerald-300 border border-emerald-800">
-                  75% COST-SHARE
-                </span>
-              </div>
-              <p className="text-xs text-slate-400 font-mono leading-relaxed">
-                Covers 75% of capital outlays for small utility entities (&lt;4M MWh/yr) deploying advanced sensors, remote edge intelligence, and wildfire mitigation equipment.
-              </p>
-            </div>
-          </div>
-
-          {/* Check 2 */}
-          <div className="p-4 bg-[#0B0F19] border border-[#2A374F] rounded-lg flex items-start gap-3">
-            <span className="material-symbols-outlined text-emerald-400 text-[22px] shrink-0 mt-0.5">
-              check_circle
-            </span>
-            <div className="flex flex-col gap-1">
-              <div className="flex items-center justify-between gap-2">
-                <span className="text-sm font-headline font-bold text-white">
-                  DOE GRIP (Grid Resilience &amp; Innovation)
-                </span>
-                <span className="px-2 py-0.5 text-[10px] font-mono rounded bg-[#00E5FF]/20 text-[#00E5FF] border border-[#00E5FF]/40">
-                  TOOLKIT INCLUDED
-                </span>
-              </div>
-              <p className="text-xs text-slate-400 font-mono leading-relaxed">
-                Topic Area 1 eligible: High-risk extreme weather hardening, automated conductor damage triage, and autonomous restoration telemetry.
-              </p>
-            </div>
-          </div>
-
-          {/* Check 3 */}
-          <div className="p-4 bg-[#0B0F19] border border-[#2A374F] rounded-lg flex items-start gap-3">
-            <span className="material-symbols-outlined text-emerald-400 text-[22px] shrink-0 mt-0.5">
-              check_circle
-            </span>
-            <div className="flex flex-col gap-1">
-              <div className="flex items-center justify-between gap-2">
-                <span className="text-sm font-headline font-bold text-white">
-                  USDA RUS Electric Infrastructure Loans
-                </span>
-                <span className="px-2 py-0.5 text-[10px] font-mono rounded bg-emerald-950 text-emerald-300 border border-emerald-800">
-                  0% INTEREST TIER
-                </span>
-              </div>
-              <p className="text-xs text-slate-400 font-mono leading-relaxed">
-                Approved smart grid asset class. Amortize the non-grant hardware CapEx over 10 years with zero-interest or municipal index rate options.
-              </p>
-            </div>
-          </div>
-
-          {/* Check 4 */}
-          <div className="p-4 bg-[#0B0F19] border border-[#2A374F] rounded-lg flex items-start gap-3">
-            <span className="material-symbols-outlined text-emerald-400 text-[22px] shrink-0 mt-0.5">
-              check_circle
-            </span>
-            <div className="flex flex-col gap-1">
-              <div className="flex items-center justify-between gap-2">
-                <span className="text-sm font-headline font-bold text-white">
-                  NDAA Sec. 884 &amp; Blue UAS Framework
-                </span>
-                <span className="px-2 py-0.5 text-[10px] font-mono rounded bg-[#F59E0B]/20 text-[#F59E0B] border border-[#F59E0B]/40">
-                  100% CERTIFIED
-                </span>
-              </div>
-              <p className="text-xs text-slate-400 font-mono leading-relaxed">
-                Zero covered foreign silicon, avionics, or transmission chips. Federal grant rules strictly prohibit DJI / Da-Jiang Innovations hardware from federal funds.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Action Footer for Grants */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
-          <span className="text-xs font-mono text-slate-400">
-            Need grant application assistance? AeroDock provides complete turnkey Section 40101(d) filing templates.
-          </span>
-          <button
-            type="button"
-            onClick={onOpenGrantChecklistModal}
-            className="text-xs font-mono text-[#00E5FF] hover:underline flex items-center gap-1 font-bold shrink-0 cursor-pointer"
-          >
-            <span>Request Co-op Grant Template Kit &rarr;</span>
-          </button>
-        </div>
-      </div>
+      <GrantQualificationMatrix onOpenGrantChecklistModal={onOpenGrantChecklistModal} />
 
       {/* Executive Summary & Board Deck Generator CTA */}
       <div
