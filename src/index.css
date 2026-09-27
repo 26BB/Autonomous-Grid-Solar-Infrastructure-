@@ -203,5 +203,6 @@ input[type=range]::-moz-range-thumb {
 
 .animate-laser-glow {
   animation: laser-glow 2.5s ease-in-out infinite;
+  will-change: box-shadow;
 }
 
