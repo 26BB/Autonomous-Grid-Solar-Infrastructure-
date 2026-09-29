@@ -51,3 +51,9 @@
 **Learning:** Extracting large comparative visualization sections (such as 3-year cost benchmarks with multiple motion cards and lists) into memoized subcomponents (`CostBenchmarkSection`) with primitive numeric/boolean props cleanly modularizes the component tree and allows React to skip re-renders whenever step thresholds don't alter calculation outputs.
 
 **Action:** Pass primitive numbers/booleans rather than large composite calculation objects to memoized subcomponents so `React.memo`'s default shallow comparison works cleanly and reliably.
+
+## 2025-05-27 - Sub-Card Component Granularity Prevents Unnecessary Child Re-renders During Single-Slider Adjustments
+
+**Learning:** When a composite parent component (such as `CostBenchmarkSection` or `ModelerScreen`) contains multiple distinct visual cards, moving a single range slider (such as line mileage) causes all cards in the section to re-render—even cards whose inputs (like legacy helicopter spend) depend solely on annual spend and remain completely unchanged.
+
+**Action:** Break multi-card sections into fine-grained `React.memo` subcomponents (`HelicopterCostCard`, `ManualUavCostCard`, `ModelerHeader`, `ExecutiveBoardBriefSection`), enabling `React.memo` shallow comparison to skip re-rendering cards whose specific props haven't changed during single-slider dragging.

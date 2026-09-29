@@ -230,6 +230,178 @@ const GrantQualificationMatrix: React.FC<GrantQualificationMatrixProps> = React.
 
 GrantQualificationMatrix.displayName = 'GrantQualificationMatrix';
 
+// Performance optimization: Memoized static header component prevents top headline and badge re-renders when sliders update
+const ModelerHeader: React.FC = React.memo(() => {
+  return (
+    <div className="flex flex-col gap-3">
+      <div className="flex flex-wrap items-center gap-3">
+        <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#161F30] border border-[#F59E0B]/60 text-[#F59E0B] font-mono text-xs font-semibold">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#F59E0B] animate-ping" />
+          BIL SEC. 40101(D) &amp; USDA RUS FUNDING ACCELERATOR
+        </span>
+        <span className="px-3 py-1 rounded-full bg-[#161F30] border border-[#2A374F] text-slate-400 font-mono text-xs">
+          MODEL V4.8.2 // 2024-2025 ALLOCATIONS ACTIVE
+        </span>
+      </div>
+      <h1 className="text-3xl lg:text-4xl font-headline font-bold text-white tracking-tight">
+        Autonomous Infrastructure ROI &amp; Federal Grant Modeler
+      </h1>
+      <p className="text-slate-400 text-sm md:text-base max-w-3xl font-mono leading-relaxed">
+        Parametrically project your 3-year net operational savings, wildfire &amp; outage mitigation yield, and capital reimbursement under Bipartisan Infrastructure Law Section 40101(d) and USDA Rural Utility Service programs.
+      </p>
+    </div>
+  );
+});
+
+ModelerHeader.displayName = 'ModelerHeader';
+
+// Performance optimization: Memoized Helicopter Cost Card skips re-rendering during miles slider adjustments when annual spend remains unchanged
+interface HelicopterCostCardProps {
+  helicopter3Yr: number;
+}
+
+const HelicopterCostCard: React.FC<HelicopterCostCardProps> = React.memo(({ helicopter3Yr }) => {
+  return (
+    <motion.div
+      whileHover={{ y: -4 }}
+      transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+      className="bg-[#0B0F19] border border-[#2A374F] rounded-xl p-5 flex flex-col justify-between"
+    >
+      <div>
+        <div className="flex items-center justify-between mb-3">
+          <span className="text-xs font-mono text-red-400 uppercase font-bold">
+            Legacy Helicopter Crew
+          </span>
+          <span className="material-symbols-outlined text-red-400 text-[20px]">
+            flight
+          </span>
+        </div>
+        <div className="text-2xl font-headline font-bold text-white">
+          ${helicopter3Yr.toLocaleString()}
+        </div>
+        <div className="text-xs font-mono text-slate-400 mb-4">
+          ${Math.round(helicopter3Yr / 3).toLocaleString()} / year contracted
+        </div>
+
+        <div className="w-full bg-[#161F30] h-3 rounded-full overflow-hidden mb-4 border border-[#2A374F]">
+          <div className="bg-red-500/80 h-full w-full"></div>
+        </div>
+
+        <ul className="space-y-2 text-xs text-slate-400 border-t border-[#2A374F] pt-3 font-mono">
+          <li className="flex items-center gap-1.5">
+            <span className="text-red-400">✕</span> 1x annual inspection cadence
+          </li>
+          <li className="flex items-center gap-1.5">
+            <span className="text-red-400">✕</span> 4–6 week dispatch scheduling lag
+          </li>
+          <li className="flex items-center gap-1.5">
+            <span className="text-red-400">✕</span> Significant crew aviation hazard
+          </li>
+          <li className="flex items-center gap-1.5">
+            <span className="text-red-400">✕</span> Zero real-time post-storm data
+          </li>
+        </ul>
+      </div>
+      <div className="mt-4 pt-3 border-t border-[#2A374F] text-[11px] font-mono text-slate-500">
+        Carbon index: 480 kg CO₂ / inspection
+      </div>
+    </motion.div>
+  );
+});
+
+HelicopterCostCard.displayName = 'HelicopterCostCard';
+
+// Performance optimization: Memoized Manual UAV Cost Card skips re-rendering during miles slider adjustments when annual spend remains unchanged
+interface ManualUavCostCardProps {
+  manualUav3Yr: number;
+  manualUavBarPct: number;
+}
+
+const ManualUavCostCard: React.FC<ManualUavCostCardProps> = React.memo(({ manualUav3Yr, manualUavBarPct }) => {
+  return (
+    <motion.div
+      whileHover={{ y: -4 }}
+      transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+      className="bg-[#0B0F19] border border-[#2A374F] rounded-xl p-5 flex flex-col justify-between"
+    >
+      <div>
+        <div className="flex items-center justify-between mb-3">
+          <span className="text-xs font-mono text-amber-400 uppercase font-bold">
+            Manual Drone Contractors
+          </span>
+          <span className="material-symbols-outlined text-amber-400 text-[20px]">
+            person_pin_circle
+          </span>
+        </div>
+        <div className="text-2xl font-headline font-bold text-white">
+          ${manualUav3Yr.toLocaleString()}
+        </div>
+        <div className="text-xs font-mono text-slate-400 mb-4">
+          ${Math.round(manualUav3Yr / 3).toLocaleString()} / year pilot triage
+        </div>
+
+        <div className="w-full bg-[#161F30] h-3 rounded-full overflow-hidden mb-4 border border-[#2A374F]">
+          {/* Performance optimization: transition-[width] isolates CSS transition strictly to width property, preventing layout thrashing during range slider dragging */}
+          <div
+            className="bg-amber-500/80 h-full transition-[width] duration-300"
+            style={{ width: `${manualUavBarPct}%` }}
+          ></div>
+        </div>
+
+        <ul className="space-y-2 text-xs text-slate-400 border-t border-[#2A374F] pt-3 font-mono">
+          <li className="flex items-center gap-1.5">
+            <span className="text-amber-400">△</span> Quarterly line patrol cadence
+          </li>
+          <li className="flex items-center gap-1.5">
+            <span className="text-red-400">✕</span> Truck roll &amp; travel per diem
+          </li>
+          <li className="flex items-center gap-1.5">
+            <span className="text-red-400">✕</span> Pilot availability bottleneck
+          </li>
+          <li className="flex items-center gap-1.5">
+            <span className="text-emerald-400">✓</span> High-res optical imagery
+          </li>
+        </ul>
+      </div>
+      <div className="mt-4 pt-3 border-t border-[#2A374F] text-[11px] font-mono text-slate-500">
+        Labor volatility: High turnover risk
+      </div>
+    </motion.div>
+  );
+});
+
+ManualUavCostCard.displayName = 'ManualUavCostCard';
+
+// Performance optimization: Memoized Executive Board Brief section isolates static deliverable copy from range slider state changes
+interface ExecutiveBoardBriefSectionProps {
+  onSubmit: (cleanEmail: string) => void;
+}
+
+const ExecutiveBoardBriefSection: React.FC<ExecutiveBoardBriefSectionProps> = React.memo(({ onSubmit }) => {
+  return (
+    <div
+      id="exec-summary-box"
+      className="bg-gradient-to-r from-[#161F30] to-[#0E1626] border-2 border-[#00E5FF]/40 rounded-xl p-6 sm:p-8 shadow-2xl flex flex-col lg:flex-row items-center justify-between gap-6"
+    >
+      <div className="max-w-2xl">
+        <span className="text-xs font-mono text-[#00E5FF] font-bold uppercase tracking-wider">
+          Board-Ready Deliverable
+        </span>
+        <h3 className="text-2xl font-headline font-bold text-white mt-1">
+          Generate Your Cooperative Board Economic Brief
+        </h3>
+        <p className="text-sm text-slate-300 mt-2 font-mono leading-relaxed">
+          Receive a customized 4-page PDF complete with your specific line mileage ROI breakdown, regulatory Part 108 readiness timeline, and pre-filled Section 40101(d) grant application worksheets.
+        </p>
+      </div>
+
+      <BoardBriefForm onSubmit={onSubmit} />
+    </div>
+  );
+});
+
+ExecutiveBoardBriefSection.displayName = 'ExecutiveBoardBriefSection';
+
 // Performance optimization: Memoized component isolates 3-year cumulative cost benchmark card tree from high-frequency range slider ticks (60–120Hz) in ModelerScreen
 interface CostBenchmarkSectionProps {
   helicopter3Yr: number;
@@ -285,100 +457,10 @@ const CostBenchmarkSection: React.FC<CostBenchmarkSectionProps> = React.memo(({
       {/* Comparative Visual Bars */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
         {/* Card 1: Contracted Helicopter Crews */}
-        <motion.div
-          whileHover={{ y: -4 }}
-          transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-          className="bg-[#0B0F19] border border-[#2A374F] rounded-xl p-5 flex flex-col justify-between"
-        >
-          <div>
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-xs font-mono text-red-400 uppercase font-bold">
-                Legacy Helicopter Crew
-              </span>
-              <span className="material-symbols-outlined text-red-400 text-[20px]">
-                flight
-              </span>
-            </div>
-            <div className="text-2xl font-headline font-bold text-white">
-              ${helicopter3Yr.toLocaleString()}
-            </div>
-            <div className="text-xs font-mono text-slate-400 mb-4">
-              ${Math.round(helicopter3Yr / 3).toLocaleString()} / year contracted
-            </div>
-
-            <div className="w-full bg-[#161F30] h-3 rounded-full overflow-hidden mb-4 border border-[#2A374F]">
-              <div className="bg-red-500/80 h-full w-full"></div>
-            </div>
-
-            <ul className="space-y-2 text-xs text-slate-400 border-t border-[#2A374F] pt-3 font-mono">
-              <li className="flex items-center gap-1.5">
-                <span className="text-red-400">✕</span> 1x annual inspection cadence
-              </li>
-              <li className="flex items-center gap-1.5">
-                <span className="text-red-400">✕</span> 4–6 week dispatch scheduling lag
-              </li>
-              <li className="flex items-center gap-1.5">
-                <span className="text-red-400">✕</span> Significant crew aviation hazard
-              </li>
-              <li className="flex items-center gap-1.5">
-                <span className="text-red-400">✕</span> Zero real-time post-storm data
-              </li>
-            </ul>
-          </div>
-          <div className="mt-4 pt-3 border-t border-[#2A374F] text-[11px] font-mono text-slate-500">
-            Carbon index: 480 kg CO₂ / inspection
-          </div>
-        </motion.div>
+        <HelicopterCostCard helicopter3Yr={helicopter3Yr} />
 
         {/* Card 2: Manual Pilot Dispatches */}
-        <motion.div
-          whileHover={{ y: -4 }}
-          transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-          className="bg-[#0B0F19] border border-[#2A374F] rounded-xl p-5 flex flex-col justify-between"
-        >
-          <div>
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-xs font-mono text-amber-400 uppercase font-bold">
-                Manual Drone Contractors
-              </span>
-              <span className="material-symbols-outlined text-amber-400 text-[20px]">
-                person_pin_circle
-              </span>
-            </div>
-            <div className="text-2xl font-headline font-bold text-white">
-              ${manualUav3Yr.toLocaleString()}
-            </div>
-            <div className="text-xs font-mono text-slate-400 mb-4">
-              ${Math.round(manualUav3Yr / 3).toLocaleString()} / year pilot triage
-            </div>
-
-            <div className="w-full bg-[#161F30] h-3 rounded-full overflow-hidden mb-4 border border-[#2A374F]">
-              {/* Performance optimization: transition-[width] isolates CSS transition strictly to width property, preventing layout thrashing during range slider dragging */}
-              <div
-                className="bg-amber-500/80 h-full transition-[width] duration-300"
-                style={{ width: `${manualUavBarPct}%` }}
-              ></div>
-            </div>
-
-            <ul className="space-y-2 text-xs text-slate-400 border-t border-[#2A374F] pt-3 font-mono">
-              <li className="flex items-center gap-1.5">
-                <span className="text-amber-400">△</span> Quarterly line patrol cadence
-              </li>
-              <li className="flex items-center gap-1.5">
-                <span className="text-red-400">✕</span> Truck roll &amp; travel per diem
-              </li>
-              <li className="flex items-center gap-1.5">
-                <span className="text-red-400">✕</span> Pilot availability bottleneck
-              </li>
-              <li className="flex items-center gap-1.5">
-                <span className="text-emerald-400">✓</span> High-res optical imagery
-              </li>
-            </ul>
-          </div>
-          <div className="mt-4 pt-3 border-t border-[#2A374F] text-[11px] font-mono text-slate-500">
-            Labor volatility: High turnover risk
-          </div>
-        </motion.div>
+        <ManualUavCostCard manualUav3Yr={manualUav3Yr} manualUavBarPct={manualUavBarPct} />
 
         {/* Card 3: AeroDock Autonomous DiaB */}
         <motion.div
@@ -599,23 +681,7 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = React.memo(({
   return (
     <div className="w-full flex flex-col gap-10">
       {/* Top Headline & Context */}
-      <div className="flex flex-col gap-3">
-        <div className="flex flex-wrap items-center gap-3">
-          <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#161F30] border border-[#F59E0B]/60 text-[#F59E0B] font-mono text-xs font-semibold">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#F59E0B] animate-ping" />
-            BIL SEC. 40101(D) &amp; USDA RUS FUNDING ACCELERATOR
-          </span>
-          <span className="px-3 py-1 rounded-full bg-[#161F30] border border-[#2A374F] text-slate-400 font-mono text-xs">
-            MODEL V4.8.2 // 2024-2025 ALLOCATIONS ACTIVE
-          </span>
-        </div>
-        <h1 className="text-3xl lg:text-4xl font-headline font-bold text-white tracking-tight">
-          Autonomous Infrastructure ROI &amp; Federal Grant Modeler
-        </h1>
-        <p className="text-slate-400 text-sm md:text-base max-w-3xl font-mono leading-relaxed">
-          Parametrically project your 3-year net operational savings, wildfire &amp; outage mitigation yield, and capital reimbursement under Bipartisan Infrastructure Law Section 40101(d) and USDA Rural Utility Service programs.
-        </p>
-      </div>
+      <ModelerHeader />
 
       {/* Two-Column Interactive Modeler Workspace */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -951,24 +1017,7 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = React.memo(({
       <GrantQualificationMatrix onOpenGrantChecklistModal={onOpenGrantChecklistModal} />
 
       {/* Executive Summary & Board Deck Generator CTA */}
-      <div
-        id="exec-summary-box"
-        className="bg-gradient-to-r from-[#161F30] to-[#0E1626] border-2 border-[#00E5FF]/40 rounded-xl p-6 sm:p-8 shadow-2xl flex flex-col lg:flex-row items-center justify-between gap-6"
-      >
-        <div className="max-w-2xl">
-          <span className="text-xs font-mono text-[#00E5FF] font-bold uppercase tracking-wider">
-            Board-Ready Deliverable
-          </span>
-          <h3 className="text-2xl font-headline font-bold text-white mt-1">
-            Generate Your Cooperative Board Economic Brief
-          </h3>
-          <p className="text-sm text-slate-300 mt-2 font-mono leading-relaxed">
-            Receive a customized 4-page PDF complete with your specific line mileage ROI breakdown, regulatory Part 108 readiness timeline, and pre-filled Section 40101(d) grant application worksheets.
-          </p>
-        </div>
-
-        <BoardBriefForm onSubmit={handleDownloadBriefSubmit} />
-      </div>
+      <ExecutiveBoardBriefSection onSubmit={handleDownloadBriefSubmit} />
     </div>
   );
 });
