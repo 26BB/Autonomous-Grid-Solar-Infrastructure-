@@ -9,16 +9,21 @@ export function isValidEmail(email: string): boolean {
   if (!email || typeof email !== 'string') return false;
   const trimmed = email.trim();
   if (trimmed.length === 0 || trimmed.length > 254) return false;
+  // Security: Handle HTML-escaped entities if sanitizeInput was called prior to email validation
+  const unescaped = trimmed
+    .replace(/&amp;/g, '&')
+    .replace(/&#x27;/g, '\'')
+    .replace(/&#39;/g, '\'');
   // Security: RFC 5321 specifies that the local part (before @) must not exceed 64 characters and email must contain exactly one '@'
-  const parts = trimmed.split('@');
+  const parts = unescaped.split('@');
   if (parts.length !== 2) return false;
   const localPart = parts[0];
   if (!localPart || localPart.length > 64) return false;
-  // Security: Ensure domain has valid TLD structure and prevent consecutive dots or leading/trailing dashes in domain labels
-  const emailRegex = /^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/;
-  if (!emailRegex.test(trimmed)) return false;
+  // Security: RFC 5322 compliant local part characters (including apostrophes and ampersands) and valid TLD structure
+  const emailRegex = /^[a-zA-Z0-9._%+'&-]+@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/;
+  if (!emailRegex.test(unescaped)) return false;
   // Extra safeguard against consecutive dots or leading/trailing dots in local part
-  if (trimmed.includes('..') || trimmed.startsWith('.') || localPart.endsWith('.')) return false;
+  if (unescaped.includes('..') || unescaped.startsWith('.') || localPart.endsWith('.')) return false;
   return true;
 }
 
@@ -29,6 +34,8 @@ export function sanitizeInput(input: string, maxLength: number = 2000): string {
   if (!input || typeof input !== 'string') return '';
   const trimmed = input.trim().slice(0, maxLength);
   return trimmed
+    // Security: Remove unpaired surrogates caused by truncation or malformed UTF-16 input
+    .replace(/[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/g, '')
     // Security: Strip C0/C1 control characters, zero-width spaces, and Unicode BIDI formatting (Trojan Source attacks)
     .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F\u0080-\u009F\u200B-\u200D\u200E\u200F\u202A-\u202E\u2066-\u2069\uFEFF]/g, '')
     .replace(/&/g, '&amp;')
