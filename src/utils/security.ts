@@ -9,8 +9,10 @@ export function isValidEmail(email: string): boolean {
   if (!email || typeof email !== 'string') return false;
   const trimmed = email.trim();
   if (trimmed.length === 0 || trimmed.length > 254) return false;
-  // Security: RFC 5321 specifies that the local part (before @) must not exceed 64 characters
-  const localPart = trimmed.split('@')[0];
+  // Security: RFC 5321 specifies that the local part (before @) must not exceed 64 characters and email must contain exactly one '@'
+  const parts = trimmed.split('@');
+  if (parts.length !== 2) return false;
+  const localPart = parts[0];
   if (!localPart || localPart.length > 64) return false;
   // Security: Ensure domain has valid TLD structure and prevent consecutive dots or leading/trailing dashes in domain labels
   const emailRegex = /^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/;

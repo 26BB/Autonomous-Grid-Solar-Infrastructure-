@@ -15,6 +15,7 @@ describe('isValidEmail', () => {
     assert.equal(isValidEmail('@domain.com'), false);
     assert.equal(isValidEmail('user@domain..com'), false);
     assert.equal(isValidEmail('user@domain'), false);
+    assert.equal(isValidEmail('user@domain@extra.com'), false);
     assert.equal(isValidEmail(''), false);
     assert.equal(isValidEmail(null as unknown as string), false);
     assert.equal(isValidEmail('a'.repeat(255) + '@example.com'), false);
