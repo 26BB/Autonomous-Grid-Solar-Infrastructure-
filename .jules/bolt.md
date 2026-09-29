@@ -45,3 +45,9 @@
 **Learning:** Rendering large static markup blocks (such as complex matrix/checklist cards with multiple icons and buttons) directly inside interactive components (`ModelerScreen.tsx`) causes React to recreate and diff all those static VDOM nodes on every single 60–120Hz slider movement tick.
 
 **Action:** Extract large static JSX blocks into dedicated `React.memo` subcomponents (`GrantQualificationMatrix`), passing only stable callback props to isolate them completely from slider state updates during interactive dragging.
+
+## 2025-05-26 - Primitive Prop Memoization in Subcomponents Prevents Unnecessary Re-evaluations
+
+**Learning:** Extracting large comparative visualization sections (such as 3-year cost benchmarks with multiple motion cards and lists) into memoized subcomponents (`CostBenchmarkSection`) with primitive numeric/boolean props cleanly modularizes the component tree and allows React to skip re-renders whenever step thresholds don't alter calculation outputs.
+
+**Action:** Pass primitive numbers/booleans rather than large composite calculation objects to memoized subcomponents so `React.memo`'s default shallow comparison works cleanly and reliably.

@@ -230,6 +230,220 @@ const GrantQualificationMatrix: React.FC<GrantQualificationMatrixProps> = React.
 
 GrantQualificationMatrix.displayName = 'GrantQualificationMatrix';
 
+// Performance optimization: Memoized component isolates 3-year cumulative cost benchmark card tree from high-frequency range slider ticks (60–120Hz) in ModelerScreen
+interface CostBenchmarkSectionProps {
+  helicopter3Yr: number;
+  manualUav3Yr: number;
+  aeroDock3YrTotal: number;
+  effectiveCapex: number;
+  docks: number;
+  aeroDockBarPct: number;
+  manualUavBarPct: number;
+  grantActive: boolean;
+}
+
+const CostBenchmarkSection: React.FC<CostBenchmarkSectionProps> = React.memo(({
+  helicopter3Yr,
+  manualUav3Yr,
+  aeroDock3YrTotal,
+  effectiveCapex,
+  docks,
+  aeroDockBarPct,
+  manualUavBarPct,
+  grantActive,
+}) => {
+  return (
+    <div id="benchmark-section" className="bg-[#161F30] border border-[#2A374F] rounded-xl p-6 lg:p-8 flex flex-col gap-6">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-[#2A374F] pb-4">
+        <div>
+          <span className="text-xs font-mono text-[#00E5FF] uppercase tracking-wider">
+            Financial Modeling // 36-Month Horizon
+          </span>
+          <h2 className="text-2xl font-headline font-bold text-white mt-1">
+            3-Year Cumulative Cost Benchmark
+          </h2>
+          <p className="text-xs md:text-sm text-slate-400 mt-1 font-mono">
+            Directly comparing contracted helicopter crews, manual pilot dispatches, and AeroDock autonomous infrastructure.
+          </p>
+        </div>
+        <div className="flex items-center gap-3 text-xs font-mono">
+          <span className="inline-flex items-center gap-1.5">
+            <span className="w-3 h-3 bg-red-400/80 rounded" />
+            Contracted Rotor
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            <span className="w-3 h-3 bg-amber-400/80 rounded" />
+            Manual UAV
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            <span className="w-3 h-3 bg-[#00E5FF] rounded" />
+            AeroDock DiaB
+          </span>
+        </div>
+      </div>
+
+      {/* Comparative Visual Bars */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
+        {/* Card 1: Contracted Helicopter Crews */}
+        <motion.div
+          whileHover={{ y: -4 }}
+          transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+          className="bg-[#0B0F19] border border-[#2A374F] rounded-xl p-5 flex flex-col justify-between"
+        >
+          <div>
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-xs font-mono text-red-400 uppercase font-bold">
+                Legacy Helicopter Crew
+              </span>
+              <span className="material-symbols-outlined text-red-400 text-[20px]">
+                flight
+              </span>
+            </div>
+            <div className="text-2xl font-headline font-bold text-white">
+              ${helicopter3Yr.toLocaleString()}
+            </div>
+            <div className="text-xs font-mono text-slate-400 mb-4">
+              ${Math.round(helicopter3Yr / 3).toLocaleString()} / year contracted
+            </div>
+
+            <div className="w-full bg-[#161F30] h-3 rounded-full overflow-hidden mb-4 border border-[#2A374F]">
+              <div className="bg-red-500/80 h-full w-full"></div>
+            </div>
+
+            <ul className="space-y-2 text-xs text-slate-400 border-t border-[#2A374F] pt-3 font-mono">
+              <li className="flex items-center gap-1.5">
+                <span className="text-red-400">✕</span> 1x annual inspection cadence
+              </li>
+              <li className="flex items-center gap-1.5">
+                <span className="text-red-400">✕</span> 4–6 week dispatch scheduling lag
+              </li>
+              <li className="flex items-center gap-1.5">
+                <span className="text-red-400">✕</span> Significant crew aviation hazard
+              </li>
+              <li className="flex items-center gap-1.5">
+                <span className="text-red-400">✕</span> Zero real-time post-storm data
+              </li>
+            </ul>
+          </div>
+          <div className="mt-4 pt-3 border-t border-[#2A374F] text-[11px] font-mono text-slate-500">
+            Carbon index: 480 kg CO₂ / inspection
+          </div>
+        </motion.div>
+
+        {/* Card 2: Manual Pilot Dispatches */}
+        <motion.div
+          whileHover={{ y: -4 }}
+          transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+          className="bg-[#0B0F19] border border-[#2A374F] rounded-xl p-5 flex flex-col justify-between"
+        >
+          <div>
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-xs font-mono text-amber-400 uppercase font-bold">
+                Manual Drone Contractors
+              </span>
+              <span className="material-symbols-outlined text-amber-400 text-[20px]">
+                person_pin_circle
+              </span>
+            </div>
+            <div className="text-2xl font-headline font-bold text-white">
+              ${manualUav3Yr.toLocaleString()}
+            </div>
+            <div className="text-xs font-mono text-slate-400 mb-4">
+              ${Math.round(manualUav3Yr / 3).toLocaleString()} / year pilot triage
+            </div>
+
+            <div className="w-full bg-[#161F30] h-3 rounded-full overflow-hidden mb-4 border border-[#2A374F]">
+              {/* Performance optimization: transition-[width] isolates CSS transition strictly to width property, preventing layout thrashing during range slider dragging */}
+              <div
+                className="bg-amber-500/80 h-full transition-[width] duration-300"
+                style={{ width: `${manualUavBarPct}%` }}
+              ></div>
+            </div>
+
+            <ul className="space-y-2 text-xs text-slate-400 border-t border-[#2A374F] pt-3 font-mono">
+              <li className="flex items-center gap-1.5">
+                <span className="text-amber-400">△</span> Quarterly line patrol cadence
+              </li>
+              <li className="flex items-center gap-1.5">
+                <span className="text-red-400">✕</span> Truck roll &amp; travel per diem
+              </li>
+              <li className="flex items-center gap-1.5">
+                <span className="text-red-400">✕</span> Pilot availability bottleneck
+              </li>
+              <li className="flex items-center gap-1.5">
+                <span className="text-emerald-400">✓</span> High-res optical imagery
+              </li>
+            </ul>
+          </div>
+          <div className="mt-4 pt-3 border-t border-[#2A374F] text-[11px] font-mono text-slate-500">
+            Labor volatility: High turnover risk
+          </div>
+        </motion.div>
+
+        {/* Card 3: AeroDock Autonomous DiaB */}
+        <motion.div
+          whileHover={{ y: -4, boxShadow: '0 0 35px rgba(0,229,255,0.25)' }}
+          transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+          className="bg-[#0B0F19] border-2 border-[#00E5FF] rounded-xl p-5 flex flex-col justify-between shadow-[0_0_25px_rgba(0,229,255,0.15)] relative"
+        >
+          <div className="absolute -top-3 right-4 px-2.5 py-0.5 rounded-full bg-[#00E5FF] text-[#0B0F19] font-mono text-[10px] font-bold uppercase tracking-wider">
+            Best TCO // 64% Lower
+          </div>
+          <div>
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-xs font-mono text-[#00E5FF] uppercase font-bold">
+                AeroDock Autonomous DiaB
+              </span>
+              <span className="material-symbols-outlined text-[#00E5FF] text-[20px]">
+                smart_toy
+              </span>
+            </div>
+            <div className="text-2xl font-headline font-bold text-[#00E5FF]">
+              ${Math.round(aeroDock3YrTotal).toLocaleString()}
+            </div>
+            <div className="text-xs font-mono text-slate-400 mb-4">
+              ${Math.round(effectiveCapex).toLocaleString()} CapEx + $
+              {(docks * 8000).toLocaleString()}/yr SaaS ({docks}{' '}
+              {docks === 1 ? 'Dock' : 'Docks'})
+            </div>
+
+            <div className="w-full bg-[#161F30] h-3 rounded-full overflow-hidden mb-4 border border-[#2A374F]">
+              {/* Performance optimization: transition-[width] isolates CSS transition strictly to width property, preventing layout thrashing during range slider dragging */}
+              <div
+                className="bg-[#00E5FF] h-full transition-[width] duration-300"
+                style={{ width: `${aeroDockBarPct}%` }}
+              ></div>
+            </div>
+
+            <ul className="space-y-2 text-xs text-slate-300 border-t border-[#2A374F] pt-3 font-mono">
+              <li className="flex items-center gap-1.5">
+                <span className="text-emerald-400">✓</span> Daily autonomous patrols on schedule
+              </li>
+              <li className="flex items-center gap-1.5">
+                <span className="text-emerald-400">✓</span> 20-second automated storm re-dispatch
+              </li>
+              <li className="flex items-center gap-1.5">
+                <span className="text-emerald-400">✓</span> Zero human field hazard
+              </li>
+              <li className="flex items-center gap-1.5">
+                <span className="text-emerald-400">✓</span> 100% NDAA &amp; Blue UAS Compliant
+              </li>
+            </ul>
+          </div>
+          <div className="mt-4 pt-3 border-t border-[#2A374F] flex items-center justify-between text-[11px] font-mono">
+            <span className="text-slate-400">Federal Cost Share:</span>
+            <span className="text-[#00E5FF] font-bold">
+              {grantActive ? '75% Grant Offset Applied' : 'Standard Financing'}
+            </span>
+          </div>
+        </motion.div>
+      </div>
+    </div>
+  );
+});
+
+CostBenchmarkSection.displayName = 'CostBenchmarkSection';
+
 // Memoized to isolate modeler calculations and slider interactions from external App state updates
 export const ModelerScreen: React.FC<ModelerScreenProps> = React.memo(({
   initialProfile,
@@ -722,192 +936,16 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = React.memo(({
       </div>
 
       {/* 3-Year Cumulative Cost Benchmark Section */}
-      <div id="benchmark-section" className="bg-[#161F30] border border-[#2A374F] rounded-xl p-6 lg:p-8 flex flex-col gap-6">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-[#2A374F] pb-4">
-          <div>
-            <span className="text-xs font-mono text-[#00E5FF] uppercase tracking-wider">
-              Financial Modeling // 36-Month Horizon
-            </span>
-            <h2 className="text-2xl font-headline font-bold text-white mt-1">
-              3-Year Cumulative Cost Benchmark
-            </h2>
-            <p className="text-xs md:text-sm text-slate-400 mt-1 font-mono">
-              Directly comparing contracted helicopter crews, manual pilot dispatches, and AeroDock autonomous infrastructure.
-            </p>
-          </div>
-          <div className="flex items-center gap-3 text-xs font-mono">
-            <span className="inline-flex items-center gap-1.5">
-              <span className="w-3 h-3 bg-red-400/80 rounded" />
-              Contracted Rotor
-            </span>
-            <span className="inline-flex items-center gap-1.5">
-              <span className="w-3 h-3 bg-amber-400/80 rounded" />
-              Manual UAV
-            </span>
-            <span className="inline-flex items-center gap-1.5">
-              <span className="w-3 h-3 bg-[#00E5FF] rounded" />
-              AeroDock DiaB
-            </span>
-          </div>
-        </div>
-
-        {/* Comparative Visual Bars */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
-          {/* Card 1: Contracted Helicopter Crews */}
-          <motion.div
-            whileHover={{ y: -4 }}
-            transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-            className="bg-[#0B0F19] border border-[#2A374F] rounded-xl p-5 flex flex-col justify-between"
-          >
-            <div>
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-xs font-mono text-red-400 uppercase font-bold">
-                  Legacy Helicopter Crew
-                </span>
-                <span className="material-symbols-outlined text-red-400 text-[20px]">
-                  flight
-                </span>
-              </div>
-              <div className="text-2xl font-headline font-bold text-white">
-                ${calculations.helicopter3Yr.toLocaleString()}
-              </div>
-              <div className="text-xs font-mono text-slate-400 mb-4">
-                ${Math.round(calculations.helicopter3Yr / 3).toLocaleString()} / year contracted
-              </div>
-
-              <div className="w-full bg-[#161F30] h-3 rounded-full overflow-hidden mb-4 border border-[#2A374F]">
-                <div className="bg-red-500/80 h-full w-full"></div>
-              </div>
-
-              <ul className="space-y-2 text-xs text-slate-400 border-t border-[#2A374F] pt-3 font-mono">
-                <li className="flex items-center gap-1.5">
-                  <span className="text-red-400">✕</span> 1x annual inspection cadence
-                </li>
-                <li className="flex items-center gap-1.5">
-                  <span className="text-red-400">✕</span> 4–6 week dispatch scheduling lag
-                </li>
-                <li className="flex items-center gap-1.5">
-                  <span className="text-red-400">✕</span> Significant crew aviation hazard
-                </li>
-                <li className="flex items-center gap-1.5">
-                  <span className="text-red-400">✕</span> Zero real-time post-storm data
-                </li>
-              </ul>
-            </div>
-            <div className="mt-4 pt-3 border-t border-[#2A374F] text-[11px] font-mono text-slate-500">
-              Carbon index: 480 kg CO₂ / inspection
-            </div>
-          </motion.div>
-
-          {/* Card 2: Manual Pilot Dispatches */}
-          <motion.div
-            whileHover={{ y: -4 }}
-            transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-            className="bg-[#0B0F19] border border-[#2A374F] rounded-xl p-5 flex flex-col justify-between"
-          >
-            <div>
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-xs font-mono text-amber-400 uppercase font-bold">
-                  Manual Drone Contractors
-                </span>
-                <span className="material-symbols-outlined text-amber-400 text-[20px]">
-                  person_pin_circle
-                </span>
-              </div>
-              <div className="text-2xl font-headline font-bold text-white">
-                ${calculations.manualUav3Yr.toLocaleString()}
-              </div>
-              <div className="text-xs font-mono text-slate-400 mb-4">
-                ${Math.round(calculations.manualUav3Yr / 3).toLocaleString()} / year pilot triage
-              </div>
-
-              <div className="w-full bg-[#161F30] h-3 rounded-full overflow-hidden mb-4 border border-[#2A374F]">
-                {/* Performance optimization: transition-[width] isolates CSS transition strictly to width property, preventing layout thrashing during range slider dragging */}
-                <div
-                  className="bg-amber-500/80 h-full transition-[width] duration-300"
-                  style={{ width: `${calculations.manualUavBarPct}%` }}
-                ></div>
-              </div>
-
-              <ul className="space-y-2 text-xs text-slate-400 border-t border-[#2A374F] pt-3 font-mono">
-                <li className="flex items-center gap-1.5">
-                  <span className="text-amber-400">△</span> Quarterly line patrol cadence
-                </li>
-                <li className="flex items-center gap-1.5">
-                  <span className="text-red-400">✕</span> Truck roll &amp; travel per diem
-                </li>
-                <li className="flex items-center gap-1.5">
-                  <span className="text-red-400">✕</span> Pilot availability bottleneck
-                </li>
-                <li className="flex items-center gap-1.5">
-                  <span className="text-emerald-400">✓</span> High-res optical imagery
-                </li>
-              </ul>
-            </div>
-            <div className="mt-4 pt-3 border-t border-[#2A374F] text-[11px] font-mono text-slate-500">
-              Labor volatility: High turnover risk
-            </div>
-          </motion.div>
-
-          {/* Card 3: AeroDock Autonomous DiaB */}
-          <motion.div
-            whileHover={{ y: -4, boxShadow: '0 0 35px rgba(0,229,255,0.25)' }}
-            transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-            className="bg-[#0B0F19] border-2 border-[#00E5FF] rounded-xl p-5 flex flex-col justify-between shadow-[0_0_25px_rgba(0,229,255,0.15)] relative"
-          >
-            <div className="absolute -top-3 right-4 px-2.5 py-0.5 rounded-full bg-[#00E5FF] text-[#0B0F19] font-mono text-[10px] font-bold uppercase tracking-wider">
-              Best TCO // 64% Lower
-            </div>
-            <div>
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-xs font-mono text-[#00E5FF] uppercase font-bold">
-                  AeroDock Autonomous DiaB
-                </span>
-                <span className="material-symbols-outlined text-[#00E5FF] text-[20px]">
-                  smart_toy
-                </span>
-              </div>
-              <div className="text-2xl font-headline font-bold text-[#00E5FF]">
-                ${Math.round(calculations.aeroDock3YrTotal).toLocaleString()}
-              </div>
-              <div className="text-xs font-mono text-slate-400 mb-4">
-                ${Math.round(calculations.effectiveCapex).toLocaleString()} CapEx + $
-                {(calculations.docks * 8000).toLocaleString()}/yr SaaS ({calculations.docks}{' '}
-                {calculations.docks === 1 ? 'Dock' : 'Docks'})
-              </div>
-
-              <div className="w-full bg-[#161F30] h-3 rounded-full overflow-hidden mb-4 border border-[#2A374F]">
-                {/* Performance optimization: transition-[width] isolates CSS transition strictly to width property, preventing layout thrashing during range slider dragging */}
-                <div
-                  className="bg-[#00E5FF] h-full transition-[width] duration-300"
-                  style={{ width: `${calculations.aeroDockBarPct}%` }}
-                ></div>
-              </div>
-
-              <ul className="space-y-2 text-xs text-slate-300 border-t border-[#2A374F] pt-3 font-mono">
-                <li className="flex items-center gap-1.5">
-                  <span className="text-emerald-400">✓</span> Daily autonomous patrols on schedule
-                </li>
-                <li className="flex items-center gap-1.5">
-                  <span className="text-emerald-400">✓</span> 20-second automated storm re-dispatch
-                </li>
-                <li className="flex items-center gap-1.5">
-                  <span className="text-emerald-400">✓</span> Zero human field hazard
-                </li>
-                <li className="flex items-center gap-1.5">
-                  <span className="text-emerald-400">✓</span> 100% NDAA &amp; Blue UAS Compliant
-                </li>
-              </ul>
-            </div>
-            <div className="mt-4 pt-3 border-t border-[#2A374F] flex items-center justify-between text-[11px] font-mono">
-              <span className="text-slate-400">Federal Cost Share:</span>
-              <span className="text-[#00E5FF] font-bold">
-                {grantActive ? '75% Grant Offset Applied' : 'Standard Financing'}
-              </span>
-            </div>
-          </motion.div>
-        </div>
-      </div>
+      <CostBenchmarkSection
+        helicopter3Yr={calculations.helicopter3Yr}
+        manualUav3Yr={calculations.manualUav3Yr}
+        aeroDock3YrTotal={calculations.aeroDock3YrTotal}
+        effectiveCapex={calculations.effectiveCapex}
+        docks={calculations.docks}
+        aeroDockBarPct={calculations.aeroDockBarPct}
+        manualUavBarPct={calculations.manualUavBarPct}
+        grantActive={grantActive}
+      />
 
       {/* Federal Funding & Grant Qualification Checklist */}
       <GrantQualificationMatrix onOpenGrantChecklistModal={onOpenGrantChecklistModal} />
