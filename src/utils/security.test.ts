@@ -7,6 +7,9 @@ describe('isValidEmail', () => {
     assert.equal(isValidEmail('user@example.com'), true);
     assert.equal(isValidEmail('admin.test@sub.domain.co.uk'), true);
     assert.equal(isValidEmail('  director@rural-electric.coop  '), true);
+    assert.equal(isValidEmail('o\'connor@example.com'), true);
+    assert.equal(isValidEmail('r&d@coop.org'), true);
+    assert.equal(isValidEmail('user+tag@domain.com'), true);
   });
 
   it('rejects invalid email addresses and edge cases', () => {
@@ -63,6 +66,14 @@ describe('sanitizeInput', () => {
     assert.equal(sanitizeInput(bidiInput), 'user@domain.com');
   });
 
+  it('strips unpaired Unicode surrogates safely', () => {
+    const unpairedHigh = 'user\uD83D@domain.com';
+    assert.equal(sanitizeInput(unpairedHigh), 'user@domain.com');
+
+    const unpairedLow = 'user\uDE00@domain.com';
+    assert.equal(sanitizeInput(unpairedLow), 'user@domain.com');
+  });
+
   it('enforces maxLength parameter truncation', () => {
     const longInput = 'a'.repeat(3000);
     const sanitizedDefault = sanitizeInput(longInput);
@@ -111,5 +122,15 @@ describe('sanitizeInput', () => {
     const validWithPadding = '  user@example.com  ';
     const cleanValidEmail = sanitizeInput(validWithPadding, 254);
     assert.equal(isValidEmail(cleanValidEmail), true);
+
+    const oConnor = '  o\'connor@rural-electric.coop  ';
+    const cleanOConnor = sanitizeInput(oConnor, 254);
+    assert.equal(isValidEmail(cleanOConnor), true);
+    assert.equal(cleanOConnor.includes('&#x27;'), true);
+
+    const rAndD = '  r&d@coop.org  ';
+    const cleanRAndD = sanitizeInput(rAndD, 254);
+    assert.equal(isValidEmail(cleanRAndD), true);
+    assert.equal(cleanRAndD.includes('&amp;'), true);
   });
 });
