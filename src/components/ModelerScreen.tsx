@@ -62,6 +62,7 @@ const BoardBriefForm: React.FC<BoardBriefFormProps> = React.memo(({ onSubmit }) 
       <div className="flex flex-col sm:flex-row items-stretch gap-3">
         <input
           type="email"
+          maxLength={254}
           value={emailInput}
           onChange={(e) => {
             setEmailInput(e.target.value);
