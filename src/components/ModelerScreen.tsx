@@ -402,6 +402,175 @@ const ExecutiveBoardBriefSection: React.FC<ExecutiveBoardBriefSectionProps> = Re
 
 ExecutiveBoardBriefSection.displayName = 'ExecutiveBoardBriefSection';
 
+// Performance optimization: Memoized ProjectedYieldCard skips re-rendering when inputs change that produce unchanged yield calculations or when only sibling state changes
+interface ProjectedYieldCardProps {
+  netSavings: number;
+  savingsPct: number;
+  paybackMonths: string;
+  grantOffset: number;
+  docks: number;
+  riskReduction: string;
+  effectiveCapex: number;
+  grantActive: boolean;
+  profile: InfrastructureProfile;
+  miles: number;
+  onOpenProposalPackageModal: (data: {
+    profile: string;
+    miles: number;
+    savings: number;
+    docks: number;
+    grantOffset: number;
+    effectiveCapex: number;
+  }) => void;
+}
+
+const ProjectedYieldCard: React.FC<ProjectedYieldCardProps> = React.memo(({
+  netSavings,
+  savingsPct,
+  paybackMonths,
+  grantOffset,
+  docks,
+  riskReduction,
+  effectiveCapex,
+  grantActive,
+  profile,
+  miles,
+  onOpenProposalPackageModal,
+}) => {
+  return (
+    <div className="bg-[#161F30] border border-[#00E5FF]/40 rounded-xl p-6 lg:p-7 shadow-[0_0_30px_rgba(0,229,255,0.08)] flex flex-col gap-5">
+      <div className="flex items-center justify-between border-b border-[#2A374F] pb-3">
+        <div className="flex items-center gap-2">
+          <span className="material-symbols-outlined text-[#00E5FF]">
+            monitoring
+          </span>
+          <span className="text-xs font-mono tracking-wider text-slate-300 uppercase">
+            3-Year Projected Yield
+          </span>
+        </div>
+        <span className="text-xs font-mono text-emerald-400 font-semibold flex items-center gap-1">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+          Verified ROI
+        </span>
+      </div>
+
+      <div>
+        <div className="text-xs font-mono uppercase text-slate-400">
+          Net 3-Year Operational Savings
+        </div>
+        {/* Performance optimization: Render numeric text directly without AnimatePresence key-swapping to eliminate DOM node destruction/re-creation on slider drag */}
+        <div className="text-4xl lg:text-5xl font-headline font-bold text-[#00E5FF] mt-1 tracking-tight">
+          ${netSavings.toLocaleString()}
+        </div>
+        <div className="text-xs text-slate-400 mt-1 flex items-center gap-1.5 font-mono">
+          <span className="text-emerald-400 font-bold">
+            {savingsPct}% cost reduction
+          </span>{' '}
+          vs. legacy manned patrols
+        </div>
+      </div>
+
+      {/* Secondary Grid of 4 Metrics */}
+      <div className="grid grid-cols-2 gap-3 pt-2">
+        <div className="p-3 bg-[#0B0F19] border border-[#2A374F] rounded-lg">
+          <div className="text-[11px] font-mono text-slate-400 uppercase">
+            Payback Timeline
+          </div>
+          <div className="text-xl font-headline font-bold text-white mt-1">
+            {paybackMonths} Months
+          </div>
+          <div className="text-[10px] text-slate-500 font-mono mt-0.5">
+            Rapid capital recovery
+          </div>
+        </div>
+
+        <div className="p-3 bg-[#0B0F19] border border-[#2A374F] rounded-lg">
+          <div className="text-[11px] font-mono text-slate-400 uppercase">
+            Grant Offset
+          </div>
+          <div className="text-xl font-headline font-bold text-[#F59E0B] mt-1">
+            ${Math.round(grantOffset).toLocaleString()}
+          </div>
+          <div className="text-[10px] text-slate-500 font-mono mt-0.5">
+            75% Non-dilutive match
+          </div>
+        </div>
+
+        <div className="p-3 bg-[#0B0F19] border border-[#2A374F] rounded-lg">
+          <div className="text-[11px] font-mono text-slate-400 uppercase">
+            Required Docks
+          </div>
+          <div className="text-xl font-headline font-bold text-white mt-1">
+            {docks} {docks === 1 ? 'Unit' : 'Units'}
+          </div>
+          <div className="text-[10px] text-slate-500 font-mono mt-0.5">
+            Automated coverage
+          </div>
+        </div>
+
+        <div className="p-3 bg-[#0B0F19] border border-[#2A374F] rounded-lg">
+          <div className="text-[11px] font-mono text-slate-400 uppercase">
+            Risk Reduction
+          </div>
+          <div className="text-xl font-headline font-bold text-emerald-400 mt-1">
+            {riskReduction}
+          </div>
+          <div className="text-[10px] text-slate-500 font-mono mt-0.5">
+            Outage &amp; ignition safety
+          </div>
+        </div>
+      </div>
+
+      {/* Federal Grant Net CapEx Pill */}
+      <div className="p-3.5 bg-[#161F30] border border-[#2A374F] rounded-lg flex items-center justify-between">
+        <div className="flex flex-col">
+          <span className="text-[11px] font-mono text-slate-300 uppercase">
+            Effective Hardware CapEx / Base
+          </span>
+          <span className="text-xs text-slate-400 font-mono">
+            Regular: $35,000
+          </span>
+        </div>
+        <div className="text-right">
+          <span className="text-lg font-headline font-bold text-emerald-400">
+            ${Math.round(effectiveCapex / docks).toLocaleString()}
+          </span>
+          <span className="block text-[10px] font-mono text-slate-400">
+            {grantActive ? 'w/ 75% Sec. 40101(d) Grant' : 'Standard CapEx Rate'}
+          </span>
+        </div>
+      </div>
+
+      <button
+        type="button"
+        onClick={() =>
+          onOpenProposalPackageModal({
+            profile:
+              profile === 'coop'
+                ? 'Electric Cooperative'
+                : profile === 'solar'
+                ? 'Community Solar'
+                : 'IOU / G&T Net',
+            miles,
+            savings: netSavings,
+            docks,
+            grantOffset,
+            effectiveCapex,
+          })
+        }
+        className="w-full py-3 rounded-lg bg-[#00E5FF] text-[#0B0F19] font-headline font-bold text-sm hover:bg-white transition-all shadow-[0_0_20px_rgba(0,229,255,0.3)] flex items-center justify-center gap-2 cursor-pointer"
+      >
+        <span className="material-symbols-outlined text-[18px]">
+          download_done
+        </span>
+        <span>Lock In Grant Proposal Package</span>
+      </button>
+    </div>
+  );
+});
+
+ProjectedYieldCard.displayName = 'ProjectedYieldCard';
+
 // Performance optimization: Memoized component isolates 3-year cumulative cost benchmark card tree from high-frequency range slider ticks (60–120Hz) in ModelerScreen
 interface CostBenchmarkSectionProps {
   helicopter3Yr: number;
@@ -870,134 +1039,19 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = React.memo(({
 
         {/* RIGHT: Calculated Financial Model & Yield Cards (5 cols) */}
         <div className="lg:col-span-5 flex flex-col gap-6">
-          <div className="bg-[#161F30] border border-[#00E5FF]/40 rounded-xl p-6 lg:p-7 shadow-[0_0_30px_rgba(0,229,255,0.08)] flex flex-col gap-5">
-            <div className="flex items-center justify-between border-b border-[#2A374F] pb-3">
-              <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-[#00E5FF]">
-                  monitoring
-                </span>
-                <span className="text-xs font-mono tracking-wider text-slate-300 uppercase">
-                  3-Year Projected Yield
-                </span>
-              </div>
-              <span className="text-xs font-mono text-emerald-400 font-semibold flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                Verified ROI
-              </span>
-            </div>
-
-            <div>
-              <div className="text-xs font-mono uppercase text-slate-400">
-                Net 3-Year Operational Savings
-              </div>
-              {/* Performance optimization: Render numeric text directly without AnimatePresence key-swapping to eliminate DOM node destruction/re-creation on slider drag */}
-              <div className="text-4xl lg:text-5xl font-headline font-bold text-[#00E5FF] mt-1 tracking-tight">
-                ${calculations.netSavings.toLocaleString()}
-              </div>
-              <div className="text-xs text-slate-400 mt-1 flex items-center gap-1.5 font-mono">
-                <span className="text-emerald-400 font-bold">
-                  {calculations.savingsPct}% cost reduction
-                </span>{' '}
-                vs. legacy manned patrols
-              </div>
-            </div>
-
-            {/* Secondary Grid of 4 Metrics */}
-            <div className="grid grid-cols-2 gap-3 pt-2">
-              <div className="p-3 bg-[#0B0F19] border border-[#2A374F] rounded-lg">
-                <div className="text-[11px] font-mono text-slate-400 uppercase">
-                  Payback Timeline
-                </div>
-                <div className="text-xl font-headline font-bold text-white mt-1">
-                  {calculations.paybackMonths} Months
-                </div>
-                <div className="text-[10px] text-slate-500 font-mono mt-0.5">
-                  Rapid capital recovery
-                </div>
-              </div>
-
-              <div className="p-3 bg-[#0B0F19] border border-[#2A374F] rounded-lg">
-                <div className="text-[11px] font-mono text-slate-400 uppercase">
-                  Grant Offset
-                </div>
-                <div className="text-xl font-headline font-bold text-[#F59E0B] mt-1">
-                  ${Math.round(calculations.grantOffset).toLocaleString()}
-                </div>
-                <div className="text-[10px] text-slate-500 font-mono mt-0.5">
-                  75% Non-dilutive match
-                </div>
-              </div>
-
-              <div className="p-3 bg-[#0B0F19] border border-[#2A374F] rounded-lg">
-                <div className="text-[11px] font-mono text-slate-400 uppercase">
-                  Required Docks
-                </div>
-                <div className="text-xl font-headline font-bold text-white mt-1">
-                  {calculations.docks} {calculations.docks === 1 ? 'Unit' : 'Units'}
-                </div>
-                <div className="text-[10px] text-slate-500 font-mono mt-0.5">
-                  Automated coverage
-                </div>
-              </div>
-
-              <div className="p-3 bg-[#0B0F19] border border-[#2A374F] rounded-lg">
-                <div className="text-[11px] font-mono text-slate-400 uppercase">
-                  Risk Reduction
-                </div>
-                <div className="text-xl font-headline font-bold text-emerald-400 mt-1">
-                  {calculations.riskReduction}
-                </div>
-                <div className="text-[10px] text-slate-500 font-mono mt-0.5">
-                  Outage &amp; ignition safety
-                </div>
-              </div>
-            </div>
-
-            {/* Federal Grant Net CapEx Pill */}
-            <div className="p-3.5 bg-[#161F30] border border-[#2A374F] rounded-lg flex items-center justify-between">
-              <div className="flex flex-col">
-                <span className="text-[11px] font-mono text-slate-300 uppercase">
-                  Effective Hardware CapEx / Base
-                </span>
-                <span className="text-xs text-slate-400 font-mono">
-                  Regular: $35,000
-                </span>
-              </div>
-              <div className="text-right">
-                <span className="text-lg font-headline font-bold text-emerald-400">
-                  ${Math.round(calculations.effectiveCapex / calculations.docks).toLocaleString()}
-                </span>
-                <span className="block text-[10px] font-mono text-slate-400">
-                  {grantActive ? 'w/ 75% Sec. 40101(d) Grant' : 'Standard CapEx Rate'}
-                </span>
-              </div>
-            </div>
-
-            <button
-              type="button"
-              onClick={() =>
-                onOpenProposalPackageModal({
-                  profile:
-                    profile === 'coop'
-                      ? 'Electric Cooperative'
-                      : profile === 'solar'
-                      ? 'Community Solar'
-                      : 'IOU / G&T Net',
-                  miles,
-                  savings: calculations.netSavings,
-                  docks: calculations.docks,
-                  grantOffset: calculations.grantOffset,
-                  effectiveCapex: calculations.effectiveCapex,
-                })
-              }
-              className="w-full py-3 rounded-lg bg-[#00E5FF] text-[#0B0F19] font-headline font-bold text-sm hover:bg-white transition-all shadow-[0_0_20px_rgba(0,229,255,0.3)] flex items-center justify-center gap-2 cursor-pointer"
-            >
-              <span className="material-symbols-outlined text-[18px]">
-                download_done
-              </span>
-              <span>Lock In Grant Proposal Package</span>
-            </button>
-          </div>
+          <ProjectedYieldCard
+            netSavings={calculations.netSavings}
+            savingsPct={calculations.savingsPct}
+            paybackMonths={calculations.paybackMonths}
+            grantOffset={calculations.grantOffset}
+            docks={calculations.docks}
+            riskReduction={calculations.riskReduction}
+            effectiveCapex={calculations.effectiveCapex}
+            grantActive={grantActive}
+            profile={profile}
+            miles={miles}
+            onOpenProposalPackageModal={onOpenProposalPackageModal}
+          />
         </div>
       </div>
 
