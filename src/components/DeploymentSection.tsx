@@ -52,6 +52,7 @@ export const DeploymentSection: React.FC = React.memo(() => {
             <input
               type="email"
               required
+              maxLength={254}
               value={deploymentEmail}
               onChange={(e) => {
                 setDeploymentEmail(e.target.value);

@@ -101,8 +101,12 @@ export const ProposalPackageModal: React.FC<ProposalPackageModalProps> = React.m
                 <input
                   type="email"
                   required
+                  maxLength={254}
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    if (error) setError(null);
+                  }}
                   placeholder="e.g. jsmith@valleyelectric.coop"
                   className="w-full bg-[#0B0F19] border border-[#2A374F] rounded-lg px-4 py-3 text-white text-xs font-mono focus:border-[#00E5FF] focus:outline-none"
                 />
