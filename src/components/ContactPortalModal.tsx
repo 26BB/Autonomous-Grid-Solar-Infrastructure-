@@ -105,7 +105,10 @@ export const ContactPortalModal: React.FC<ContactPortalModalProps> = React.memo(
                     required
                     maxLength={254}
                     value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    onChange={(e) => {
+                      setFormData({ ...formData, email: e.target.value });
+                      if (error) setError(null);
+                    }}
                     placeholder="sjenkins@ozarkelectric.coop"
                     className="w-full bg-[#0B0F19] border border-[#2A374F] rounded px-3 py-2 text-white text-xs font-mono focus:border-[#00E5FF] focus:outline-none"
                   />
