@@ -43,6 +43,13 @@ describe('isValidEmail', () => {
     const invalid65 = 'a'.repeat(65) + '@example.com';
     assert.equal(isValidEmail(invalid65), false);
   });
+
+  it('handles &apos; HTML entity unescaping and enforces domain length limits', () => {
+    assert.equal(isValidEmail('o&apos;connor@example.com'), true);
+
+    const longDomain = 'user@' + 'a'.repeat(250) + '.com';
+    assert.equal(isValidEmail(longDomain), false);
+  });
 });
 
 describe('sanitizeInput', () => {

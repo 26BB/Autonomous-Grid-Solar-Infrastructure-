@@ -13,12 +13,14 @@ export function isValidEmail(email: string): boolean {
   const unescaped = trimmed
     .replace(/&amp;/g, '&')
     .replace(/&#x27;/g, '\'')
-    .replace(/&#39;/g, '\'');
-  // Security: RFC 5321 specifies that the local part (before @) must not exceed 64 characters and email must contain exactly one '@'
+    .replace(/&#39;/g, '\'')
+    .replace(/&apos;/g, '\'');
+  // Security: RFC 5321 specifies that local part <= 64 chars, domain part <= 255 chars, and email contains exactly one '@'
   const parts = unescaped.split('@');
   if (parts.length !== 2) return false;
   const localPart = parts[0];
-  if (!localPart || localPart.length > 64) return false;
+  const domainPart = parts[1];
+  if (!localPart || localPart.length > 64 || !domainPart || domainPart.length > 255) return false;
   // Security: RFC 5322 compliant local part characters (including apostrophes and ampersands) and valid TLD structure
   const emailRegex = /^[a-zA-Z0-9._%+'&-]+@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/;
   if (!emailRegex.test(unescaped)) return false;
