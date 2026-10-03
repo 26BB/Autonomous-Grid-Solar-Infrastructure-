@@ -57,3 +57,9 @@
 **Learning:** When a composite parent component (such as `CostBenchmarkSection` or `ModelerScreen`) contains multiple distinct visual cards, moving a single range slider (such as line mileage) causes all cards in the section to re-render—even cards whose inputs (like legacy helicopter spend) depend solely on annual spend and remain completely unchanged.
 
 **Action:** Break multi-card sections into fine-grained `React.memo` subcomponents (`HelicopterCostCard`, `ManualUavCostCard`, `ModelerHeader`, `ExecutiveBoardBriefSection`), enabling `React.memo` shallow comparison to skip re-rendering cards whose specific props haven't changed during single-slider dragging.
+
+## 2025-05-28 - Isolating Interactive Calculator Yield Displays into Memoized Subcomponents Eliminates Right-Column VDOM Reconciliation
+
+**Learning:** Rendering complex financial yield metrics and proposal lock CTA buttons directly inside an interactive calculator workspace component (`ModelerScreen.tsx`) causes React to re-evaluate and diff the entire right-column card tree on every 60–120Hz slider movement tick—even when slider movements within step thresholds produce identical primitive yield outputs.
+
+**Action:** Extract right-column yield display cards into dedicated `React.memo` subcomponents (`YieldMetricsCard`), passing primitive calculation values and stable `useCallback` handlers backed by `modelDataRef` (`deps: []`) to eliminate unnecessary VDOM diffing during slider dragging.
