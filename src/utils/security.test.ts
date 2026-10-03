@@ -46,6 +46,10 @@ describe('isValidEmail', () => {
 
   it('handles &apos; HTML entity unescaping and enforces domain length limits', () => {
     assert.equal(isValidEmail('o&apos;connor@example.com'), true);
+    assert.equal(isValidEmail('o&#X27;connor@example.com'), true);
+    assert.equal(isValidEmail('r&#x26;d@example.com'), true);
+    assert.equal(isValidEmail('r&#X26;d@example.com'), true);
+    assert.equal(isValidEmail('r&AMP;d@example.com'), true);
 
     const longDomain = 'user@' + 'a'.repeat(250) + '.com';
     assert.equal(isValidEmail(longDomain), false);
