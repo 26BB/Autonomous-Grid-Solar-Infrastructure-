@@ -256,6 +256,57 @@ const ModelerHeader: React.FC = React.memo(() => {
 
 ModelerHeader.displayName = 'ModelerHeader';
 
+// Performance optimization: Memoized component isolates static grant qualification text and toggles from 60–120Hz range slider movements
+interface GrantMatchingCardProps {
+  grantActive: boolean;
+  onToggleGrant: (active: boolean) => void;
+}
+
+const GrantMatchingCard: React.FC<GrantMatchingCardProps> = React.memo(({
+  grantActive,
+  onToggleGrant,
+}) => {
+  return (
+    <div className="flex flex-col gap-3 p-4 rounded-lg bg-[#0B0F19] border border-[#2A374F] mt-2">
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex flex-col">
+          <span className="text-sm font-headline font-semibold text-white">
+            BIL Section 40101(d) / DOE GRIP 75% Match
+          </span>
+          <span className="text-xs text-slate-400 font-mono">
+            Apply non-dilutive formula grant offset for electric cooperatives
+          </span>
+        </div>
+        <label className="relative inline-flex items-center cursor-pointer">
+          <input
+            type="checkbox"
+            checked={grantActive}
+            onChange={(e) => onToggleGrant(e.target.checked)}
+            className="sr-only peer"
+          />
+          <div className="w-11 h-6 bg-[#161F30] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#00E5FF]"></div>
+        </label>
+      </div>
+
+      <div className="border-t border-[#2A374F]/60 pt-3 flex items-center justify-between gap-4">
+        <div className="flex flex-col">
+          <span className="text-xs font-mono text-slate-300">
+            USDA RUS Electric Infrastructure Loan Qualification
+          </span>
+          <span className="text-[11px] text-slate-500 font-mono">
+            Enables zero-interest 10-year repayment structure on remaining CapEx
+          </span>
+        </div>
+        <span className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-emerald-950 text-emerald-400 border border-emerald-700/50">
+          PRE-APPROVED
+        </span>
+      </div>
+    </div>
+  );
+});
+
+GrantMatchingCard.displayName = 'GrantMatchingCard';
+
 // Performance optimization: Memoized Helicopter Cost Card skips re-rendering during miles slider adjustments when annual spend remains unchanged
 interface HelicopterCostCardProps {
   helicopter3Yr: number;
@@ -714,6 +765,10 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = React.memo(({
   const [threat, setThreat] = useState<ThreatVector>('vegetation');
   const [grantActive, setGrantActive] = useState<boolean>(true);
 
+  const handleToggleGrant = React.useCallback((active: boolean) => {
+    setGrantActive(active);
+  }, []);
+
   const handleProfileSelect = (p: InfrastructureProfile) => {
     setProfile(p);
     if (p === 'coop') {
@@ -1042,41 +1097,10 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = React.memo(({
           </div>
 
           {/* Grant Matching Toggles */}
-          <div className="flex flex-col gap-3 p-4 rounded-lg bg-[#0B0F19] border border-[#2A374F] mt-2">
-            <div className="flex items-center justify-between gap-4">
-              <div className="flex flex-col">
-                <span className="text-sm font-headline font-semibold text-white">
-                  BIL Section 40101(d) / DOE GRIP 75% Match
-                </span>
-                <span className="text-xs text-slate-400 font-mono">
-                  Apply non-dilutive formula grant offset for electric cooperatives
-                </span>
-              </div>
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={grantActive}
-                  onChange={(e) => setGrantActive(e.target.checked)}
-                  className="sr-only peer"
-                />
-                <div className="w-11 h-6 bg-[#161F30] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#00E5FF]"></div>
-              </label>
-            </div>
-
-            <div className="border-t border-[#2A374F]/60 pt-3 flex items-center justify-between gap-4">
-              <div className="flex flex-col">
-                <span className="text-xs font-mono text-slate-300">
-                  USDA RUS Electric Infrastructure Loan Qualification
-                </span>
-                <span className="text-[11px] text-slate-500 font-mono">
-                  Enables zero-interest 10-year repayment structure on remaining CapEx
-                </span>
-              </div>
-              <span className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-emerald-950 text-emerald-400 border border-emerald-700/50">
-                PRE-APPROVED
-              </span>
-            </div>
-          </div>
+          <GrantMatchingCard
+            grantActive={grantActive}
+            onToggleGrant={handleToggleGrant}
+          />
         </div>
 
         {/* RIGHT: Calculated Financial Model & Yield Cards (5 cols) */}
