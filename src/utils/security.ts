@@ -11,10 +11,11 @@ export function isValidEmail(email: string): boolean {
   if (trimmed.length === 0 || trimmed.length > 254) return false;
   // Security: Handle HTML-escaped entities if sanitizeInput was called prior to email validation
   const unescaped = trimmed
-    .replace(/&amp;/g, '&')
-    .replace(/&#x27;/g, '\'')
+    .replace(/&amp;/gi, '&')
+    .replace(/&#x26;/gi, '&')
+    .replace(/&#x27;/gi, '\'')
     .replace(/&#39;/g, '\'')
-    .replace(/&apos;/g, '\'');
+    .replace(/&apos;/gi, '\'');
   // Security: RFC 5321 specifies that local part <= 64 chars, domain part <= 255 chars, and email contains exactly one '@'
   const parts = unescaped.split('@');
   if (parts.length !== 2) return false;
