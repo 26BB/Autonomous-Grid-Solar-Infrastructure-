@@ -50,6 +50,9 @@ describe('isValidEmail', () => {
     assert.equal(isValidEmail('r&#x26;d@example.com'), true);
     assert.equal(isValidEmail('r&#X26;d@example.com'), true);
     assert.equal(isValidEmail('r&AMP;d@example.com'), true);
+    assert.equal(isValidEmail('r&#38;d@example.com'), true);
+    assert.equal(isValidEmail('r&#038;d@example.com'), true);
+    assert.equal(isValidEmail('o&#039;connor@example.com'), true);
 
     const longDomain = 'user@' + 'a'.repeat(250) + '.com';
     assert.equal(isValidEmail(longDomain), false);
