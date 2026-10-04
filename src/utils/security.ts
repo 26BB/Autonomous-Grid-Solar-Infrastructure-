@@ -13,8 +13,9 @@ export function isValidEmail(email: string): boolean {
   const unescaped = trimmed
     .replace(/&amp;/gi, '&')
     .replace(/&#x26;/gi, '&')
+    .replace(/&#0*38;/g, '&')
     .replace(/&#x27;/gi, '\'')
-    .replace(/&#39;/g, '\'')
+    .replace(/&#0*39;/g, '\'')
     .replace(/&apos;/gi, '\'');
   // Security: RFC 5321 specifies that local part <= 64 chars, domain part <= 255 chars, and email contains exactly one '@'
   const parts = unescaped.split('@');
