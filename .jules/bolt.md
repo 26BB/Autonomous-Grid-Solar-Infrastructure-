@@ -63,3 +63,9 @@
 **Learning:** Rendering complex financial yield metrics and proposal lock CTA buttons directly inside an interactive calculator workspace component (`ModelerScreen.tsx`) causes React to re-evaluate and diff the entire right-column card tree on every 60–120Hz slider movement tick—even when slider movements within step thresholds produce identical primitive yield outputs.
 
 **Action:** Extract right-column yield display cards into dedicated `React.memo` subcomponents (`YieldMetricsCard`), passing primitive calculation values and stable `useCallback` handlers backed by `modelDataRef` (`deps: []`) to eliminate unnecessary VDOM diffing during slider dragging.
+
+## 2025-05-29 - Extracting Interactive System Input Panels into Memoized Subcomponents Isolates Parameter Control VDOM Trees
+
+**Learning:** Rendering complex input controls (tabs, range sliders, threat dropdowns, grant toggles) directly inside a parent workspace component (`ModelerScreen.tsx`) forces React to re-evaluate and diff the entire 120-line left-column input workspace card on every top-level state change or sibling re-render.
+
+**Action:** Extract parameter control panels into dedicated `React.memo` subcomponents (`ParametricInputsPanel`) with stable `useCallback` handlers (`deps: []`) for input setters to isolate the control panel VDOM tree from parent reconciliation.
