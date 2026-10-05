@@ -47,12 +47,26 @@ describe('isValidEmail', () => {
   it('handles &apos; HTML entity unescaping and enforces domain length limits', () => {
     assert.equal(isValidEmail('o&apos;connor@example.com'), true);
     assert.equal(isValidEmail('o&#X27;connor@example.com'), true);
+    assert.equal(isValidEmail('o&#39;connor@example.com'), true);
+    assert.equal(isValidEmail('o&#039;connor@example.com'), true);
     assert.equal(isValidEmail('r&#x26;d@example.com'), true);
     assert.equal(isValidEmail('r&#X26;d@example.com'), true);
+    assert.equal(isValidEmail('r&#38;d@example.com'), true);
+    assert.equal(isValidEmail('r&#038;d@example.com'), true);
     assert.equal(isValidEmail('r&AMP;d@example.com'), true);
 
     const longDomain = 'user@' + 'a'.repeat(250) + '.com';
     assert.equal(isValidEmail(longDomain), false);
+
+    // RFC 1035 / RFC 5321 specifies maximum FQDN domain length is 253 characters
+    // Max valid email length is 254 (1 char local + 1 '@' + 252 char domain = 254 chars)
+    const domain252 = 'a'.repeat(63) + '.' + 'a'.repeat(63) + '.' + 'a'.repeat(63) + '.' + 'a'.repeat(56) + '.com'; // length 252
+    assert.equal(domain252.length, 252);
+    assert.equal(isValidEmail('u@' + domain252), true);
+
+    const domain253 = 'a'.repeat(63) + '.' + 'a'.repeat(63) + '.' + 'a'.repeat(63) + '.' + 'a'.repeat(57) + '.com'; // length 253
+    assert.equal(domain253.length, 253);
+    assert.equal(isValidEmail('u@' + domain253), false);
   });
 });
 
