@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { motion } from 'motion/react';
 
 interface EmbeddedCalculatorProps {
@@ -14,14 +14,27 @@ export const EmbeddedCalculator: React.FC<EmbeddedCalculatorProps> = React.memo(
   const [profile, setProfile] = useState<'coop' | 'solar'>('coop');
   const [sliderVal, setSliderVal] = useState<number>(1500);
 
-  const handleProfileChange = (newProfile: 'coop' | 'solar') => {
+  // Performance optimization: Stable callback for profile switching prevents function recreation
+  const handleProfileChange = useCallback((newProfile: 'coop' | 'solar') => {
     setProfile(newProfile);
     if (newProfile === 'coop') {
       setSliderVal(1500);
     } else {
       setSliderVal(25);
     }
-  };
+  }, []);
+
+  const handleSelectCoop = useCallback(() => handleProfileChange('coop'), [handleProfileChange]);
+  const handleSelectSolar = useCallback(() => handleProfileChange('solar'), [handleProfileChange]);
+
+  // Performance optimization: Stable callback for range slider change prevents inline handler recreation during 60-120Hz dragging
+  const handleSliderChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const minVal = profile === 'coop' ? 200 : 5;
+      setSliderVal(parseInt(e.target.value, 10) || minVal);
+    },
+    [profile]
+  );
 
   // Performance optimization: Memoize derived calculations and formatted strings to prevent redundant string formatting / allocations during slider interaction
   const { annualSavings, riskReduction, sizeText } = useMemo(() => {
@@ -38,6 +51,15 @@ export const EmbeddedCalculator: React.FC<EmbeddedCalculatorProps> = React.memo(
 
     return { annualSavings, riskReduction, sizeText };
   }, [profile, sliderVal]);
+
+  // Performance optimization: Stable proposal modal launcher prevents object allocations and inline function creation on every slider tick
+  const handleOpenProposal = useCallback(() => {
+    onOpenProposalModal({
+      profile: profile === 'coop' ? 'Electric Cooperative' : 'Community Solar',
+      size: sizeText,
+      savings: `$${annualSavings.toLocaleString()}/yr`,
+    });
+  }, [onOpenProposalModal, profile, sizeText, annualSavings]);
 
   return (
     <section className="px-4 sm:px-6 lg:px-12 max-w-5xl mx-auto w-full mb-20 sm:mb-24">
@@ -74,7 +96,7 @@ export const EmbeddedCalculator: React.FC<EmbeddedCalculatorProps> = React.memo(
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   type="button"
-                  onClick={() => handleProfileChange('coop')}
+                  onClick={handleSelectCoop}
                   className={`px-4 py-3 rounded-lg font-headline font-semibold text-sm transition-all text-center cursor-pointer ${
                     profile === 'coop'
                       ? 'bg-[#00E5FF] text-[#0B0F19] shadow-[0_0_15px_rgba(0,229,255,0.4)]'
@@ -87,7 +109,7 @@ export const EmbeddedCalculator: React.FC<EmbeddedCalculatorProps> = React.memo(
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   type="button"
-                  onClick={() => handleProfileChange('solar')}
+                  onClick={handleSelectSolar}
                   className={`px-4 py-3 rounded-lg font-headline font-semibold text-sm transition-all text-center cursor-pointer ${
                     profile === 'solar'
                       ? 'bg-[#00E5FF] text-[#0B0F19] shadow-[0_0_15px_rgba(0,229,255,0.4)]'
@@ -114,7 +136,7 @@ export const EmbeddedCalculator: React.FC<EmbeddedCalculatorProps> = React.memo(
                 max={profile === 'coop' ? 8000 : 100}
                 step={profile === 'coop' ? 100 : 5}
                 value={sliderVal}
-                onChange={(e) => setSliderVal(parseInt(e.target.value, 10) || (profile === 'coop' ? 200 : 5))}
+                onChange={handleSliderChange}
                 className="w-full accent-[#00E5FF] bg-[#0B0F19] h-2 rounded-lg cursor-pointer"
               />
               <div className="flex justify-between text-[11px] font-mono text-slate-500 mt-1">
@@ -174,13 +196,7 @@ export const EmbeddedCalculator: React.FC<EmbeddedCalculatorProps> = React.memo(
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 type="button"
-                onClick={() =>
-                  onOpenProposalModal({
-                    profile: profile === 'coop' ? 'Electric Cooperative' : 'Community Solar',
-                    size: sizeText,
-                    savings: `$${annualSavings.toLocaleString()}/yr`,
-                  })
-                }
+                onClick={handleOpenProposal}
                 className="w-full py-3 rounded bg-[#00E5FF] text-[#0B0F19] font-headline font-bold text-sm hover:bg-white hover:text-black transition-all text-center cursor-pointer shadow-[0_0_15px_rgba(0,229,255,0.3)]"
               >
                 Lock In Grant Proposal Package
