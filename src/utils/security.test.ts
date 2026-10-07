@@ -86,6 +86,17 @@ describe('sanitizeInput', () => {
     assert.equal(sanitizeInput(controlCharsInput), 'helloworldtest');
   });
 
+  it('normalizes CRLF line endings and strips standalone carriage returns to prevent CRLF injection', () => {
+    const crlfInput = 'Header: Value\r\nInjected-Header: evil';
+    const sanitizedCrlf = sanitizeInput(crlfInput);
+    assert.equal(sanitizedCrlf.includes('\r'), false);
+    assert.equal(sanitizedCrlf, 'Header: Value\nInjected-Header: evil');
+
+    const loneCrInput = 'admin\ruser@example.com';
+    const sanitizedLoneCr = sanitizeInput(loneCrInput);
+    assert.equal(sanitizedLoneCr, 'adminuser@example.com');
+  });
+
   it('strips C1 control characters, zero-width spaces, and BIDI Trojan Source characters', () => {
     const bidiInput = 'user\u202E@domain.com\u200B\u0085';
     assert.equal(sanitizeInput(bidiInput), 'user@domain.com');
