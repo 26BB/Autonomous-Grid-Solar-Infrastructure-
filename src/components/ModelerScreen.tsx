@@ -256,6 +256,151 @@ const ModelerHeader: React.FC = React.memo(() => {
 
 ModelerHeader.displayName = 'ModelerHeader';
 
+// Performance optimization: Memoized Profile Selector Card skips re-rendering during range slider dragging
+interface ProfileSelectorCardProps {
+  profile: InfrastructureProfile;
+  onSelectProfile: (p: InfrastructureProfile) => void;
+}
+
+const ProfileSelectorCard: React.FC<ProfileSelectorCardProps> = React.memo(({ profile, onSelectProfile }) => {
+  return (
+    <div className="flex flex-col gap-2">
+      <label className="text-xs font-mono uppercase text-slate-300">
+        Infrastructure Profile
+      </label>
+      <div className="grid grid-cols-3 gap-2 p-1 bg-[#0B0F19] border border-[#2A374F] rounded-lg">
+        <button
+          type="button"
+          onClick={() => onSelectProfile('coop')}
+          className={`py-2 px-3 text-xs font-mono rounded text-center transition-all cursor-pointer ${
+            profile === 'coop'
+              ? 'bg-[#161F30] text-[#00E5FF] font-bold border border-[#00E5FF]/40 shadow-sm'
+              : 'text-slate-400 hover:text-white border border-transparent'
+          }`}
+        >
+          Rural Electric Co-op
+        </button>
+        <button
+          type="button"
+          onClick={() => onSelectProfile('solar')}
+          className={`py-2 px-3 text-xs font-mono rounded text-center transition-all cursor-pointer ${
+            profile === 'solar'
+              ? 'bg-[#161F30] text-[#00E5FF] font-bold border border-[#00E5FF]/40 shadow-sm'
+              : 'text-slate-400 hover:text-white border border-transparent'
+          }`}
+        >
+          Community Solar
+        </button>
+        <button
+          type="button"
+          onClick={() => onSelectProfile('iou')}
+          className={`py-2 px-3 text-xs font-mono rounded text-center transition-all cursor-pointer ${
+            profile === 'iou'
+              ? 'bg-[#161F30] text-[#00E5FF] font-bold border border-[#00E5FF]/40 shadow-sm'
+              : 'text-slate-400 hover:text-white border border-transparent'
+          }`}
+        >
+          IOU / G&amp;T Net
+        </button>
+      </div>
+    </div>
+  );
+});
+
+ProfileSelectorCard.displayName = 'ProfileSelectorCard';
+
+// Performance optimization: Memoized Threat Vector Card skips re-rendering during range slider dragging
+interface ThreatVectorCardProps {
+  threat: ThreatVector;
+  onThreatChange: (threat: ThreatVector) => void;
+}
+
+const ThreatVectorCard: React.FC<ThreatVectorCardProps> = React.memo(({ threat, onThreatChange }) => {
+  return (
+    <div className="flex flex-col gap-2 pt-2">
+      <label className="text-xs font-mono uppercase text-slate-300">
+        Primary Operational Threat Vector
+      </label>
+      <div className="relative">
+        <select
+          value={threat}
+          onChange={(e) => onThreatChange(e.target.value as ThreatVector)}
+          className="w-full bg-[#0B0F19] border border-[#2A374F] rounded-lg p-3 text-sm text-slate-200 font-mono focus:border-[#00E5FF] focus:outline-none appearance-none cursor-pointer pr-10"
+        >
+          <option value="wildfire">
+            Wildfire Hardening &amp; Red-Flag Rapid Patrols (High Priority)
+          </option>
+          <option value="vegetation">
+            Vegetation Encroachment &amp; Right-of-Way Ingress
+          </option>
+          <option value="storm">
+            Severe Storm Rapid Post-Event Re-dispatch
+          </option>
+          <option value="thermography">
+            Substation &amp; Transformer Radiometric Thermography
+          </option>
+        </select>
+        <span className="material-symbols-outlined text-slate-400 absolute right-3 top-3 pointer-events-none text-[20px]">
+          expand_more
+        </span>
+      </div>
+    </div>
+  );
+});
+
+ThreatVectorCard.displayName = 'ThreatVectorCard';
+
+// Performance optimization: Memoized Grant Matching Toggles Card skips re-rendering during range slider dragging
+interface GrantMatchingTogglesCardProps {
+  grantActive: boolean;
+  onGrantActiveChange: (active: boolean) => void;
+}
+
+const GrantMatchingTogglesCard: React.FC<GrantMatchingTogglesCardProps> = React.memo(({
+  grantActive,
+  onGrantActiveChange,
+}) => {
+  return (
+    <div className="flex flex-col gap-3 p-4 rounded-lg bg-[#0B0F19] border border-[#2A374F] mt-2">
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex flex-col">
+          <span className="text-sm font-headline font-semibold text-white">
+            BIL Section 40101(d) / DOE GRIP 75% Match
+          </span>
+          <span className="text-xs text-slate-400 font-mono">
+            Apply non-dilutive formula grant offset for electric cooperatives
+          </span>
+        </div>
+        <label className="relative inline-flex items-center cursor-pointer">
+          <input
+            type="checkbox"
+            checked={grantActive}
+            onChange={(e) => onGrantActiveChange(e.target.checked)}
+            className="sr-only peer"
+          />
+          <div className="w-11 h-6 bg-[#161F30] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#00E5FF]"></div>
+        </label>
+      </div>
+
+      <div className="border-t border-[#2A374F]/60 pt-3 flex items-center justify-between gap-4">
+        <div className="flex flex-col">
+          <span className="text-xs font-mono text-slate-300">
+            USDA RUS Electric Infrastructure Loan Qualification
+          </span>
+          <span className="text-[11px] text-slate-500 font-mono">
+            Enables zero-interest 10-year repayment structure on remaining CapEx
+          </span>
+        </div>
+        <span className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-emerald-950 text-emerald-400 border border-emerald-700/50">
+          PRE-APPROVED
+        </span>
+      </div>
+    </div>
+  );
+});
+
+GrantMatchingTogglesCard.displayName = 'GrantMatchingTogglesCard';
+
 // Performance optimization: Memoized Helicopter Cost Card skips re-rendering during miles slider adjustments when annual spend remains unchanged
 interface HelicopterCostCardProps {
   helicopter3Yr: number;
@@ -714,7 +859,8 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = React.memo(({
   const [threat, setThreat] = useState<ThreatVector>('vegetation');
   const [grantActive, setGrantActive] = useState<boolean>(true);
 
-  const handleProfileSelect = (p: InfrastructureProfile) => {
+  // Performance optimization: Stable callback handlers prevent unnecessary re-renders of memoized subcomponents
+  const handleProfileSelect = React.useCallback((p: InfrastructureProfile) => {
     setProfile(p);
     if (p === 'coop') {
       setMiles(1850);
@@ -726,7 +872,15 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = React.memo(({
       setMiles(3600);
       setSpend(480000);
     }
-  };
+  }, []);
+
+  const handleThreatChange = React.useCallback((newThreat: ThreatVector) => {
+    setThreat(newThreat);
+  }, []);
+
+  const handleGrantActiveChange = React.useCallback((active: boolean) => {
+    setGrantActive(active);
+  }, []);
 
   // Performance optimization: Only execute handleProfileSelect when initialProfile changes post-mount
   const prevInitialProfileRef = React.useRef(initialProfile);
@@ -912,47 +1066,8 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = React.memo(({
             </span>
           </div>
 
-          {/* Infrastructure Profile Tabs */}
-          <div className="flex flex-col gap-2">
-            <label className="text-xs font-mono uppercase text-slate-300">
-              Infrastructure Profile
-            </label>
-            <div className="grid grid-cols-3 gap-2 p-1 bg-[#0B0F19] border border-[#2A374F] rounded-lg">
-              <button
-                type="button"
-                onClick={() => handleProfileSelect('coop')}
-                className={`py-2 px-3 text-xs font-mono rounded text-center transition-all cursor-pointer ${
-                  profile === 'coop'
-                    ? 'bg-[#161F30] text-[#00E5FF] font-bold border border-[#00E5FF]/40 shadow-sm'
-                    : 'text-slate-400 hover:text-white border border-transparent'
-                }`}
-              >
-                Rural Electric Co-op
-              </button>
-              <button
-                type="button"
-                onClick={() => handleProfileSelect('solar')}
-                className={`py-2 px-3 text-xs font-mono rounded text-center transition-all cursor-pointer ${
-                  profile === 'solar'
-                    ? 'bg-[#161F30] text-[#00E5FF] font-bold border border-[#00E5FF]/40 shadow-sm'
-                    : 'text-slate-400 hover:text-white border border-transparent'
-                }`}
-              >
-                Community Solar
-              </button>
-              <button
-                type="button"
-                onClick={() => handleProfileSelect('iou')}
-                className={`py-2 px-3 text-xs font-mono rounded text-center transition-all cursor-pointer ${
-                  profile === 'iou'
-                    ? 'bg-[#161F30] text-[#00E5FF] font-bold border border-[#00E5FF]/40 shadow-sm'
-                    : 'text-slate-400 hover:text-white border border-transparent'
-                }`}
-              >
-                IOU / G&amp;T Net
-              </button>
-            </div>
-          </div>
+          {/* Infrastructure Profile Tabs - Memoized Subcomponent */}
+          <ProfileSelectorCard profile={profile} onSelectProfile={handleProfileSelect} />
 
           {/* Slider 1: Line Miles / Assets */}
           <div className="flex flex-col gap-2 pt-2">
@@ -1011,72 +1126,11 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = React.memo(({
             </div>
           </div>
 
-          {/* Threat Vector Select */}
-          <div className="flex flex-col gap-2 pt-2">
-            <label className="text-xs font-mono uppercase text-slate-300">
-              Primary Operational Threat Vector
-            </label>
-            <div className="relative">
-              <select
-                value={threat}
-                onChange={(e) => setThreat(e.target.value as ThreatVector)}
-                className="w-full bg-[#0B0F19] border border-[#2A374F] rounded-lg p-3 text-sm text-slate-200 font-mono focus:border-[#00E5FF] focus:outline-none appearance-none cursor-pointer pr-10"
-              >
-                <option value="wildfire">
-                  Wildfire Hardening &amp; Red-Flag Rapid Patrols (High Priority)
-                </option>
-                <option value="vegetation">
-                  Vegetation Encroachment &amp; Right-of-Way Ingress
-                </option>
-                <option value="storm">
-                  Severe Storm Rapid Post-Event Re-dispatch
-                </option>
-                <option value="thermography">
-                  Substation &amp; Transformer Radiometric Thermography
-                </option>
-              </select>
-              <span className="material-symbols-outlined text-slate-400 absolute right-3 top-3 pointer-events-none text-[20px]">
-                expand_more
-              </span>
-            </div>
-          </div>
+          {/* Threat Vector Select - Memoized Subcomponent */}
+          <ThreatVectorCard threat={threat} onThreatChange={handleThreatChange} />
 
-          {/* Grant Matching Toggles */}
-          <div className="flex flex-col gap-3 p-4 rounded-lg bg-[#0B0F19] border border-[#2A374F] mt-2">
-            <div className="flex items-center justify-between gap-4">
-              <div className="flex flex-col">
-                <span className="text-sm font-headline font-semibold text-white">
-                  BIL Section 40101(d) / DOE GRIP 75% Match
-                </span>
-                <span className="text-xs text-slate-400 font-mono">
-                  Apply non-dilutive formula grant offset for electric cooperatives
-                </span>
-              </div>
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={grantActive}
-                  onChange={(e) => setGrantActive(e.target.checked)}
-                  className="sr-only peer"
-                />
-                <div className="w-11 h-6 bg-[#161F30] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#00E5FF]"></div>
-              </label>
-            </div>
-
-            <div className="border-t border-[#2A374F]/60 pt-3 flex items-center justify-between gap-4">
-              <div className="flex flex-col">
-                <span className="text-xs font-mono text-slate-300">
-                  USDA RUS Electric Infrastructure Loan Qualification
-                </span>
-                <span className="text-[11px] text-slate-500 font-mono">
-                  Enables zero-interest 10-year repayment structure on remaining CapEx
-                </span>
-              </div>
-              <span className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-emerald-950 text-emerald-400 border border-emerald-700/50">
-                PRE-APPROVED
-              </span>
-            </div>
-          </div>
+          {/* Grant Matching Toggles - Memoized Subcomponent */}
+          <GrantMatchingTogglesCard grantActive={grantActive} onGrantActiveChange={handleGrantActiveChange} />
         </div>
 
         {/* RIGHT: Calculated Financial Model & Yield Cards (5 cols) */}
