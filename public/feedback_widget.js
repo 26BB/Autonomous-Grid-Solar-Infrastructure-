@@ -292,11 +292,26 @@
 
   // Submit Feedback
   submitBtn.addEventListener('click', async () => {
-    const text = messageInput.value.trim();
-    if (!text) {
+    const rawText = messageInput.value.trim();
+    if (!rawText) {
       alert("Please write a short description.");
       return;
     }
+
+    const rawEmail = emailInput.value.trim();
+    if (rawEmail && rawEmail.toLowerCase() !== "anonymous") {
+      const emailRegex = /^[a-zA-Z0-9._%+'&-]+@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/;
+      if (!emailRegex.test(rawEmail) || rawEmail.length > 254) {
+        alert("Please enter a valid email address or leave it blank.");
+        return;
+      }
+    }
+
+    // Security: Sanitize control chars, Trojan Source BIDI, and HTML special chars
+    const sanitize = (str, maxLen = 2000) =>
+      str.slice(0, maxLen)
+        .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F\u0080-\u009F\u200B-\u200D\u200E\u200F\u202A-\u202E\u2066-\u2069\uFEFF]/g, '')
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#x27;').replace(/`/g, '&#x60;');
 
     submitBtn.disabled = true;
     submitBtn.textContent = "Submitting...";
@@ -304,8 +319,8 @@
     const payload = {
       projectName: (window.FEEDBACK_CONFIG && window.FEEDBACK_CONFIG.projectName) || document.title || "Web App",
       type: selectedType,
-      message: text,
-      email: emailInput.value.trim() || "Anonymous",
+      message: sanitize(rawText, 1000),
+      email: rawEmail ? sanitize(rawEmail, 254) : "Anonymous",
       url: window.location.href,
       viewport: `${window.innerWidth}x${window.innerHeight}`,
       userAgent: navigator.userAgent,
