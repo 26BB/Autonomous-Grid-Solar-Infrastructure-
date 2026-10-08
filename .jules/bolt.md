@@ -63,3 +63,9 @@
 **Learning:** Rendering complex financial yield metrics and proposal lock CTA buttons directly inside an interactive calculator workspace component (`ModelerScreen.tsx`) causes React to re-evaluate and diff the entire right-column card tree on every 60–120Hz slider movement tick—even when slider movements within step thresholds produce identical primitive yield outputs.
 
 **Action:** Extract right-column yield display cards into dedicated `React.memo` subcomponents (`YieldMetricsCard`), passing primitive calculation values and stable `useCallback` handlers backed by `modelDataRef` (`deps: []`) to eliminate unnecessary VDOM diffing during slider dragging.
+
+## 2025-05-29 - Extracting Embedded Calculator Subcomponents and Stabilizing Action Callbacks Prevents Unnecessary Re-evaluations
+
+**Learning:** Declaring static section headings and dynamic yield cards directly in `EmbeddedCalculator.tsx` caused static VDOM nodes to be re-evaluated on every range slider drag tick (60–120Hz), while action callbacks with state dependencies (`[sizeText, annualSavings]`) were re-allocated every frame.
+
+**Action:** Extract static headers into `EmbeddedCalculatorHeader` (`React.memo`) and yield displays into `EmbeddedYieldCard` (`React.memo`), backing modal action callbacks with `calcDataRef` (`deps: []`) to preserve callback reference stability during high-frequency slider dragging.
