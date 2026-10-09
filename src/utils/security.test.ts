@@ -47,10 +47,14 @@ describe('isValidEmail', () => {
   it('handles &apos; HTML entity unescaping and enforces domain length limits', () => {
     assert.equal(isValidEmail('o&apos;connor@example.com'), true);
     assert.equal(isValidEmail('o&#X27;connor@example.com'), true);
+    assert.equal(isValidEmail('o&#x027;connor@example.com'), true);
+    assert.equal(isValidEmail('o&#X0027;connor@example.com'), true);
     assert.equal(isValidEmail('o&#39;connor@example.com'), true);
     assert.equal(isValidEmail('o&#039;connor@example.com'), true);
     assert.equal(isValidEmail('r&#x26;d@example.com'), true);
     assert.equal(isValidEmail('r&#X26;d@example.com'), true);
+    assert.equal(isValidEmail('r&#x026;d@example.com'), true);
+    assert.equal(isValidEmail('r&#X0026;d@example.com'), true);
     assert.equal(isValidEmail('r&#38;d@example.com'), true);
     assert.equal(isValidEmail('r&#038;d@example.com'), true);
     assert.equal(isValidEmail('r&AMP;d@example.com'), true);
