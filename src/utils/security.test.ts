@@ -90,9 +90,12 @@ describe('sanitizeInput', () => {
     assert.equal(sanitizeInput(controlCharsInput), 'helloworldtest');
   });
 
-  it('strips C1 control characters, zero-width spaces, and BIDI Trojan Source characters', () => {
+  it('strips C1 control characters, soft hyphens, zero-width spaces, invisible operators, and BIDI Trojan Source characters', () => {
     const bidiInput = 'user\u202E@domain.com\u200B\u0085';
     assert.equal(sanitizeInput(bidiInput), 'user@domain.com');
+
+    const softHyphenAndWordJoinerInput = 'ad\u00ADmin\u2060@domain.com\u2061\u2064';
+    assert.equal(sanitizeInput(softHyphenAndWordJoinerInput), 'admin@domain.com');
   });
 
   it('strips unpaired Unicode surrogates safely', () => {

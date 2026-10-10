@@ -40,8 +40,8 @@ export function sanitizeInput(input: string, maxLength: number = 2000): string {
   return trimmed
     // Security: Remove unpaired surrogates caused by truncation or malformed UTF-16 input
     .replace(/[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/g, '')
-    // Security: Strip C0/C1 control characters, zero-width spaces, and Unicode BIDI formatting (Trojan Source attacks)
-    .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F\u0080-\u009F\u200B-\u200D\u200E\u200F\u202A-\u202E\u2066-\u2069\uFEFF]/g, '')
+    // Security: Strip C0/C1 control characters, soft hyphens (\u00AD), zero-width spaces, invisible operators, and Unicode BIDI formatting (\u2060-\u206F, Trojan Source attacks)
+    .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F\u0080-\u009F\u00AD\u200B-\u200D\u200E\u200F\u202A-\u202E\u2060-\u206F\uFEFF]/g, '')
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
