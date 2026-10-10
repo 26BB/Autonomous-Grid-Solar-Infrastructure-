@@ -12,9 +12,9 @@ export function isValidEmail(email: string): boolean {
   // Security: Handle HTML-escaped entities if sanitizeInput was called prior to email validation
   const unescaped = trimmed
     .replace(/&amp;/gi, '&')
-    .replace(/&#x26;/gi, '&')
+    .replace(/&#x0*26;/gi, '&')
     .replace(/&#0*38;/g, '&')
-    .replace(/&#x27;/gi, '\'')
+    .replace(/&#x0*27;/gi, '\'')
     .replace(/&#0*39;/g, '\'')
     .replace(/&apos;/gi, '\'');
   // Security: RFC 5321 specifies local part <= 64 chars, domain FQDN <= 253 chars (RFC 1035), and email contains exactly one '@'
