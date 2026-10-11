@@ -298,14 +298,29 @@
       return;
     }
 
+    // Security: Validate optional email input format and restrict length
+    const rawEmail = emailInput.value.trim();
+    let sanitizedEmail = "Anonymous";
+    if (rawEmail) {
+      const emailRegex = /^[a-zA-Z0-9._%+'&-]+@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/;
+      if (!emailRegex.test(rawEmail) || rawEmail.length > 254) {
+        alert("Please enter a valid email address or leave it blank.");
+        return;
+      }
+      sanitizedEmail = rawEmail.slice(0, 254);
+    }
+
     submitBtn.disabled = true;
     submitBtn.textContent = "Submitting...";
+
+    // Security: Truncate message payload (max 2000 chars) and strip control characters to prevent DoS / payload bloat
+    const sanitizedText = text.slice(0, 2000).replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '');
 
     const payload = {
       projectName: (window.FEEDBACK_CONFIG && window.FEEDBACK_CONFIG.projectName) || document.title || "Web App",
       type: selectedType,
-      message: text,
-      email: emailInput.value.trim() || "Anonymous",
+      message: sanitizedText,
+      email: sanitizedEmail,
       url: window.location.href,
       viewport: `${window.innerWidth}x${window.innerHeight}`,
       userAgent: navigator.userAgent,
