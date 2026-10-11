@@ -63,3 +63,9 @@
 **Learning:** Rendering complex financial yield metrics and proposal lock CTA buttons directly inside an interactive calculator workspace component (`ModelerScreen.tsx`) causes React to re-evaluate and diff the entire right-column card tree on every 60–120Hz slider movement tick—even when slider movements within step thresholds produce identical primitive yield outputs.
 
 **Action:** Extract right-column yield display cards into dedicated `React.memo` subcomponents (`YieldMetricsCard`), passing primitive calculation values and stable `useCallback` handlers backed by `modelDataRef` (`deps: []`) to eliminate unnecessary VDOM diffing during slider dragging.
+
+## 2025-05-29 - Fine-Grained Memoization of Static Form Option Cards Isolates Range Slider Dragging from VDOM Reconciliation
+
+**Learning:** In interactive calculator screens (`ModelerScreen.tsx`), leaving static option cards (such as threat vector dropdown selects and federal grant match toggle cards) inline inside the parent component causes React to recreate and diff their nested DOM node trees on every 60–120Hz range slider drag tick.
+
+**Action:** Extract static option cards into fine-grained `React.memo` subcomponents (`ThreatVectorSelector`, `GrantMatchingToggles`) and pass stable `useCallback` event handlers, enabling React's shallow prop comparison to skip re-rendering static input option cards during range slider dragging.
