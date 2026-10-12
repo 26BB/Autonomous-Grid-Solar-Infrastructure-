@@ -38,6 +38,9 @@ export function sanitizeInput(input: string, maxLength: number = 2000): string {
   if (!input || typeof input !== 'string') return '';
   const trimmed = input.trim().slice(0, maxLength);
   return trimmed
+    // Security: Normalize CRLF line endings and strip standalone carriage returns (\r / \x0D) to prevent CRLF injection
+    .replace(/\r\n/g, '\n')
+    .replace(/\r/g, '')
     // Security: Remove unpaired surrogates caused by truncation or malformed UTF-16 input
     .replace(/[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/g, '')
     // Security: Strip C0/C1 control characters, zero-width spaces, and Unicode BIDI formatting (Trojan Source attacks)
