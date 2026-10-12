@@ -69,3 +69,9 @@
 **Learning:** Rendering static grant qualification text, legal disclosures, and toggle controls directly inside an interactive calculator workspace (`ModelerScreen.tsx`) forces React to re-evaluate and diff all text nodes and toggle markup on every 60–120Hz range slider drag tick—even though the grant toggle state remains unchanged during slider movements.
 
 **Action:** Extract grant matching toggle blocks into a dedicated `React.memo` subcomponent (`GrantMatchingCard`) with stable `useCallback` handlers to completely eliminate VDOM diffing of static grant copy during high-frequency slider adjustments.
+
+## 2025-05-30 - Isolating Embedded Calculator Static Elements and Display Cards Prevents Overview VDOM Reconciliation Churn
+
+**Learning:** Rendering static headlines, eligibility callout boxes, and dynamic output cards directly inside a top-level quick calculator component (`EmbeddedCalculator.tsx`) forces React to re-create and diff all static DOM nodes on every 60–120Hz range slider adjustment tick on the homepage overview screen.
+
+**Action:** Extract static headers (`EmbeddedCalculatorHeader`), callouts (`EmbeddedCalculatorEligibilityNotes`), and dynamic output cards (`EmbeddedCalculatorOutputCard`) into `React.memo` subcomponents, backing modal launch callbacks with a `calculatorDataRef` (`deps: []`) to isolate slider drag re-renders completely.
