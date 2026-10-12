@@ -25,7 +25,17 @@
   console.error = function (...args) {
     capturedErrors.push({
       type: 'console_error',
-      message: args.map(a => (typeof a === 'object' ? JSON.stringify(a) : String(a))).join(' '),
+      // Security: Safely handle circular objects or non-serializable arguments to prevent crashes
+      message: args.map(a => {
+        if (typeof a === 'object' && a !== null) {
+          try {
+            return JSON.stringify(a);
+          } catch (e) {
+            return '[Unserializable Object]';
+          }
+        }
+        return String(a);
+      }).join(' '),
       time: new Date().toISOString()
     });
     if (capturedErrors.length > MAX_ERRORS) capturedErrors.shift();
@@ -225,8 +235,8 @@
             <button class="feedback-tab-btn" data-type="General">💬 General</button>
           </div>
 
-          <textarea class="feedback-textarea" id="fbMessage" placeholder="Describe the issue or feature request in detail..."></textarea>
-          <input type="email" class="feedback-input-email" id="fbEmail" placeholder="Your email (optional, for update notifications)" />
+          <textarea class="feedback-textarea" id="fbMessage" maxlength="2000" placeholder="Describe the issue or feature request in detail..."></textarea>
+          <input type="email" class="feedback-input-email" id="fbEmail" maxlength="254" placeholder="Your email (optional, for update notifications)" />
 
           <div class="feedback-metadata-badge">
             <span id="fbMetaInfo">Auto-attaching: URL, Device</span>
