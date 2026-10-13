@@ -64,7 +64,6 @@ const BoardBriefForm: React.FC<BoardBriefFormProps> = React.memo(({ onSubmit }) 
           type="email"
           maxLength={254}
           value={emailInput}
-          maxLength={254}
           onChange={(e) => {
             setEmailInput(e.target.value);
             if (emailError) setEmailError(null);
@@ -256,6 +255,229 @@ const ModelerHeader: React.FC = React.memo(() => {
 });
 
 ModelerHeader.displayName = 'ModelerHeader';
+
+// Performance optimization: Memoized Profile Selector Tabs component isolates profile switcher buttons from 60–120Hz slider movement updates
+interface ProfileSelectorTabsProps {
+  profile: InfrastructureProfile;
+  onSelectProfile: (profile: InfrastructureProfile) => void;
+}
+
+const ProfileSelectorTabs: React.FC<ProfileSelectorTabsProps> = React.memo(({ profile, onSelectProfile }) => {
+  return (
+    <div className="flex flex-col gap-2">
+      <label className="text-xs font-mono uppercase text-slate-300">
+        Infrastructure Profile
+      </label>
+      <div className="grid grid-cols-3 gap-2 p-1 bg-[#0B0F19] border border-[#2A374F] rounded-lg">
+        <button
+          type="button"
+          onClick={() => onSelectProfile('coop')}
+          className={`py-2 px-3 text-xs font-mono rounded text-center transition-all cursor-pointer ${
+            profile === 'coop'
+              ? 'bg-[#161F30] text-[#00E5FF] font-bold border border-[#00E5FF]/40 shadow-sm'
+              : 'text-slate-400 hover:text-white border border-transparent'
+          }`}
+        >
+          Rural Electric Co-op
+        </button>
+        <button
+          type="button"
+          onClick={() => onSelectProfile('solar')}
+          className={`py-2 px-3 text-xs font-mono rounded text-center transition-all cursor-pointer ${
+            profile === 'solar'
+              ? 'bg-[#161F30] text-[#00E5FF] font-bold border border-[#00E5FF]/40 shadow-sm'
+              : 'text-slate-400 hover:text-white border border-transparent'
+          }`}
+        >
+          Community Solar
+        </button>
+        <button
+          type="button"
+          onClick={() => onSelectProfile('iou')}
+          className={`py-2 px-3 text-xs font-mono rounded text-center transition-all cursor-pointer ${
+            profile === 'iou'
+              ? 'bg-[#161F30] text-[#00E5FF] font-bold border border-[#00E5FF]/40 shadow-sm'
+              : 'text-slate-400 hover:text-white border border-transparent'
+          }`}
+        >
+          IOU / G&amp;T Net
+        </button>
+      </div>
+    </div>
+  );
+});
+
+ProfileSelectorTabs.displayName = 'ProfileSelectorTabs';
+
+// Performance optimization: Memoized Threat Vector Select component isolates threat dropdown selection and option tags from range slider movements
+interface ThreatVectorSelectProps {
+  threat: ThreatVector;
+  onThreatChange: (threat: ThreatVector) => void;
+}
+
+const ThreatVectorSelect: React.FC<ThreatVectorSelectProps> = React.memo(({ threat, onThreatChange }) => {
+  return (
+    <div className="flex flex-col gap-2 pt-2">
+      <label className="text-xs font-mono uppercase text-slate-300">
+        Primary Operational Threat Vector
+      </label>
+      <div className="relative">
+        <select
+          value={threat}
+          onChange={(e) => onThreatChange(e.target.value as ThreatVector)}
+          className="w-full bg-[#0B0F19] border border-[#2A374F] rounded-lg p-3 text-sm text-slate-200 font-mono focus:border-[#00E5FF] focus:outline-none appearance-none cursor-pointer pr-10"
+        >
+          <option value="wildfire">
+            Wildfire Hardening &amp; Red-Flag Rapid Patrols (High Priority)
+          </option>
+          <option value="vegetation">
+            Vegetation Encroachment &amp; Right-of-Way Ingress
+          </option>
+          <option value="storm">
+            Severe Storm Rapid Post-Event Re-dispatch
+          </option>
+          <option value="thermography">
+            Substation &amp; Transformer Radiometric Thermography
+          </option>
+        </select>
+        <span className="material-symbols-outlined text-slate-400 absolute right-3 top-3 pointer-events-none text-[20px]">
+          expand_more
+        </span>
+      </div>
+    </div>
+  );
+});
+
+ThreatVectorSelect.displayName = 'ThreatVectorSelect';
+
+// Performance optimization: Memoized Parametric Sliders Card component groups and isolates range slider inputs, preventing VDOM diffing on static headers and tabs during high-frequency slider dragging
+interface ParametricSlidersCardProps {
+  profile: InfrastructureProfile;
+  miles: number;
+  spend: number;
+  threat: ThreatVector;
+  grantActive: boolean;
+  milesLabel: string;
+  milesBadge: string;
+  minMiles: number;
+  maxMiles: number;
+  stepMiles: number;
+  onProfileSelect: (p: InfrastructureProfile) => void;
+  onMilesChange: (val: number) => void;
+  onSpendChange: (val: number) => void;
+  onThreatChange: (threat: ThreatVector) => void;
+  onToggleGrant: (active: boolean) => void;
+}
+
+const ParametricSlidersCard: React.FC<ParametricSlidersCardProps> = React.memo(({
+  profile,
+  miles,
+  spend,
+  threat,
+  grantActive,
+  milesLabel,
+  milesBadge,
+  minMiles,
+  maxMiles,
+  stepMiles,
+  onProfileSelect,
+  onMilesChange,
+  onSpendChange,
+  onThreatChange,
+  onToggleGrant,
+}) => {
+  return (
+    <div className="lg:col-span-7 flex flex-col gap-6 bg-[#161F30] border border-[#2A374F] p-6 lg:p-8 rounded-xl shadow-2xl">
+      <div className="flex items-center justify-between border-b border-[#2A374F] pb-4">
+        <div className="flex items-center gap-2">
+          <span className="material-symbols-outlined text-[#00E5FF] text-[22px]">
+            tune
+          </span>
+          <h2 className="text-lg font-headline font-semibold text-white">
+            System Parametric Inputs
+          </h2>
+        </div>
+        <span className="text-xs font-mono text-slate-400 uppercase tracking-wider">
+          Live Dynamic Sync
+        </span>
+      </div>
+
+      <ProfileSelectorTabs
+        profile={profile}
+        onSelectProfile={onProfileSelect}
+      />
+
+      {/* Slider 1: Line Miles / Assets */}
+      <div className="flex flex-col gap-2 pt-2">
+        <div className="flex justify-between items-center">
+          <span className="text-xs font-mono uppercase text-slate-300">
+            {milesLabel}
+          </span>
+          <span className="text-lg font-headline font-bold text-[#00E5FF]">
+            {milesBadge}
+          </span>
+        </div>
+        <input
+          type="range"
+          min={minMiles}
+          max={maxMiles}
+          step={stepMiles}
+          value={miles}
+          onChange={(e) => onMilesChange(parseInt(e.target.value, 10) || minMiles)}
+          className="w-full"
+        />
+        <div className="flex justify-between text-[11px] font-mono text-slate-500">
+          <span>{profile === 'solar' ? '10 MW' : '500 mi (Compact Substation)'}</span>
+          <span>{profile === 'solar' ? '150 MW' : '2,500 mi'}</span>
+          <span>{profile === 'solar' ? '300 MW' : '5,000 mi (Multi-County G&T)'}</span>
+        </div>
+      </div>
+
+      {/* Slider 2: Current Annual Inspection Spend */}
+      <div className="flex flex-col gap-2 pt-2">
+        <div className="flex justify-between items-center">
+          <div>
+            <span className="text-xs font-mono uppercase text-slate-300">
+              Current Annual Inspection Spend
+            </span>
+            <span className="block text-[11px] text-slate-400 font-mono">
+              Helicopters, foot patrols, bucket trucks &amp; manual UAV
+            </span>
+          </div>
+          <span className="text-lg font-headline font-bold text-[#00E5FF]">
+            ${spend.toLocaleString()} / yr
+          </span>
+        </div>
+        <input
+          type="range"
+          min={50000}
+          max={600000}
+          step={10000}
+          value={spend}
+          onChange={(e) => onSpendChange(parseInt(e.target.value, 10) || 50000)}
+          className="w-full"
+        />
+        <div className="flex justify-between text-[11px] font-mono text-slate-500">
+          <span>$50,000 / yr</span>
+          <span>$300,000 / yr</span>
+          <span>$600,000 / yr</span>
+        </div>
+      </div>
+
+      <ThreatVectorSelect
+        threat={threat}
+        onThreatChange={onThreatChange}
+      />
+
+      <GrantMatchingCard
+        grantActive={grantActive}
+        onToggleGrant={onToggleGrant}
+      />
+    </div>
+  );
+});
+
+ParametricSlidersCard.displayName = 'ParametricSlidersCard';
 
 // Performance optimization: Memoized component isolates static grant qualification text and toggles from 60–120Hz range slider movements
 interface GrantMatchingCardProps {
@@ -770,7 +992,7 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = React.memo(({
     setGrantActive(active);
   }, []);
 
-  const handleProfileSelect = (p: InfrastructureProfile) => {
+  const handleProfileSelect = React.useCallback((p: InfrastructureProfile) => {
     setProfile(p);
     if (p === 'coop') {
       setMiles(1850);
@@ -782,7 +1004,19 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = React.memo(({
       setMiles(3600);
       setSpend(480000);
     }
-  };
+  }, []);
+
+  const handleMilesChange = React.useCallback((val: number) => {
+    setMiles(val);
+  }, []);
+
+  const handleSpendChange = React.useCallback((val: number) => {
+    setSpend(val);
+  }, []);
+
+  const handleThreatChange = React.useCallback((t: ThreatVector) => {
+    setThreat(t);
+  }, []);
 
   // Performance optimization: Only execute handleProfileSelect when initialProfile changes post-mount
   const prevInitialProfileRef = React.useRef(initialProfile);
@@ -953,156 +1187,23 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = React.memo(({
       {/* Two-Column Interactive Modeler Workspace */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* LEFT: Parametric Sliders & Input Controls (7 cols) */}
-        <div className="lg:col-span-7 flex flex-col gap-6 bg-[#161F30] border border-[#2A374F] p-6 lg:p-8 rounded-xl shadow-2xl">
-          <div className="flex items-center justify-between border-b border-[#2A374F] pb-4">
-            <div className="flex items-center gap-2">
-              <span className="material-symbols-outlined text-[#00E5FF] text-[22px]">
-                tune
-              </span>
-              <h2 className="text-lg font-headline font-semibold text-white">
-                System Parametric Inputs
-              </h2>
-            </div>
-            <span className="text-xs font-mono text-slate-400 uppercase tracking-wider">
-              Live Dynamic Sync
-            </span>
-          </div>
-
-          {/* Infrastructure Profile Tabs */}
-          <div className="flex flex-col gap-2">
-            <label className="text-xs font-mono uppercase text-slate-300">
-              Infrastructure Profile
-            </label>
-            <div className="grid grid-cols-3 gap-2 p-1 bg-[#0B0F19] border border-[#2A374F] rounded-lg">
-              <button
-                type="button"
-                onClick={() => handleProfileSelect('coop')}
-                className={`py-2 px-3 text-xs font-mono rounded text-center transition-all cursor-pointer ${
-                  profile === 'coop'
-                    ? 'bg-[#161F30] text-[#00E5FF] font-bold border border-[#00E5FF]/40 shadow-sm'
-                    : 'text-slate-400 hover:text-white border border-transparent'
-                }`}
-              >
-                Rural Electric Co-op
-              </button>
-              <button
-                type="button"
-                onClick={() => handleProfileSelect('solar')}
-                className={`py-2 px-3 text-xs font-mono rounded text-center transition-all cursor-pointer ${
-                  profile === 'solar'
-                    ? 'bg-[#161F30] text-[#00E5FF] font-bold border border-[#00E5FF]/40 shadow-sm'
-                    : 'text-slate-400 hover:text-white border border-transparent'
-                }`}
-              >
-                Community Solar
-              </button>
-              <button
-                type="button"
-                onClick={() => handleProfileSelect('iou')}
-                className={`py-2 px-3 text-xs font-mono rounded text-center transition-all cursor-pointer ${
-                  profile === 'iou'
-                    ? 'bg-[#161F30] text-[#00E5FF] font-bold border border-[#00E5FF]/40 shadow-sm'
-                    : 'text-slate-400 hover:text-white border border-transparent'
-                }`}
-              >
-                IOU / G&amp;T Net
-              </button>
-            </div>
-          </div>
-
-          {/* Slider 1: Line Miles / Assets */}
-          <div className="flex flex-col gap-2 pt-2">
-            <div className="flex justify-between items-center">
-              <span className="text-xs font-mono uppercase text-slate-300">
-                {milesLabel}
-              </span>
-              <span className="text-lg font-headline font-bold text-[#00E5FF]">
-                {milesBadge}
-              </span>
-            </div>
-            <input
-              type="range"
-              min={minMiles}
-              max={maxMiles}
-              step={stepMiles}
-              value={miles}
-              onChange={(e) => setMiles(parseInt(e.target.value, 10) || minMiles)}
-              className="w-full"
-            />
-            <div className="flex justify-between text-[11px] font-mono text-slate-500">
-              <span>{profile === 'solar' ? '10 MW' : '500 mi (Compact Substation)'}</span>
-              <span>{profile === 'solar' ? '150 MW' : '2,500 mi'}</span>
-              <span>{profile === 'solar' ? '300 MW' : '5,000 mi (Multi-County G&T)'}</span>
-            </div>
-          </div>
-
-          {/* Slider 2: Current Annual Inspection Spend */}
-          <div className="flex flex-col gap-2 pt-2">
-            <div className="flex justify-between items-center">
-              <div>
-                <span className="text-xs font-mono uppercase text-slate-300">
-                  Current Annual Inspection Spend
-                </span>
-                <span className="block text-[11px] text-slate-400 font-mono">
-                  Helicopters, foot patrols, bucket trucks &amp; manual UAV
-                </span>
-              </div>
-              <span className="text-lg font-headline font-bold text-[#00E5FF]">
-                ${spend.toLocaleString()} / yr
-              </span>
-            </div>
-            <input
-              type="range"
-              min={50000}
-              max={600000}
-              step={10000}
-              value={spend}
-              onChange={(e) => setSpend(parseInt(e.target.value, 10) || 50000)}
-              className="w-full"
-            />
-            <div className="flex justify-between text-[11px] font-mono text-slate-500">
-              <span>$50,000 / yr</span>
-              <span>$300,000 / yr</span>
-              <span>$600,000 / yr</span>
-            </div>
-          </div>
-
-          {/* Threat Vector Select */}
-          <div className="flex flex-col gap-2 pt-2">
-            <label className="text-xs font-mono uppercase text-slate-300">
-              Primary Operational Threat Vector
-            </label>
-            <div className="relative">
-              <select
-                value={threat}
-                onChange={(e) => setThreat(e.target.value as ThreatVector)}
-                className="w-full bg-[#0B0F19] border border-[#2A374F] rounded-lg p-3 text-sm text-slate-200 font-mono focus:border-[#00E5FF] focus:outline-none appearance-none cursor-pointer pr-10"
-              >
-                <option value="wildfire">
-                  Wildfire Hardening &amp; Red-Flag Rapid Patrols (High Priority)
-                </option>
-                <option value="vegetation">
-                  Vegetation Encroachment &amp; Right-of-Way Ingress
-                </option>
-                <option value="storm">
-                  Severe Storm Rapid Post-Event Re-dispatch
-                </option>
-                <option value="thermography">
-                  Substation &amp; Transformer Radiometric Thermography
-                </option>
-              </select>
-              <span className="material-symbols-outlined text-slate-400 absolute right-3 top-3 pointer-events-none text-[20px]">
-                expand_more
-              </span>
-            </div>
-          </div>
-
-          {/* Grant Matching Toggles */}
-          <GrantMatchingCard
-            grantActive={grantActive}
-            onToggleGrant={handleToggleGrant}
-          />
-        </div>
+        <ParametricSlidersCard
+          profile={profile}
+          miles={miles}
+          spend={spend}
+          threat={threat}
+          grantActive={grantActive}
+          milesLabel={milesLabel}
+          milesBadge={milesBadge}
+          minMiles={minMiles}
+          maxMiles={maxMiles}
+          stepMiles={stepMiles}
+          onProfileSelect={handleProfileSelect}
+          onMilesChange={handleMilesChange}
+          onSpendChange={handleSpendChange}
+          onThreatChange={handleThreatChange}
+          onToggleGrant={handleToggleGrant}
+        />
 
         {/* RIGHT: Calculated Financial Model & Yield Cards (5 cols) */}
         <div className="lg:col-span-5 flex flex-col gap-6">

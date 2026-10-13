@@ -69,3 +69,9 @@
 **Learning:** Rendering static grant qualification text, legal disclosures, and toggle controls directly inside an interactive calculator workspace (`ModelerScreen.tsx`) forces React to re-evaluate and diff all text nodes and toggle markup on every 60–120Hz range slider drag tick—even though the grant toggle state remains unchanged during slider movements.
 
 **Action:** Extract grant matching toggle blocks into a dedicated `React.memo` subcomponent (`GrantMatchingCard`) with stable `useCallback` handlers to completely eliminate VDOM diffing of static grant copy during high-frequency slider adjustments.
+
+## 2025-05-30 - Fine-Grained Subcomponent Memoization for Interactive Parametric Input Controls Prevents Left-Column VDOM Re-creation
+
+**Learning:** In interactive calculator workspaces (`ModelerScreen.tsx`), rendering infrastructure profile tab buttons, threat vector `<select>` dropdowns with option tags, and range slider controls inline within the parent component forces React to recreate and diff those DOM nodes on every 60–120Hz range slider drag tick.
+
+**Action:** Extract infrastructure profile tabs (`ProfileSelectorTabs`), threat vector dropdowns (`ThreatVectorSelect`), and slider control panels (`ParametricSlidersCard`) into fine-grained `React.memo` subcomponents with `useCallback` handlers to isolate input controls and eliminate VDOM diffing during high-frequency slider adjustments.
