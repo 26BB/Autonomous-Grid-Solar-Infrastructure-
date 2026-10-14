@@ -102,7 +102,6 @@ export const ProposalPackageModal: React.FC<ProposalPackageModalProps> = React.m
                   type="email"
                   maxLength={254}
                   required
-                  maxLength={254}
                   value={email}
                   onChange={(e) => {
                     setEmail(e.target.value);
