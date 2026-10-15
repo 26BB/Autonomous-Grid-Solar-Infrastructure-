@@ -70,7 +70,13 @@
 
 **Action:** Extract grant matching toggle blocks into a dedicated `React.memo` subcomponent (`GrantMatchingCard`) with stable `useCallback` handlers to completely eliminate VDOM diffing of static grant copy during high-frequency slider adjustments.
 
-## 2025-05-30 - Fine-Grained Subcomponent Memoization for Interactive Parametric Input Controls Prevents Left-Column VDOM Re-creation
+## 2025-05-30 - Isolating Embedded Calculator Static Elements and Display Cards Prevents Overview VDOM Reconciliation Churn
+
+**Learning:** Rendering static headlines, eligibility callout boxes, and dynamic output cards directly inside a top-level quick calculator component (`EmbeddedCalculator.tsx`) forces React to re-create and diff all static DOM nodes on every 60–120Hz range slider adjustment tick on the homepage overview screen.
+
+**Action:** Extract static headers (`EmbeddedCalculatorHeader`), callouts (`EmbeddedCalculatorEligibilityNotes`), and dynamic output cards (`EmbeddedCalculatorOutputCard`) into `React.memo` subcomponents, backing modal launch callbacks with a `calculatorDataRef` (`deps: []`) to isolate slider drag re-renders completely.
+
+## 2025-05-31 - Fine-Grained Subcomponent Memoization for Interactive Parametric Input Controls Prevents Left-Column VDOM Re-creation
 
 **Learning:** In interactive calculator workspaces (`ModelerScreen.tsx`), rendering infrastructure profile tab buttons, threat vector `<select>` dropdowns with option tags, and range slider controls inline within the parent component forces React to recreate and diff those DOM nodes on every 60–120Hz range slider drag tick.
 
