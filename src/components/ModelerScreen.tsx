@@ -63,7 +63,6 @@ const BoardBriefForm: React.FC<BoardBriefFormProps> = React.memo(({ onSubmit }) 
         <input
           type="email"
           value={emailInput}
-          maxLength={254}
           onChange={(e) => {
             setEmailInput(e.target.value);
             if (emailError) setEmailError(null);
