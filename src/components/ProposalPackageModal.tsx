@@ -100,7 +100,6 @@ export const ProposalPackageModal: React.FC<ProposalPackageModalProps> = React.m
                 </label>
                 <input
                   type="email"
-                  maxLength={254}
                   required
                   value={email}
                   onChange={(e) => {
