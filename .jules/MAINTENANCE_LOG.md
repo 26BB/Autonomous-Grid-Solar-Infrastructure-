@@ -11,12 +11,16 @@
 | Date Found | Category | File | Issue | Priority |
 |------------|----------|------|-------|----------|
 | 2026-10-15 | ⚡ Perf | src/components/ModelerScreen.tsx, src/components/ProposalPackageModal.tsx | Fine-grained memoization for parametric input controls (PR #105 had conflicts) | MEDIUM |
-| 2026-10-15 | ⚡ Perf | src/components/DeploymentSection.tsx, src/components/ModelerScreen.tsx | Isolate profile tabs and threat vector controls into memoized subcomponents (PR #110 had conflicts) | MEDIUM |
 | 2026-10-15 | 🛡️ Maint | docs/AUTONOMOUS_MAINTENANCE_LOG.md | Morning health squad log entries for 2026-10-08 and 2026-10-13 (PR #107, #109 had conflicts) | LOW |
 
 ---
 
 ## ✅ Completed Log (most recent first)
+
+### 2026-10-15 — Isolate Profile Tabs & Threat Vector Controls (ATLAS)
+**Status:** ✅ Completed by ATLAS
+**Fixed:**
+- ⚡ Extracted `ProfileTabs` and `ThreatVectorSelect` subcomponents with `React.memo` and `useCallback` handlers in `src/components/ModelerScreen.tsx` to prevent redundant re-renders during high-frequency (60–120Hz) range slider movements.
 
 ### 2026-10-15 — Initial Logbook + Jules Master Bulk Merge
 **Status:** ✅ Bulk merge by Jules Master

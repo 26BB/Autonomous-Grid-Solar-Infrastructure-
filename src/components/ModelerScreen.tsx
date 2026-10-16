@@ -255,6 +255,100 @@ const ModelerHeader: React.FC = React.memo(() => {
 
 ModelerHeader.displayName = 'ModelerHeader';
 
+// Performance optimization: Memoized component isolates profile tabs from high-frequency range slider ticks (60–120Hz)
+interface ProfileTabsProps {
+  profile: InfrastructureProfile;
+  onSelectProfile: (p: InfrastructureProfile) => void;
+}
+
+const ProfileTabs: React.FC<ProfileTabsProps> = React.memo(({ profile, onSelectProfile }) => {
+  return (
+    <div className="flex flex-col gap-2">
+      <label className="text-xs font-mono uppercase text-slate-300">
+        Infrastructure Profile
+      </label>
+      <div className="grid grid-cols-3 gap-2 p-1 bg-[#0B0F19] border border-[#2A374F] rounded-lg">
+        <button
+          type="button"
+          onClick={() => onSelectProfile('coop')}
+          className={`py-2 px-3 text-xs font-mono rounded text-center transition-all cursor-pointer ${
+            profile === 'coop'
+              ? 'bg-[#161F30] text-[#00E5FF] font-bold border border-[#00E5FF]/40 shadow-sm'
+              : 'text-slate-400 hover:text-white border border-transparent'
+          }`}
+        >
+          Rural Electric Co-op
+        </button>
+        <button
+          type="button"
+          onClick={() => onSelectProfile('solar')}
+          className={`py-2 px-3 text-xs font-mono rounded text-center transition-all cursor-pointer ${
+            profile === 'solar'
+              ? 'bg-[#161F30] text-[#00E5FF] font-bold border border-[#00E5FF]/40 shadow-sm'
+              : 'text-slate-400 hover:text-white border border-transparent'
+          }`}
+        >
+          Community Solar
+        </button>
+        <button
+          type="button"
+          onClick={() => onSelectProfile('iou')}
+          className={`py-2 px-3 text-xs font-mono rounded text-center transition-all cursor-pointer ${
+            profile === 'iou'
+              ? 'bg-[#161F30] text-[#00E5FF] font-bold border border-[#00E5FF]/40 shadow-sm'
+              : 'text-slate-400 hover:text-white border border-transparent'
+          }`}
+        >
+          IOU / G&amp;T Net
+        </button>
+      </div>
+    </div>
+  );
+});
+
+ProfileTabs.displayName = 'ProfileTabs';
+
+// Performance optimization: Memoized component isolates operational threat vector select from high-frequency range slider ticks (60–120Hz)
+interface ThreatVectorSelectProps {
+  threat: ThreatVector;
+  onChangeThreat: (t: ThreatVector) => void;
+}
+
+const ThreatVectorSelect: React.FC<ThreatVectorSelectProps> = React.memo(({ threat, onChangeThreat }) => {
+  return (
+    <div className="flex flex-col gap-2 pt-2">
+      <label className="text-xs font-mono uppercase text-slate-300">
+        Primary Operational Threat Vector
+      </label>
+      <div className="relative">
+        <select
+          value={threat}
+          onChange={(e) => onChangeThreat(e.target.value as ThreatVector)}
+          className="w-full bg-[#0B0F19] border border-[#2A374F] rounded-lg p-3 text-sm text-slate-200 font-mono focus:border-[#00E5FF] focus:outline-none appearance-none cursor-pointer pr-10"
+        >
+          <option value="wildfire">
+            Wildfire Hardening &amp; Red-Flag Rapid Patrols (High Priority)
+          </option>
+          <option value="vegetation">
+            Vegetation Encroachment &amp; Right-of-Way Ingress
+          </option>
+          <option value="storm">
+            Severe Storm Rapid Post-Event Re-dispatch
+          </option>
+          <option value="thermography">
+            Substation &amp; Transformer Radiometric Thermography
+          </option>
+        </select>
+        <span className="material-symbols-outlined text-slate-400 absolute right-3 top-3 pointer-events-none text-[20px]">
+          expand_more
+        </span>
+      </div>
+    </div>
+  );
+});
+
+ThreatVectorSelect.displayName = 'ThreatVectorSelect';
+
 // Performance optimization: Memoized component isolates static grant qualification text and toggles from 60–120Hz range slider movements
 interface GrantMatchingCardProps {
   grantActive: boolean;
@@ -768,7 +862,7 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = React.memo(({
     setGrantActive(active);
   }, []);
 
-  const handleProfileSelect = (p: InfrastructureProfile) => {
+  const handleProfileSelect = React.useCallback((p: InfrastructureProfile) => {
     setProfile(p);
     if (p === 'coop') {
       setMiles(1850);
@@ -780,7 +874,11 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = React.memo(({
       setMiles(3600);
       setSpend(480000);
     }
-  };
+  }, []);
+
+  const handleThreatChange = React.useCallback((t: ThreatVector) => {
+    setThreat(t);
+  }, []);
 
   // Performance optimization: Only execute handleProfileSelect when initialProfile changes post-mount
   const prevInitialProfileRef = React.useRef(initialProfile);
@@ -967,46 +1065,7 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = React.memo(({
           </div>
 
           {/* Infrastructure Profile Tabs */}
-          <div className="flex flex-col gap-2">
-            <label className="text-xs font-mono uppercase text-slate-300">
-              Infrastructure Profile
-            </label>
-            <div className="grid grid-cols-3 gap-2 p-1 bg-[#0B0F19] border border-[#2A374F] rounded-lg">
-              <button
-                type="button"
-                onClick={() => handleProfileSelect('coop')}
-                className={`py-2 px-3 text-xs font-mono rounded text-center transition-all cursor-pointer ${
-                  profile === 'coop'
-                    ? 'bg-[#161F30] text-[#00E5FF] font-bold border border-[#00E5FF]/40 shadow-sm'
-                    : 'text-slate-400 hover:text-white border border-transparent'
-                }`}
-              >
-                Rural Electric Co-op
-              </button>
-              <button
-                type="button"
-                onClick={() => handleProfileSelect('solar')}
-                className={`py-2 px-3 text-xs font-mono rounded text-center transition-all cursor-pointer ${
-                  profile === 'solar'
-                    ? 'bg-[#161F30] text-[#00E5FF] font-bold border border-[#00E5FF]/40 shadow-sm'
-                    : 'text-slate-400 hover:text-white border border-transparent'
-                }`}
-              >
-                Community Solar
-              </button>
-              <button
-                type="button"
-                onClick={() => handleProfileSelect('iou')}
-                className={`py-2 px-3 text-xs font-mono rounded text-center transition-all cursor-pointer ${
-                  profile === 'iou'
-                    ? 'bg-[#161F30] text-[#00E5FF] font-bold border border-[#00E5FF]/40 shadow-sm'
-                    : 'text-slate-400 hover:text-white border border-transparent'
-                }`}
-              >
-                IOU / G&amp;T Net
-              </button>
-            </div>
-          </div>
+          <ProfileTabs profile={profile} onSelectProfile={handleProfileSelect} />
 
           {/* Slider 1: Line Miles / Assets */}
           <div className="flex flex-col gap-2 pt-2">
@@ -1066,34 +1125,7 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = React.memo(({
           </div>
 
           {/* Threat Vector Select */}
-          <div className="flex flex-col gap-2 pt-2">
-            <label className="text-xs font-mono uppercase text-slate-300">
-              Primary Operational Threat Vector
-            </label>
-            <div className="relative">
-              <select
-                value={threat}
-                onChange={(e) => setThreat(e.target.value as ThreatVector)}
-                className="w-full bg-[#0B0F19] border border-[#2A374F] rounded-lg p-3 text-sm text-slate-200 font-mono focus:border-[#00E5FF] focus:outline-none appearance-none cursor-pointer pr-10"
-              >
-                <option value="wildfire">
-                  Wildfire Hardening &amp; Red-Flag Rapid Patrols (High Priority)
-                </option>
-                <option value="vegetation">
-                  Vegetation Encroachment &amp; Right-of-Way Ingress
-                </option>
-                <option value="storm">
-                  Severe Storm Rapid Post-Event Re-dispatch
-                </option>
-                <option value="thermography">
-                  Substation &amp; Transformer Radiometric Thermography
-                </option>
-              </select>
-              <span className="material-symbols-outlined text-slate-400 absolute right-3 top-3 pointer-events-none text-[20px]">
-                expand_more
-              </span>
-            </div>
-          </div>
+          <ThreatVectorSelect threat={threat} onChangeThreat={handleThreatChange} />
 
           {/* Grant Matching Toggles */}
           <GrantMatchingCard
