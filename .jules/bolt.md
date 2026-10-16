@@ -75,3 +75,8 @@
 **Learning:** Rendering static headlines, eligibility callout boxes, and dynamic output cards directly inside a top-level quick calculator component (`EmbeddedCalculator.tsx`) forces React to re-create and diff all static DOM nodes on every 60–120Hz range slider adjustment tick on the homepage overview screen.
 
 **Action:** Extract static headers (`EmbeddedCalculatorHeader`), callouts (`EmbeddedCalculatorEligibilityNotes`), and dynamic output cards (`EmbeddedCalculatorOutputCard`) into `React.memo` subcomponents, backing modal launch callbacks with a `calculatorDataRef` (`deps: []`) to isolate slider drag re-renders completely.
+## 2025-05-31 - Isolating Input Select Controls into Memoized Subcomponents Prevents Unnecessary Control Re-renders During Range Slider Movement
+
+**Learning:** Rendering static tab buttons (e.g. infrastructure profiles) and select dropdowns (e.g. threat vectors) directly inside an interactive calculator workspace (`ModelerScreen.tsx`) causes React to re-evaluate and diff those input controls on every 60–120Hz range slider drag tick, even though profile and threat vector states remain unchanged during slider dragging.
+
+**Action:** Extract control groups into dedicated `React.memo` subcomponents (`InfrastructureProfileTabs`, `ThreatVectorSelect`) with stable `useCallback` handlers (`deps: []`) to eliminate VDOM diffing of static control markup during high-frequency slider adjustments.
