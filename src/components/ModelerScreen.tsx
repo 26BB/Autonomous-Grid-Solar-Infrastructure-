@@ -311,6 +311,103 @@ const InfrastructureProfileTabs: React.FC<InfrastructureProfileTabsProps> = Reac
 
 InfrastructureProfileTabs.displayName = 'InfrastructureProfileTabs';
 
+// Performance optimization: Memoized Line Miles Slider isolates line mileage range slider ticks from unrelated state changes
+interface LineMilesSliderProps {
+  label: string;
+  badge: string;
+  miles: number;
+  minMiles: number;
+  maxMiles: number;
+  stepMiles: number;
+  profile: InfrastructureProfile;
+  onChangeMiles: (miles: number) => void;
+}
+
+const LineMilesSlider: React.FC<LineMilesSliderProps> = React.memo(({
+  label,
+  badge,
+  miles,
+  minMiles,
+  maxMiles,
+  stepMiles,
+  profile,
+  onChangeMiles,
+}) => {
+  return (
+    <div className="flex flex-col gap-2 pt-2">
+      <div className="flex justify-between items-center">
+        <span className="text-xs font-mono uppercase text-slate-300">
+          {label}
+        </span>
+        <span className="text-lg font-headline font-bold text-[#00E5FF]">
+          {badge}
+        </span>
+      </div>
+      <input
+        type="range"
+        min={minMiles}
+        max={maxMiles}
+        step={stepMiles}
+        value={miles}
+        onChange={(e) => onChangeMiles(parseInt(e.target.value, 10) || minMiles)}
+        className="w-full"
+      />
+      <div className="flex justify-between text-[11px] font-mono text-slate-500">
+        <span>{profile === 'solar' ? '10 MW' : '500 mi (Compact Substation)'}</span>
+        <span>{profile === 'solar' ? '150 MW' : '2,500 mi'}</span>
+        <span>{profile === 'solar' ? '300 MW' : '5,000 mi (Multi-County G&T)'}</span>
+      </div>
+    </div>
+  );
+});
+
+LineMilesSlider.displayName = 'LineMilesSlider';
+
+// Performance optimization: Memoized Inspection Spend Slider isolates annual inspection spend slider ticks from unrelated state changes
+interface InspectionSpendSliderProps {
+  spend: number;
+  onChangeSpend: (spend: number) => void;
+}
+
+const InspectionSpendSlider: React.FC<InspectionSpendSliderProps> = React.memo(({
+  spend,
+  onChangeSpend,
+}) => {
+  return (
+    <div className="flex flex-col gap-2 pt-2">
+      <div className="flex justify-between items-center">
+        <div>
+          <span className="text-xs font-mono uppercase text-slate-300">
+            Current Annual Inspection Spend
+          </span>
+          <span className="block text-[11px] text-slate-400 font-mono">
+            Helicopters, foot patrols, bucket trucks &amp; manual UAV
+          </span>
+        </div>
+        <span className="text-lg font-headline font-bold text-[#00E5FF]">
+          ${spend.toLocaleString()} / yr
+        </span>
+      </div>
+      <input
+        type="range"
+        min={50000}
+        max={600000}
+        step={10000}
+        value={spend}
+        onChange={(e) => onChangeSpend(parseInt(e.target.value, 10) || 50000)}
+        className="w-full"
+      />
+      <div className="flex justify-between text-[11px] font-mono text-slate-500">
+        <span>$50,000 / yr</span>
+        <span>$300,000 / yr</span>
+        <span>$600,000 / yr</span>
+      </div>
+    </div>
+  );
+});
+
+InspectionSpendSlider.displayName = 'InspectionSpendSlider';
+
 // Performance optimization: Memoized component isolates Threat Vector select control from 60–120Hz range slider ticks
 interface ThreatVectorSelectProps {
   threat: ThreatVector;
@@ -886,6 +983,14 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = React.memo(({
     setThreat(t);
   }, []);
 
+  const handleMilesChange = React.useCallback((m: number) => {
+    setMiles(m);
+  }, []);
+
+  const handleSpendChange = React.useCallback((s: number) => {
+    setSpend(s);
+  }, []);
+
   // Performance optimization: Only execute handleProfileSelect when initialProfile changes post-mount
   const prevInitialProfileRef = React.useRef(initialProfile);
   React.useEffect(() => {
@@ -1077,61 +1182,22 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = React.memo(({
           />
 
           {/* Slider 1: Line Miles / Assets */}
-          <div className="flex flex-col gap-2 pt-2">
-            <div className="flex justify-between items-center">
-              <span className="text-xs font-mono uppercase text-slate-300">
-                {milesLabel}
-              </span>
-              <span className="text-lg font-headline font-bold text-[#00E5FF]">
-                {milesBadge}
-              </span>
-            </div>
-            <input
-              type="range"
-              min={minMiles}
-              max={maxMiles}
-              step={stepMiles}
-              value={miles}
-              onChange={(e) => setMiles(parseInt(e.target.value, 10) || minMiles)}
-              className="w-full"
-            />
-            <div className="flex justify-between text-[11px] font-mono text-slate-500">
-              <span>{profile === 'solar' ? '10 MW' : '500 mi (Compact Substation)'}</span>
-              <span>{profile === 'solar' ? '150 MW' : '2,500 mi'}</span>
-              <span>{profile === 'solar' ? '300 MW' : '5,000 mi (Multi-County G&T)'}</span>
-            </div>
-          </div>
+          <LineMilesSlider
+            label={milesLabel}
+            badge={milesBadge}
+            miles={miles}
+            minMiles={minMiles}
+            maxMiles={maxMiles}
+            stepMiles={stepMiles}
+            profile={profile}
+            onChangeMiles={handleMilesChange}
+          />
 
           {/* Slider 2: Current Annual Inspection Spend */}
-          <div className="flex flex-col gap-2 pt-2">
-            <div className="flex justify-between items-center">
-              <div>
-                <span className="text-xs font-mono uppercase text-slate-300">
-                  Current Annual Inspection Spend
-                </span>
-                <span className="block text-[11px] text-slate-400 font-mono">
-                  Helicopters, foot patrols, bucket trucks &amp; manual UAV
-                </span>
-              </div>
-              <span className="text-lg font-headline font-bold text-[#00E5FF]">
-                ${spend.toLocaleString()} / yr
-              </span>
-            </div>
-            <input
-              type="range"
-              min={50000}
-              max={600000}
-              step={10000}
-              value={spend}
-              onChange={(e) => setSpend(parseInt(e.target.value, 10) || 50000)}
-              className="w-full"
-            />
-            <div className="flex justify-between text-[11px] font-mono text-slate-500">
-              <span>$50,000 / yr</span>
-              <span>$300,000 / yr</span>
-              <span>$600,000 / yr</span>
-            </div>
-          </div>
+          <InspectionSpendSlider
+            spend={spend}
+            onChangeSpend={handleSpendChange}
+          />
 
           {/* Threat Vector Select */}
           <ThreatVectorSelect

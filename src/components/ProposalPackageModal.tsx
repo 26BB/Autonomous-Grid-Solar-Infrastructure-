@@ -14,6 +14,49 @@ interface ProposalPackageModalProps {
   } | null;
 }
 
+// Performance optimization: Memoized component isolates static specifications summary from email input keystroke state re-renders
+interface PackageSpecificationsCardProps {
+  profile: string;
+  miles: number;
+  grantOffset: number;
+  savings: number;
+}
+
+const PackageSpecificationsCard: React.FC<PackageSpecificationsCardProps> = React.memo(({
+  profile,
+  miles,
+  grantOffset,
+  savings,
+}) => {
+  return (
+    <div className="p-4 rounded-xl bg-[#0B0F19] border border-[#2A374F] space-y-2">
+      <span className="text-[10px] uppercase text-[#00E5FF] font-bold">
+        PACKAGE SPECIFICATIONS RESERVED
+      </span>
+      <div className="grid grid-cols-2 gap-3 text-xs">
+        <div>
+          <span className="text-slate-500">PROFILE:</span>
+          <p className="font-bold text-white">{profile}</p>
+        </div>
+        <div>
+          <span className="text-slate-500">COVERAGE:</span>
+          <p className="font-bold text-[#00E5FF]">{miles.toLocaleString()} Units</p>
+        </div>
+        <div>
+          <span className="text-slate-500">GRANT OFFSET:</span>
+          <p className="font-bold text-[#F59E0B]">${Math.round(grantOffset).toLocaleString()}</p>
+        </div>
+        <div>
+          <span className="text-slate-500">3-YR SAVINGS:</span>
+          <p className="font-bold text-emerald-400">${savings.toLocaleString()}</p>
+        </div>
+      </div>
+    </div>
+  );
+});
+
+PackageSpecificationsCard.displayName = 'PackageSpecificationsCard';
+
 // Memoized to prevent re-renders when modal is closed or unrelated App state changes
 export const ProposalPackageModal: React.FC<ProposalPackageModalProps> = React.memo(({
   isOpen,
@@ -70,29 +113,12 @@ export const ProposalPackageModal: React.FC<ProposalPackageModalProps> = React.m
         <div className="p-6 font-mono text-xs space-y-4">
           {!locked ? (
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="p-4 rounded-xl bg-[#0B0F19] border border-[#2A374F] space-y-2">
-                <span className="text-[10px] uppercase text-[#00E5FF] font-bold">
-                  PACKAGE SPECIFICATIONS RESERVED
-                </span>
-                <div className="grid grid-cols-2 gap-3 text-xs">
-                  <div>
-                    <span className="text-slate-500">PROFILE:</span>
-                    <p className="font-bold text-white">{data.profile}</p>
-                  </div>
-                  <div>
-                    <span className="text-slate-500">COVERAGE:</span>
-                    <p className="font-bold text-[#00E5FF]">{data.miles.toLocaleString()} Units</p>
-                  </div>
-                  <div>
-                    <span className="text-slate-500">GRANT OFFSET:</span>
-                    <p className="font-bold text-[#F59E0B]">${Math.round(data.grantOffset).toLocaleString()}</p>
-                  </div>
-                  <div>
-                    <span className="text-slate-500">3-YR SAVINGS:</span>
-                    <p className="font-bold text-emerald-400">${data.savings.toLocaleString()}</p>
-                  </div>
-                </div>
-              </div>
+              <PackageSpecificationsCard
+                profile={data.profile}
+                miles={data.miles}
+                grantOffset={data.grantOffset}
+                savings={data.savings}
+              />
 
               <div className="space-y-1.5">
                 <label className="text-slate-300 uppercase text-[11px]">
