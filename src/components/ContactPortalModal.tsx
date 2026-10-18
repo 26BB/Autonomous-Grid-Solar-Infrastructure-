@@ -30,14 +30,21 @@ export const ContactPortalModal: React.FC<ContactPortalModalProps> = React.memo(
       return;
     }
 
-    setFormData({
+    // Ensure sanitized inputs are stored in local variable so confirmation screen reads sanitized values immediately
+    const cleanData = {
       name: sanitizeInput(formData.name, 100),
       utility: sanitizeInput(formData.utility, 100),
       role: sanitizeInput(formData.role, 100),
       email: cleanEmail,
       message: sanitizeInput(formData.message, 1000),
-    });
+    };
+    setFormData(cleanData);
     setSubmitted(true);
+  };
+
+  const handleClose = () => {
+    setSubmitted(false);
+    onClose();
   };
 
   return (
@@ -59,7 +66,7 @@ export const ContactPortalModal: React.FC<ContactPortalModalProps> = React.memo(
             </div>
           </div>
           <button
-            onClick={onClose}
+            onClick={handleClose}
             className="w-8 h-8 rounded-lg bg-[#161F30] border border-[#2A374F] hover:border-red-400 text-slate-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
           >
             ✕
@@ -171,7 +178,7 @@ export const ContactPortalModal: React.FC<ContactPortalModalProps> = React.memo(
                 </p>
               </div>
               <button
-                onClick={onClose}
+                onClick={handleClose}
                 className="w-full py-2 rounded bg-[#161F30] border border-[#2A374F] text-slate-300 hover:text-white font-mono text-xs cursor-pointer"
               >
                 Close
