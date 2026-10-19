@@ -15,6 +15,11 @@
 
 ## ✅ Completed Log (most recent first)
 
+### 2026-10-15 — Proposal Package Modal State Reset and Keyboard Dismissal
+**Status:** ✅ Completed by ATLAS
+**Fixed:**
+- 🛡️ Fixed `ProposalPackageModal.tsx` to reset `locked` status, `email`, and `error` state on modal close and added `Escape` key event listener for keyboard accessibility.
+
 ### 2026-10-15 — Contact Portal Modal Form State Reset and Sanitization Fix
 **Status:** ✅ Completed by ATLAS
 **Fixed:**
