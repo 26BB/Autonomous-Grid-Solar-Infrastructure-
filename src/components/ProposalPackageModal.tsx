@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { isValidEmail, sanitizeInput } from '../utils/security';
 
 interface ProposalPackageModalProps {
@@ -67,6 +67,25 @@ export const ProposalPackageModal: React.FC<ProposalPackageModalProps> = React.m
   const [email, setEmail] = useState('');
   const [error, setError] = useState<string | null>(null);
 
+  // Reset modal state on close so users can submit new proposal requests when reopened
+  const handleClose = () => {
+    setLocked(false);
+    setError(null);
+    onClose();
+  };
+
+  // Keyboard accessibility: Allow closing modal with Escape key
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        handleClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen]);
+
   if (!isOpen || !data) return null;
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -84,7 +103,7 @@ export const ProposalPackageModal: React.FC<ProposalPackageModalProps> = React.m
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="proposal-modal-title">
       <div className="bg-[#161F30] border border-[#00E5FF]/50 rounded-2xl w-full max-w-xl shadow-2xl overflow-hidden">
         {/* Header */}
         <div className="p-5 border-b border-[#2A374F] flex items-center justify-between bg-[#0B0F19]">
@@ -93,7 +112,7 @@ export const ProposalPackageModal: React.FC<ProposalPackageModalProps> = React.m
               verified
             </span>
             <div>
-              <h3 className="font-headline font-bold text-base sm:text-lg text-white">
+              <h3 id="proposal-modal-title" className="font-headline font-bold text-base sm:text-lg text-white">
                 Lock In Federal Grant Proposal Package
               </h3>
               <p className="text-xs font-mono text-slate-400">
@@ -102,7 +121,8 @@ export const ProposalPackageModal: React.FC<ProposalPackageModalProps> = React.m
             </div>
           </div>
           <button
-            onClick={onClose}
+            onClick={handleClose}
+            aria-label="Close modal"
             className="w-8 h-8 rounded-lg bg-[#161F30] border border-[#2A374F] hover:border-red-400 text-slate-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
           >
             ✕
@@ -127,6 +147,7 @@ export const ProposalPackageModal: React.FC<ProposalPackageModalProps> = React.m
                 <input
                   type="email"
                   required
+                  maxLength={254}
                   value={email}
                   onChange={(e) => {
                     setEmail(e.target.value);
@@ -179,7 +200,7 @@ export const ProposalPackageModal: React.FC<ProposalPackageModalProps> = React.m
                 <div>Assigned Advisor: AeroDock Federal Utility Desk</div>
               </div>
               <button
-                onClick={onClose}
+                onClick={handleClose}
                 className="w-full py-2.5 rounded bg-[#161F30] border border-[#2A374F] text-slate-300 hover:text-white font-mono text-xs cursor-pointer"
               >
                 Return to Modeler

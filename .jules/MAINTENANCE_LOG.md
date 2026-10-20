@@ -15,6 +15,13 @@
 
 ## ✅ Completed Log (most recent first)
 
+### 2026-10-15 — Proposal Package Modal State Reset & Keyboard Accessibility Fix
+**Status:** ✅ Completed by ATLAS
+**Fixed:**
+- 🛡️ Fixed `ProposalPackageModal.tsx` state management by adding `handleClose` callback to reset `locked` and `error` states on close, allowing users to submit new proposal requests upon modal reopening.
+- ♿ Added `useEffect` keydown event listener for the Escape key to enable keyboard navigation and dismissal of the modal.
+- 🛡️ Added `maxLength={254}` attribute to the proposal email input and standard ARIA dialog attributes (`role="dialog"`, `aria-modal="true"`, `aria-labelledby`, `aria-label`).
+
 ### 2026-10-15 — Contact Portal Modal Form State Reset and Sanitization Fix
 **Status:** ✅ Completed by ATLAS
 **Fixed:**
