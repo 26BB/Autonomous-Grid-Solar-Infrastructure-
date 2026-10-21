@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { isValidEmail, sanitizeInput } from '../utils/security';
 
 interface ProposalPackageModalProps {
@@ -67,14 +67,25 @@ export const ProposalPackageModal: React.FC<ProposalPackageModalProps> = React.m
   const [email, setEmail] = useState('');
   const [error, setError] = useState<string | null>(null);
 
+  // Reset modal state on close to ensure pristine form state when re-opened
+  const handleClose = useCallback(() => {
+    setLocked(false);
+    setEmail('');
+    setError(null);
+    onClose();
+  }, [onClose]);
+
+  // Keyboard accessibility: Allow Escape key to dismiss open modal
   useEffect(() => {
     if (!isOpen) return;
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape') {
+        handleClose();
+      }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, onClose]);
+  }, [isOpen, handleClose]);
 
   if (!isOpen || !data) return null;
 
@@ -111,7 +122,7 @@ export const ProposalPackageModal: React.FC<ProposalPackageModalProps> = React.m
             </div>
           </div>
           <button
-            onClick={onClose}
+            onClick={handleClose}
             aria-label="Close modal"
             className="w-8 h-8 rounded-lg bg-[#161F30] border border-[#2A374F] hover:border-red-400 text-slate-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
           >
@@ -189,7 +200,7 @@ export const ProposalPackageModal: React.FC<ProposalPackageModalProps> = React.m
                 <div>Assigned Advisor: AeroDock Federal Utility Desk</div>
               </div>
               <button
-                onClick={onClose}
+                onClick={handleClose}
                 className="w-full py-2.5 rounded bg-[#161F30] border border-[#2A374F] text-slate-300 hover:text-white font-mono text-xs cursor-pointer"
               >
                 Return to Modeler

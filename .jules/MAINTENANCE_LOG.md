@@ -20,6 +20,11 @@
 **Fixed:**
 - ♿ Added `Escape` key keyboard event listeners and WAI-ARIA accessibility attributes (`role="dialog"`, `aria-modal="true"`, `aria-labelledby`, and `aria-label`) across all 6 modal overlay components (`BoardBriefModal.tsx`, `ContactPortalModal.tsx`, `GrantChecklistModal.tsx`, `Part108Modal.tsx`, `PlatformSpecsModal.tsx`, `ProposalPackageModal.tsx`).
 
+### 2026-10-15 — Proposal Package Modal State Reset and Keyboard Dismissal
+**Status:** ✅ Completed by ATLAS
+**Fixed:**
+- 🛡️ Fixed `ProposalPackageModal.tsx` to reset `locked` status, `email`, and `error` state on modal close and added `Escape` key event listener for keyboard accessibility.
+
 ### 2026-10-15 — Contact Portal Modal Form State Reset and Sanitization Fix
 **Status:** ✅ Completed by ATLAS
 **Fixed:**
