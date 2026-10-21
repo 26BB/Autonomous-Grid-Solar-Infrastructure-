@@ -104,7 +104,7 @@ export const ProposalPackageModal: React.FC<ProposalPackageModalProps> = React.m
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 overflow-y-auto">
+    <div role="dialog" aria-modal="true" aria-labelledby="proposal-package-title" className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 overflow-y-auto">
       <div className="bg-[#161F30] border border-[#00E5FF]/50 rounded-2xl w-full max-w-xl shadow-2xl overflow-hidden">
         {/* Header */}
         <div className="p-5 border-b border-[#2A374F] flex items-center justify-between bg-[#0B0F19]">
@@ -113,7 +113,7 @@ export const ProposalPackageModal: React.FC<ProposalPackageModalProps> = React.m
               verified
             </span>
             <div>
-              <h3 className="font-headline font-bold text-base sm:text-lg text-white">
+              <h3 id="proposal-package-title" className="font-headline font-bold text-base sm:text-lg text-white">
                 Lock In Federal Grant Proposal Package
               </h3>
               <p className="text-xs font-mono text-slate-400">
@@ -123,6 +123,7 @@ export const ProposalPackageModal: React.FC<ProposalPackageModalProps> = React.m
           </div>
           <button
             onClick={handleClose}
+            aria-label="Close modal"
             className="w-8 h-8 rounded-lg bg-[#161F30] border border-[#2A374F] hover:border-red-400 text-slate-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
           >
             ✕

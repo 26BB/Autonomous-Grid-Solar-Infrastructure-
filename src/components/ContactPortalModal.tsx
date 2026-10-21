@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { isValidEmail, sanitizeInput } from '../utils/security';
 
 interface ContactPortalModalProps {
@@ -17,6 +17,20 @@ export const ContactPortalModal: React.FC<ContactPortalModalProps> = React.memo(
     email: '',
     message: ''
   });
+
+  const handleClose = useCallback(() => {
+    setSubmitted(false);
+    onClose();
+  }, [onClose]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') handleClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, handleClose]);
 
   if (!isOpen) return null;
 
@@ -42,13 +56,8 @@ export const ContactPortalModal: React.FC<ContactPortalModalProps> = React.memo(
     setSubmitted(true);
   };
 
-  const handleClose = () => {
-    setSubmitted(false);
-    onClose();
-  };
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 overflow-y-auto">
+    <div role="dialog" aria-modal="true" aria-labelledby="contact-portal-title" className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 overflow-y-auto">
       <div className="bg-[#161F30] border border-[#2A374F] rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden">
         {/* Header */}
         <div className="p-5 border-b border-[#2A374F] flex items-center justify-between bg-[#0B0F19]">
@@ -57,7 +66,7 @@ export const ContactPortalModal: React.FC<ContactPortalModalProps> = React.memo(
               support_agent
             </span>
             <div>
-              <h3 className="font-headline font-bold text-base sm:text-lg text-white">
+              <h3 id="contact-portal-title" className="font-headline font-bold text-base sm:text-lg text-white">
                 Co-op &amp; Utility Portal Access
               </h3>
               <p className="text-xs font-mono text-slate-400">
@@ -67,6 +76,7 @@ export const ContactPortalModal: React.FC<ContactPortalModalProps> = React.memo(
           </div>
           <button
             onClick={handleClose}
+            aria-label="Close modal"
             className="w-8 h-8 rounded-lg bg-[#161F30] border border-[#2A374F] hover:border-red-400 text-slate-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
           >
             ✕

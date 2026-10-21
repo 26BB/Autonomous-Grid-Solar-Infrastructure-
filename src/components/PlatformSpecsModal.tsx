@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { PLATFORM_SPECS } from '../data/specs';
 
 interface PlatformSpecsModalProps {
@@ -8,10 +8,19 @@ interface PlatformSpecsModalProps {
 
 // Memoized to prevent re-renders when modal is closed or unrelated App state changes
 export const PlatformSpecsModal: React.FC<PlatformSpecsModalProps> = React.memo(({ isOpen, onClose }) => {
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 overflow-y-auto">
+    <div role="dialog" aria-modal="true" aria-labelledby="platform-specs-title" className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 overflow-y-auto">
       <div className="bg-[#161F30] border border-[#00E5FF]/40 rounded-2xl w-full max-w-4xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
         {/* Header */}
         <div className="p-5 border-b border-[#2A374F] flex items-center justify-between bg-[#0B0F19]">
@@ -20,7 +29,7 @@ export const PlatformSpecsModal: React.FC<PlatformSpecsModalProps> = React.memo(
               settings_input_component
             </span>
             <div>
-              <h3 className="font-headline font-bold text-lg text-white">
+              <h3 id="platform-specs-title" className="font-headline font-bold text-lg text-white">
                 AeroDock Platform Engineering &amp; Sensor Specifications
               </h3>
               <p className="text-xs font-mono text-slate-400">
@@ -30,6 +39,7 @@ export const PlatformSpecsModal: React.FC<PlatformSpecsModalProps> = React.memo(
           </div>
           <button
             onClick={onClose}
+            aria-label="Close modal"
             className="w-8 h-8 rounded-lg bg-[#161F30] border border-[#2A374F] hover:border-red-400 text-slate-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
           >
             ✕
