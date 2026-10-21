@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 
 interface BoardBriefModalProps {
   isOpen: boolean;
@@ -23,6 +23,15 @@ export const BoardBriefModal: React.FC<BoardBriefModalProps> = React.memo(({
 }) => {
   const [downloaded, setDownloaded] = useState(false);
 
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
   // Security: Use Web Crypto API instead of Math.random() (CWE-338) for cryptographically secure ID generation
   const docRef = useMemo(() => {
     const array = new Uint32Array(1);
@@ -40,7 +49,7 @@ export const BoardBriefModal: React.FC<BoardBriefModalProps> = React.memo(({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 overflow-y-auto">
+    <div role="dialog" aria-modal="true" aria-labelledby="board-brief-title" className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 overflow-y-auto">
       <div className="bg-[#161F30] border border-[#00E5FF]/40 rounded-2xl w-full max-w-4xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
         {/* Modal Header */}
         <div className="p-5 border-b border-[#2A374F] flex items-center justify-between bg-[#0B0F19]">
@@ -49,7 +58,7 @@ export const BoardBriefModal: React.FC<BoardBriefModalProps> = React.memo(({
               description
             </span>
             <div>
-              <h3 className="font-headline font-bold text-lg text-white">
+              <h3 id="board-brief-title" className="font-headline font-bold text-lg text-white">
                 Cooperative Board Economic Brief (PDF Preview)
               </h3>
               <p className="text-xs font-mono text-slate-400">
@@ -67,6 +76,7 @@ export const BoardBriefModal: React.FC<BoardBriefModalProps> = React.memo(({
             </button>
             <button
               onClick={onClose}
+              aria-label="Close modal"
               className="w-8 h-8 rounded-lg bg-[#161F30] border border-[#2A374F] hover:border-red-400 text-slate-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
             >
               ✕
