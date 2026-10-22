@@ -206,3 +206,54 @@ input[type=range]::-moz-range-thumb {
   will-change: box-shadow;
 }
 
+/* Print Optimization for Board Briefs, Grant Qualification Checklists, and standard page views */
+@media print {
+  body {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+  }
+
+  /* Hide non-printable action elements and dialog controls during print */
+  [role="dialog"] button,
+  .no-print {
+    display: none !important;
+  }
+
+  /* When printing an open modal dialog, hide background page headers, footers, and main view */
+  body:has(div[role="dialog"]) header,
+  body:has(div[role="dialog"]) footer,
+  body:has(div[role="dialog"]) main {
+    display: none !important;
+  }
+
+  /* Unclip printable modal dialogs for full multi-page PDF/paper exports */
+  div[role="dialog"] {
+    position: static !important;
+    background: transparent !important;
+    backdrop-filter: none !important;
+    padding: 0 !important;
+  }
+
+  div[role="dialog"] > div {
+    max-height: none !important;
+    max-width: 100% !important;
+    box-shadow: none !important;
+    border: none !important;
+    background: #ffffff !important;
+    color: #0f172a !important;
+    overflow: visible !important;
+  }
+
+  /* High-contrast text and clean card containers for print */
+  main *,
+  div[role="dialog"] * {
+    color: #0f172a !important;
+    text-shadow: none !important;
+  }
+
+  main div,
+  div[role="dialog"] div {
+    background-color: #ffffff !important;
+    border-color: #e2e8f0 !important;
+  }
+}
