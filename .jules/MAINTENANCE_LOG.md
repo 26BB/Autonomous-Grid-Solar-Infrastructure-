@@ -15,6 +15,11 @@
 
 ## ✅ Completed Log (most recent first)
 
+### 2026-10-15 — Print Media CSS Styles for Board Brief & Grant Checklist PDF Exports
+**Status:** ✅ Completed by ATLAS
+**Fixed:**
+- 🖨️ Added responsive `@media print` CSS rules in `src/index.css` to format Board Briefs and USDA/BIL Grant Qualification Checklists on clean white surfaces with high contrast text for PDF/paper exports, un-clipping modal dialog containers and hiding action buttons or background layout structure during print.
+
 ### 2026-10-15 — Keyboard Escape Listener and WAI-ARIA Accessibility Across Modals
 **Status:** ✅ Completed by ATLAS
 **Fixed:**
