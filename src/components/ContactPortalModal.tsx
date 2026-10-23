@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { isValidEmail, sanitizeInput } from '../utils/security';
+import { sanitizeInput } from '../utils/security';
+import { useEmailInput } from '../utils/useEmailInput';
 
 interface ContactPortalModalProps {
   isOpen: boolean;
@@ -9,19 +10,19 @@ interface ContactPortalModalProps {
 // Memoized to prevent re-renders when modal is closed or unrelated App state changes
 export const ContactPortalModal: React.FC<ContactPortalModalProps> = React.memo(({ isOpen, onClose }) => {
   const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const { email, error, handleEmailChange, validateAndSanitize, resetEmail } = useEmailInput();
   const [formData, setFormData] = useState({
     name: '',
     utility: '',
     role: '',
-    email: '',
     message: ''
   });
 
   const handleClose = useCallback(() => {
     setSubmitted(false);
+    resetEmail();
     onClose();
-  }, [onClose]);
+  }, [onClose, resetEmail]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -36,20 +37,15 @@ export const ContactPortalModal: React.FC<ContactPortalModalProps> = React.memo(
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
 
-    const cleanEmail = sanitizeInput(formData.email, 254);
-    if (!isValidEmail(cleanEmail)) {
-      setError('Please provide a valid email address.');
-      return;
-    }
+    const { isValid, cleanEmail } = validateAndSanitize('Please provide a valid email address.');
+    if (!isValid) return;
 
     // Ensure sanitized inputs are stored in local variable so confirmation screen reads sanitized values immediately
     const cleanData = {
       name: sanitizeInput(formData.name, 100),
       utility: sanitizeInput(formData.utility, 100),
       role: sanitizeInput(formData.role, 100),
-      email: cleanEmail,
       message: sanitizeInput(formData.message, 1000),
     };
     setFormData(cleanData);
@@ -121,11 +117,8 @@ export const ContactPortalModal: React.FC<ContactPortalModalProps> = React.memo(
                     type="email"
                     required
                     maxLength={254}
-                    value={formData.email}
-                    onChange={(e) => {
-                      setFormData({ ...formData, email: e.target.value });
-                      if (error) setError(null);
-                    }}
+                    value={email}
+                    onChange={handleEmailChange}
                     placeholder="sjenkins@ozarkelectric.coop"
                     className="w-full bg-[#0B0F19] border border-[#2A374F] rounded px-3 py-2 text-white text-xs font-mono focus:border-[#00E5FF] focus:outline-none"
                   />
@@ -184,7 +177,7 @@ export const ContactPortalModal: React.FC<ContactPortalModalProps> = React.memo(
                   Consultation Request Received
                 </h4>
                 <p className="text-slate-300 text-xs mt-1">
-                  Thank you, {formData.name}. An AeroDock solutions architect will review {formData.utility}'s service footprint and contact you at <strong>{formData.email}</strong>.
+                  Thank you, {formData.name}. An AeroDock solutions architect will review {formData.utility}'s service footprint and contact you at <strong>{email}</strong>.
                 </p>
               </div>
               <button

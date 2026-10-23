@@ -15,6 +15,13 @@
 
 ## ✅ Completed Log (most recent first)
 
+### 2026-10-15 — Reusable Email Input State Custom Hook
+**Status:** ✅ Completed by ATLAS
+**Fixed:**
+- ♻️ Extracted email input state management, error clearing, validation, and sanitization into `useEmailInput` custom hook (`src/utils/useEmailInput.ts`).
+- ♻️ Refactored `ProposalPackageModal.tsx` and `ContactPortalModal.tsx` to use `useEmailInput`.
+- 🧪 Added test suite in `src/utils/useEmailInput.test.ts` testing `useEmailInput` hook logic and validation helpers.
+
 ### 2026-10-15 — Keyboard Escape Listener and WAI-ARIA Accessibility Across Modals
 **Status:** ✅ Completed by ATLAS
 **Fixed:**
