@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { isValidEmail, sanitizeInput } from '../utils/security';
+import { useEmailInput } from '../utils/useEmailInput';
 
 interface ProposalPackageModalProps {
   isOpen: boolean;
@@ -64,16 +64,14 @@ export const ProposalPackageModal: React.FC<ProposalPackageModalProps> = React.m
   data,
 }) => {
   const [locked, setLocked] = useState(false);
-  const [email, setEmail] = useState('');
-  const [error, setError] = useState<string | null>(null);
+  const { email, error, handleEmailChange, validateAndSanitize, resetEmail } = useEmailInput();
 
   // Reset modal state on close to ensure pristine form state when re-opened
   const handleClose = useCallback(() => {
     setLocked(false);
-    setEmail('');
-    setError(null);
+    resetEmail();
     onClose();
-  }, [onClose]);
+  }, [onClose, resetEmail]);
 
   // Keyboard accessibility: Allow Escape key to dismiss open modal
   useEffect(() => {
@@ -91,15 +89,8 @@ export const ProposalPackageModal: React.FC<ProposalPackageModalProps> = React.m
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
-
-    const cleanEmail = sanitizeInput(email, 254);
-    if (!isValidEmail(cleanEmail)) {
-      setError('Please enter a valid email address.');
-      return;
-    }
-
-    setEmail(cleanEmail);
+    const { isValid } = validateAndSanitize('Please enter a valid email address.');
+    if (!isValid) return;
     setLocked(true);
   };
 
@@ -149,10 +140,7 @@ export const ProposalPackageModal: React.FC<ProposalPackageModalProps> = React.m
                   type="email"
                   required
                   value={email}
-                  onChange={(e) => {
-                    setEmail(e.target.value);
-                    if (error) setError(null);
-                  }}
+                  onChange={handleEmailChange}
                   placeholder="e.g. jsmith@valleyelectric.coop"
                   className="w-full bg-[#0B0F19] border border-[#2A374F] rounded-lg px-4 py-3 text-white text-xs font-mono focus:border-[#00E5FF] focus:outline-none"
                 />
