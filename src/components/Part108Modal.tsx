@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { PART_108_MILESTONES } from '../data/specs';
+import { useModalFocusTrap } from '../utils/useModalFocusTrap';
 
 interface Part108ModalProps {
   isOpen: boolean;
@@ -13,6 +14,8 @@ export const Part108Modal: React.FC<Part108ModalProps> = React.memo(({
   onClose,
   onOpenModeler,
 }) => {
+  const modalRef = useModalFocusTrap<HTMLDivElement>(isOpen);
+
   useEffect(() => {
     if (!isOpen) return;
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -25,7 +28,7 @@ export const Part108Modal: React.FC<Part108ModalProps> = React.memo(({
   if (!isOpen) return null;
 
   return (
-    <div role="dialog" aria-modal="true" aria-labelledby="part108-modal-title" className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 overflow-y-auto">
+    <div ref={modalRef} role="dialog" aria-modal="true" aria-labelledby="part108-modal-title" className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 overflow-y-auto">
       <div className="bg-[#161F30] border border-emerald-500/40 rounded-2xl w-full max-w-3xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
         {/* Header */}
         <div className="p-5 border-b border-[#2A374F] flex items-center justify-between bg-[#0B0F19]">

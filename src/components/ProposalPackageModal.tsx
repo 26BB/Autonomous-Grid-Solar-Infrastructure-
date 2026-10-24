@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useEmailInput } from '../utils/useEmailInput';
+import { useModalFocusTrap } from '../utils/useModalFocusTrap';
 
 interface ProposalPackageModalProps {
   isOpen: boolean;
@@ -65,6 +66,7 @@ export const ProposalPackageModal: React.FC<ProposalPackageModalProps> = React.m
 }) => {
   const [locked, setLocked] = useState(false);
   const { email, error, handleEmailChange, validateAndSanitize, resetEmail } = useEmailInput();
+  const modalRef = useModalFocusTrap<HTMLDivElement>(isOpen);
 
   // Reset modal state on close to ensure pristine form state when re-opened
   const handleClose = useCallback(() => {
@@ -95,7 +97,7 @@ export const ProposalPackageModal: React.FC<ProposalPackageModalProps> = React.m
   };
 
   return (
-    <div role="dialog" aria-modal="true" aria-labelledby="proposal-package-title" className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 overflow-y-auto">
+    <div ref={modalRef} role="dialog" aria-modal="true" aria-labelledby="proposal-package-title" className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 overflow-y-auto">
       <div className="bg-[#161F30] border border-[#00E5FF]/50 rounded-2xl w-full max-w-xl shadow-2xl overflow-hidden">
         {/* Header */}
         <div className="p-5 border-b border-[#2A374F] flex items-center justify-between bg-[#0B0F19]">

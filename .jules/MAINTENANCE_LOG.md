@@ -15,6 +15,13 @@
 
 ## ✅ Completed Log (most recent first)
 
+### 2026-10-15 — Reusable WAI-ARIA Modal Focus Trap Custom Hook
+**Status:** ✅ Completed by ATLAS
+**Fixed:**
+- ♿ Created `useModalFocusTrap` custom hook (`src/utils/useModalFocusTrap.ts`) to manage WAI-ARIA compliant focus trapping, initial element focus, and focus restoration upon modal close.
+- ♿ Integrated `useModalFocusTrap` across all 6 modal components (`BoardBriefModal.tsx`, `ContactPortalModal.tsx`, `GrantChecklistModal.tsx`, `Part108Modal.tsx`, `PlatformSpecsModal.tsx`, `ProposalPackageModal.tsx`).
+- 🧪 Added unit test in `src/utils/useModalFocusTrap.test.ts`.
+
 ### 2026-10-15 — Reusable Email Input State Custom Hook
 **Status:** ✅ Completed by ATLAS
 **Fixed:**
