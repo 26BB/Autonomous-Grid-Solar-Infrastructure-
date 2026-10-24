@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { sanitizeInput } from '../utils/security';
 import { useEmailInput } from '../utils/useEmailInput';
+import { useModalFocusTrap } from '../utils/useModalFocusTrap';
 
 interface ContactPortalModalProps {
   isOpen: boolean;
@@ -11,6 +12,7 @@ interface ContactPortalModalProps {
 export const ContactPortalModal: React.FC<ContactPortalModalProps> = React.memo(({ isOpen, onClose }) => {
   const [submitted, setSubmitted] = useState(false);
   const { email, error, handleEmailChange, validateAndSanitize, resetEmail } = useEmailInput();
+  const modalRef = useModalFocusTrap<HTMLDivElement>(isOpen);
   const [formData, setFormData] = useState({
     name: '',
     utility: '',
@@ -53,7 +55,7 @@ export const ContactPortalModal: React.FC<ContactPortalModalProps> = React.memo(
   };
 
   return (
-    <div role="dialog" aria-modal="true" aria-labelledby="contact-portal-title" className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 overflow-y-auto">
+    <div ref={modalRef} role="dialog" aria-modal="true" aria-labelledby="contact-portal-title" className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 overflow-y-auto">
       <div className="bg-[#161F30] border border-[#2A374F] rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden">
         {/* Header */}
         <div className="p-5 border-b border-[#2A374F] flex items-center justify-between bg-[#0B0F19]">

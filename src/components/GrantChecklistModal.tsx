@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useModalFocusTrap } from '../utils/useModalFocusTrap';
 
 interface GrantChecklistModalProps {
   isOpen: boolean;
@@ -42,6 +43,8 @@ const CHECKLIST_STEPS = [
 
 // Memoized to prevent re-renders when modal is closed or unrelated App state changes
 export const GrantChecklistModal: React.FC<GrantChecklistModalProps> = React.memo(({ isOpen, onClose }) => {
+  const modalRef = useModalFocusTrap<HTMLDivElement>(isOpen);
+
   useEffect(() => {
     if (!isOpen) return;
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -54,7 +57,7 @@ export const GrantChecklistModal: React.FC<GrantChecklistModalProps> = React.mem
   if (!isOpen) return null;
 
   return (
-    <div role="dialog" aria-modal="true" aria-labelledby="grant-checklist-title" className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 overflow-y-auto">
+    <div ref={modalRef} role="dialog" aria-modal="true" aria-labelledby="grant-checklist-title" className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 overflow-y-auto">
       <div className="bg-[#161F30] border border-[#F59E0B]/40 rounded-2xl w-full max-w-3xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
         {/* Header */}
         <div className="p-5 border-b border-[#2A374F] flex items-center justify-between bg-[#0B0F19]">
