@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { InfrastructureProfile, ThreatVector } from '../types';
-import { isValidEmail, sanitizeInput } from '../utils/security';
+import { useEmailInput } from '../utils/useEmailInput';
 
 interface ModelerScreenProps {
   initialProfile?: InfrastructureProfile;
@@ -40,17 +40,17 @@ interface BoardBriefFormProps {
 }
 
 const BoardBriefForm: React.FC<BoardBriefFormProps> = React.memo(({ onSubmit }) => {
-  const [emailInput, setEmailInput] = useState('');
-  const [emailError, setEmailError] = useState<string | null>(null);
+  const {
+    email: emailInput,
+    error: emailError,
+    handleEmailChange,
+    validateAndSanitize,
+  } = useEmailInput();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setEmailError(null);
-    const cleanEmail = sanitizeInput(emailInput, 254);
-    if (!isValidEmail(cleanEmail)) {
-      setEmailError('Please enter a valid utility or co-op email address.');
-      return;
-    }
+    const { isValid, cleanEmail } = validateAndSanitize('Please enter a valid utility or co-op email address.');
+    if (!isValid) return;
     onSubmit(cleanEmail);
   };
 
@@ -63,11 +63,9 @@ const BoardBriefForm: React.FC<BoardBriefFormProps> = React.memo(({ onSubmit }) 
         <input
           type="email"
           value={emailInput}
-          onChange={(e) => {
-            setEmailInput(e.target.value);
-            if (emailError) setEmailError(null);
-          }}
+          onChange={handleEmailChange}
           placeholder="enter utility / co-op email"
+          aria-label="Utility or co-op email"
           required
           className="bg-[#0B0F19] border border-[#2A374F] rounded-lg px-4 py-3 text-sm text-white font-mono focus:border-[#00E5FF] focus:outline-none min-w-[280px]"
         />
