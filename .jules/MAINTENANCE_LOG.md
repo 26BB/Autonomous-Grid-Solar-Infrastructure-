@@ -21,6 +21,12 @@
 - ♿ Added `aria-hidden="true"` to Google Material Symbols icon font spans in `CompetitorTable.tsx` (`cancel`, `check_circle`, `verified`) to ensure screen readers do not read font ligature string names aloud and properly announce visible status labels.
 - 🧪 Ran lint, build, and test checks cleanly.
 
+### 2026-10-15 — Refactored Email Form Inputs with useEmailInput Hook & WCAG Accessibility
+**Status:** ✅ Completed by ATLAS
+**Fixed:**
+- ♻️ Refactored email input state, sanitization, and error handling in `DeploymentSection.tsx` and `ModelerScreen.tsx` (`BoardBriefForm`) to use the shared `useEmailInput` custom hook (`src/utils/useEmailInput.ts`).
+- ♿ Added WCAG accessible `aria-label` attributes (`Corporate or co-op email` and `Utility or co-op email`) on email form fields across main screen components.
+
 ### 2026-10-15 — Reusable WAI-ARIA Modal Focus Trap Custom Hook
 **Status:** ✅ Completed by ATLAS
 **Fixed:**

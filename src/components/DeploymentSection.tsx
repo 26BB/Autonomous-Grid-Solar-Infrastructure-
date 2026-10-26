@@ -1,28 +1,29 @@
 import React, { useState, useCallback } from 'react';
 import { motion } from 'motion/react';
-import { isValidEmail, sanitizeInput } from '../utils/security';
+import { useEmailInput } from '../utils/useEmailInput';
 
 // Performance optimization: Memoized component isolates deployment email form inputs and submission feedback from top-level App state to prevent unnecessary full-page re-renders on keystrokes.
 export const DeploymentSection: React.FC = React.memo(() => {
-  const [deploymentEmail, setDeploymentEmail] = useState('');
+  const {
+    email: deploymentEmail,
+    error: deploymentError,
+    handleEmailChange,
+    validateAndSanitize,
+    resetEmail,
+  } = useEmailInput();
   const [deploymentSubmitted, setDeploymentSubmitted] = useState(false);
-  const [deploymentError, setDeploymentError] = useState<string | null>(null);
 
   const handleDeploymentSubmit = useCallback((e: React.FormEvent) => {
     e.preventDefault();
-    setDeploymentError(null);
-    const cleanEmail = sanitizeInput(deploymentEmail, 254);
-    if (!isValidEmail(cleanEmail)) {
-      setDeploymentError('Please enter a valid corporate or co-op email address.');
-      return;
-    }
-    setDeploymentEmail(cleanEmail);
+    const { isValid } = validateAndSanitize('Please enter a valid corporate or co-op email address.');
+    if (!isValid) return;
+
     setDeploymentSubmitted(true);
     setTimeout(() => {
       setDeploymentSubmitted(false);
-      setDeploymentEmail('');
+      resetEmail();
     }, 4500);
-  }, [deploymentEmail]);
+  }, [validateAndSanitize, resetEmail]);
 
   return (
     <section className="px-4 sm:px-6 lg:px-12 max-w-7xl mx-auto w-full mb-12">
@@ -53,11 +54,9 @@ export const DeploymentSection: React.FC = React.memo(() => {
               type="email"
               required
               value={deploymentEmail}
-              onChange={(e) => {
-                setDeploymentEmail(e.target.value);
-                if (deploymentError) setDeploymentError(null);
-              }}
+              onChange={handleEmailChange}
               placeholder="Enter corporate or co-op email..."
+              aria-label="Corporate or co-op email"
               className="bg-[#0B0F19] border border-[#2A374F] rounded-lg px-4 py-3 text-sm text-white font-mono placeholder-slate-500 focus:outline-none focus:border-[#00E5FF] flex-1"
             />
             <motion.button
