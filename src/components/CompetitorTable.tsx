@@ -74,25 +74,26 @@ export const CompetitorTable: React.FC<CompetitorTableProps> = React.memo(({ onN
               <td className="p-4 font-headline font-semibold text-white group-hover:text-[#00E5FF] transition-colors">NDAA / US Grant Compliance</td>
               <td className="p-4 text-red-400">
                 <span className="flex items-center gap-1">
-                  <span className="material-symbols-outlined text-[16px]">cancel</span>
+                  {/* aria-hidden hides icon font ligature names from screen readers so only semantic status text is announced */}
+                  <span className="material-symbols-outlined text-[16px]" aria-hidden="true">cancel</span>
                   Restricted
                 </span>
               </td>
               <td className="p-4 text-emerald-400">
                 <span className="flex items-center gap-1">
-                  <span className="material-symbols-outlined text-[16px]">check_circle</span>
+                  <span className="material-symbols-outlined text-[16px]" aria-hidden="true">check_circle</span>
                   Yes
                 </span>
               </td>
               <td className="p-4 text-emerald-400">
                 <span className="flex items-center gap-1">
-                  <span className="material-symbols-outlined text-[16px]">check_circle</span>
+                  <span className="material-symbols-outlined text-[16px]" aria-hidden="true">check_circle</span>
                   Yes
                 </span>
               </td>
               <td className="p-4 text-emerald-400 font-semibold bg-[#00E5FF]/10 border-x border-[#00E5FF]/30">
                 <span className="flex items-center gap-1">
-                  <span className="material-symbols-outlined text-[16px] animate-pulse">verified</span>
+                  <span className="material-symbols-outlined text-[16px] animate-pulse" aria-hidden="true">verified</span>
                   100% Compliant / Blue UAS
                 </span>
               </td>

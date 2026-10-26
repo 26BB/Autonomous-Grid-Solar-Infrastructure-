@@ -15,6 +15,12 @@
 
 ## ✅ Completed Log (most recent first)
 
+### 2026-10-15 — Material Symbols Icon Accessibility in Competitor Table
+**Status:** ✅ Completed by ATLAS
+**Fixed:**
+- ♿ Added `aria-hidden="true"` to Google Material Symbols icon font spans in `CompetitorTable.tsx` (`cancel`, `check_circle`, `verified`) to ensure screen readers do not read font ligature string names aloud and properly announce visible status labels.
+- 🧪 Ran lint, build, and test checks cleanly.
+
 ### 2026-10-15 — Refactored Email Form Inputs with useEmailInput Hook & WCAG Accessibility
 **Status:** ✅ Completed by ATLAS
 **Fixed:**
