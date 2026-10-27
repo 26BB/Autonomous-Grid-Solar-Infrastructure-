@@ -15,6 +15,13 @@
 
 ## ✅ Completed Log (most recent first)
 
+### 2026-10-15 — WAI-ARIA Keyboard Accessibility & Icon Hiding in Macro Metrics Strip
+**Status:** ✅ Completed by ATLAS
+**Fixed:**
+- ♿ Added `role="button"`, `tabIndex={0}`, `aria-label`, focus indicator styling, and `Enter`/`Space` key event handlers on interactive metric cards in `MacroMetricsStrip.tsx`.
+- ♿ Added `aria-hidden="true"` to Google Material Symbols icon font spans (`route`, `payments`, `verified`) to prevent screen readers from reading ligature text strings aloud.
+- 🧪 Verified through Playwright visual regression screenshot/video capture, linting, node test suite, and Vite build checks.
+
 ### 2026-10-15 — Material Symbols Icon Accessibility in Competitor Table
 **Status:** ✅ Completed by ATLAS
 **Fixed:**

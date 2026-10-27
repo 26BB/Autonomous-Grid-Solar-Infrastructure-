@@ -11,6 +11,14 @@ export const MacroMetricsStrip: React.FC<MacroMetricsStripProps> = React.memo(({
   onOpenPart108,
   onNavigateToModeler,
 }) => {
+  // Keydown handler to support keyboard navigation (Enter/Space activation) for interactive cards
+  const handleKeyDown = (e: React.KeyboardEvent, action: () => void) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      action();
+    }
+  };
+
   return (
     <section className="px-4 sm:px-6 lg:px-12 max-w-7xl mx-auto w-full mb-20 sm:mb-24">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -25,7 +33,7 @@ export const MacroMetricsStrip: React.FC<MacroMetricsStripProps> = React.memo(({
         >
           <div className="absolute top-0 right-0 w-24 h-24 bg-[#00E5FF]/5 rounded-bl-full pointer-events-none group-hover:scale-110 transition-transform duration-500"></div>
           <div className="flex items-center gap-3 mb-3">
-            <span className="material-symbols-outlined text-[#00E5FF] text-[28px] group-hover:scale-110 transition-transform">
+            <span className="material-symbols-outlined text-[#00E5FF] text-[28px] group-hover:scale-110 transition-transform" aria-hidden="true">
               route
             </span>
             <span className="text-xs font-mono text-[#00E5FF] uppercase tracking-wider">
@@ -48,11 +56,15 @@ export const MacroMetricsStrip: React.FC<MacroMetricsStripProps> = React.memo(({
           transition={{ duration: 0.5, delay: 0.15 }}
           whileHover={{ y: -6, transition: { type: 'spring', stiffness: 350 } }}
           onClick={onNavigateToModeler}
-          className="bg-[#161F30] border border-[#2A374F] p-6 rounded-xl relative overflow-hidden group hover:border-[#F59E0B] transition-colors cursor-pointer shadow-lg"
+          onKeyDown={(e) => handleKeyDown(e, onNavigateToModeler)}
+          role="button"
+          tabIndex={0}
+          aria-label="Model grant offset for CapEx capital efficiency"
+          className="bg-[#161F30] border border-[#2A374F] p-6 rounded-xl relative overflow-hidden group hover:border-[#F59E0B] transition-colors cursor-pointer shadow-lg focus:outline-none focus:ring-2 focus:ring-[#F59E0B]"
         >
           <div className="absolute top-0 right-0 w-24 h-24 bg-[#F59E0B]/5 rounded-bl-full pointer-events-none group-hover:scale-110 transition-transform duration-500"></div>
           <div className="flex items-center gap-3 mb-3">
-            <span className="material-symbols-outlined text-[#F59E0B] text-[28px] group-hover:scale-110 transition-transform">
+            <span className="material-symbols-outlined text-[#F59E0B] text-[28px] group-hover:scale-110 transition-transform" aria-hidden="true">
               payments
             </span>
             <span className="text-xs font-mono text-[#F59E0B] uppercase tracking-wider">
@@ -78,11 +90,15 @@ export const MacroMetricsStrip: React.FC<MacroMetricsStripProps> = React.memo(({
           transition={{ duration: 0.5, delay: 0.25 }}
           whileHover={{ y: -6, transition: { type: 'spring', stiffness: 350 } }}
           onClick={onOpenPart108}
-          className="bg-[#161F30] border border-[#2A374F] p-6 rounded-xl relative overflow-hidden group hover:border-emerald-400 transition-colors cursor-pointer shadow-lg"
+          onKeyDown={(e) => handleKeyDown(e, onOpenPart108)}
+          role="button"
+          tabIndex={0}
+          aria-label="Read whitepaper on FAA Part 108 regulatory standard"
+          className="bg-[#161F30] border border-[#2A374F] p-6 rounded-xl relative overflow-hidden group hover:border-emerald-400 transition-colors cursor-pointer shadow-lg focus:outline-none focus:ring-2 focus:ring-emerald-400"
         >
           <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-400/5 rounded-bl-full pointer-events-none group-hover:scale-110 transition-transform duration-500"></div>
           <div className="flex items-center gap-3 mb-3">
-            <span className="material-symbols-outlined text-emerald-400 text-[28px] group-hover:scale-110 transition-transform">
+            <span className="material-symbols-outlined text-emerald-400 text-[28px] group-hover:scale-110 transition-transform" aria-hidden="true">
               verified
             </span>
             <span className="text-xs font-mono text-emerald-400 uppercase tracking-wider">
