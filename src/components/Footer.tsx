@@ -23,7 +23,7 @@ export const Footer: React.FC<FooterProps> = React.memo(({
           {/* Brand Info */}
           <div className="lg:col-span-2 space-y-4">
             <div className="flex items-center gap-2">
-              <span className="material-symbols-outlined text-[#00E5FF] text-[28px]">
+              <span className="material-symbols-outlined text-[#00E5FF] text-[28px]" aria-hidden="true">
                 hexagon
               </span>
               <span className="font-headline font-bold text-xl tracking-wider text-white">
@@ -49,6 +49,7 @@ export const Footer: React.FC<FooterProps> = React.memo(({
             <ul className="space-y-2">
               <li>
                 <button
+                  type="button"
                   onClick={() => onNavigateView('home')}
                   className="hover:text-[#00E5FF] transition-colors cursor-pointer text-left"
                 >
@@ -57,6 +58,7 @@ export const Footer: React.FC<FooterProps> = React.memo(({
               </li>
               <li>
                 <button
+                  type="button"
                   onClick={() => onNavigateView('home')}
                   className="hover:text-[#00E5FF] transition-colors cursor-pointer text-left"
                 >
@@ -65,6 +67,7 @@ export const Footer: React.FC<FooterProps> = React.memo(({
               </li>
               <li>
                 <button
+                  type="button"
                   onClick={() => onNavigateView('modeler')}
                   className="hover:text-[#00E5FF] transition-colors cursor-pointer text-left"
                 >
@@ -73,6 +76,7 @@ export const Footer: React.FC<FooterProps> = React.memo(({
               </li>
               <li>
                 <button
+                  type="button"
                   onClick={() => onNavigateView('modeler')}
                   className="hover:text-[#00E5FF] transition-colors cursor-pointer text-left"
                 >
@@ -90,6 +94,7 @@ export const Footer: React.FC<FooterProps> = React.memo(({
             <ul className="space-y-2">
               <li>
                 <button
+                  type="button"
                   onClick={onOpenPart108}
                   className="hover:text-[#00E5FF] transition-colors cursor-pointer text-left"
                 >
@@ -98,6 +103,7 @@ export const Footer: React.FC<FooterProps> = React.memo(({
               </li>
               <li>
                 <button
+                  type="button"
                   onClick={() => onNavigateView('modeler')}
                   className="hover:text-[#00E5FF] transition-colors cursor-pointer text-left"
                 >
@@ -106,6 +112,7 @@ export const Footer: React.FC<FooterProps> = React.memo(({
               </li>
               <li>
                 <button
+                  type="button"
                   onClick={onOpenGrantChecklist}
                   className="hover:text-[#00E5FF] transition-colors cursor-pointer text-left"
                 >
@@ -114,6 +121,7 @@ export const Footer: React.FC<FooterProps> = React.memo(({
               </li>
               <li>
                 <button
+                  type="button"
                   onClick={onOpenSpecs}
                   className="hover:text-[#00E5FF] transition-colors cursor-pointer text-left"
                 >
@@ -131,6 +139,7 @@ export const Footer: React.FC<FooterProps> = React.memo(({
             <ul className="space-y-2">
               <li>
                 <button
+                  type="button"
                   onClick={onOpenSpecs}
                   className="hover:text-[#00E5FF] transition-colors cursor-pointer text-left"
                 >
@@ -139,6 +148,7 @@ export const Footer: React.FC<FooterProps> = React.memo(({
               </li>
               <li>
                 <button
+                  type="button"
                   onClick={onOpenSpecs}
                   className="hover:text-[#00E5FF] transition-colors cursor-pointer text-left"
                 >
@@ -147,6 +157,7 @@ export const Footer: React.FC<FooterProps> = React.memo(({
               </li>
               <li>
                 <button
+                  type="button"
                   onClick={onOpenContact}
                   className="hover:text-[#00E5FF] transition-colors cursor-pointer text-left"
                 >
@@ -155,6 +166,7 @@ export const Footer: React.FC<FooterProps> = React.memo(({
               </li>
               <li>
                 <button
+                  type="button"
                   onClick={onOpenContact}
                   className="hover:text-[#00E5FF] transition-colors cursor-pointer text-left"
                 >

@@ -15,6 +15,14 @@
 
 ## ✅ Completed Log (most recent first)
 
+### 2026-10-15 — Keyboard Navigation & WAI-ARIA Accessibility in MacroMetricsStrip and Footer
+**Status:** ✅ Completed by ATLAS
+**Fixed:**
+- ♿ Added `role="button"`, `tabIndex={0}`, `onKeyDown` handlers (supporting `Enter` and `Space` keypresses), and descriptive `aria-label` attributes to interactive metric cards ("Capital Efficiency" and "Regulatory Standard") in `MacroMetricsStrip.tsx`.
+- ♿ Added `aria-hidden="true"` to Google Material Symbols icon font spans (`route`, `payments`, `verified`) in `MacroMetricsStrip.tsx` to prevent screen readers from reading ligature string names aloud.
+- ♿ Added explicit `type="button"` attributes across all 12 navigation buttons and `aria-hidden="true"` on brand icon span in `Footer.tsx`.
+- 🧪 Ran lint, build, test suite, and visual Playwright verification cleanly.
+
 ### 2026-10-15 — Material Symbols Icon Accessibility in Competitor Table
 **Status:** ✅ Completed by ATLAS
 **Fixed:**
@@ -24,7 +32,7 @@
 ### 2026-10-15 — Refactored Email Form Inputs with useEmailInput Hook & WCAG Accessibility
 **Status:** ✅ Completed by ATLAS
 **Fixed:**
-- ♻️ Refactored email input state, sanitization, and error handling in `DeploymentSection.tsx` and `ModelerScreen.tsx` (`BoardBriefForm`) to use the shared `useEmailInput` custom hook (`src/utils/useEmailInput.ts`).
+- lb Refactored email input state, sanitization, and error handling in `DeploymentSection.tsx` and `ModelerScreen.tsx` (`BoardBriefForm`) to use the shared `useEmailInput` custom hook (`src/utils/useEmailInput.ts`).
 - ♿ Added WCAG accessible `aria-label` attributes (`Corporate or co-op email` and `Utility or co-op email`) on email form fields across main screen components.
 
 ### 2026-10-15 — Reusable WAI-ARIA Modal Focus Trap Custom Hook

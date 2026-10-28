@@ -25,7 +25,7 @@ export const MacroMetricsStrip: React.FC<MacroMetricsStripProps> = React.memo(({
         >
           <div className="absolute top-0 right-0 w-24 h-24 bg-[#00E5FF]/5 rounded-bl-full pointer-events-none group-hover:scale-110 transition-transform duration-500"></div>
           <div className="flex items-center gap-3 mb-3">
-            <span className="material-symbols-outlined text-[#00E5FF] text-[28px] group-hover:scale-110 transition-transform">
+            <span className="material-symbols-outlined text-[#00E5FF] text-[28px] group-hover:scale-110 transition-transform" aria-hidden="true">
               route
             </span>
             <span className="text-xs font-mono text-[#00E5FF] uppercase tracking-wider">
@@ -48,11 +48,20 @@ export const MacroMetricsStrip: React.FC<MacroMetricsStripProps> = React.memo(({
           transition={{ duration: 0.5, delay: 0.15 }}
           whileHover={{ y: -6, transition: { type: 'spring', stiffness: 350 } }}
           onClick={onNavigateToModeler}
-          className="bg-[#161F30] border border-[#2A374F] p-6 rounded-xl relative overflow-hidden group hover:border-[#F59E0B] transition-colors cursor-pointer shadow-lg"
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              onNavigateToModeler();
+            }
+          }}
+          aria-label="Capital Efficiency: $35,000 Upfront CapEx. Click to model grant offset."
+          className="bg-[#161F30] border border-[#2A374F] p-6 rounded-xl relative overflow-hidden group hover:border-[#F59E0B] transition-colors cursor-pointer shadow-lg text-left"
         >
           <div className="absolute top-0 right-0 w-24 h-24 bg-[#F59E0B]/5 rounded-bl-full pointer-events-none group-hover:scale-110 transition-transform duration-500"></div>
           <div className="flex items-center gap-3 mb-3">
-            <span className="material-symbols-outlined text-[#F59E0B] text-[28px] group-hover:scale-110 transition-transform">
+            <span className="material-symbols-outlined text-[#F59E0B] text-[28px] group-hover:scale-110 transition-transform" aria-hidden="true">
               payments
             </span>
             <span className="text-xs font-mono text-[#F59E0B] uppercase tracking-wider">
@@ -78,11 +87,20 @@ export const MacroMetricsStrip: React.FC<MacroMetricsStripProps> = React.memo(({
           transition={{ duration: 0.5, delay: 0.25 }}
           whileHover={{ y: -6, transition: { type: 'spring', stiffness: 350 } }}
           onClick={onOpenPart108}
-          className="bg-[#161F30] border border-[#2A374F] p-6 rounded-xl relative overflow-hidden group hover:border-emerald-400 transition-colors cursor-pointer shadow-lg"
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              onOpenPart108();
+            }
+          }}
+          aria-label="Regulatory Standard: FAA Part 108 Ready. Click to read whitepaper."
+          className="bg-[#161F30] border border-[#2A374F] p-6 rounded-xl relative overflow-hidden group hover:border-emerald-400 transition-colors cursor-pointer shadow-lg text-left"
         >
           <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-400/5 rounded-bl-full pointer-events-none group-hover:scale-110 transition-transform duration-500"></div>
           <div className="flex items-center gap-3 mb-3">
-            <span className="material-symbols-outlined text-emerald-400 text-[28px] group-hover:scale-110 transition-transform">
+            <span className="material-symbols-outlined text-emerald-400 text-[28px] group-hover:scale-110 transition-transform" aria-hidden="true">
               verified
             </span>
             <span className="text-xs font-mono text-emerald-400 uppercase tracking-wider">
@@ -105,4 +123,3 @@ export const MacroMetricsStrip: React.FC<MacroMetricsStripProps> = React.memo(({
 });
 
 MacroMetricsStrip.displayName = 'MacroMetricsStrip';
-
