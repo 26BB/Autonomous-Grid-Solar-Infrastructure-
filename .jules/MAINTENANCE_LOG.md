@@ -15,6 +15,14 @@
 
 ## ✅ Completed Log (most recent first)
 
+### 2026-10-15 — WAI-ARIA Keyboard Accessibility and Icon Semantics
+**Status:** ✅ Completed by ATLAS
+**Fixed:**
+- ♿ Added `role="button"`, `tabIndex={0}`, descriptive `aria-label` attributes, focus ring styles (`focus:outline-none focus:ring-2`), and `onKeyDown` (`Enter` / `Space`) keyboard event handlers to interactive cards in `MacroMetricsStrip.tsx`.
+- ♿ Added `aria-label` and `aria-pressed` state attributes to node selector buttons in `HeroTelemetryCard.tsx`.
+- ♿ Added `aria-hidden="true"` to Google Material Symbols icon font spans across `MacroMetricsStrip.tsx`, `HeroTelemetryCard.tsx`, and `Header.tsx` to prevent screen readers from voicing icon ligature text strings.
+- 🧪 Verified with lint, node unit tests, vite build, custom accessibility audit tool, and Playwright UI screenshot verification.
+
 ### 2026-10-15 — Material Symbols Icon Accessibility in Competitor Table
 **Status:** ✅ Completed by ATLAS
 **Fixed:**
