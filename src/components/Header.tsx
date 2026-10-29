@@ -28,7 +28,7 @@ export const Header: React.FC<HeaderProps> = React.memo(({
             className="flex items-center gap-2.5 text-left group focus:outline-none"
             aria-label="AeroDock Home"
           >
-            <span className="material-symbols-outlined text-[#00E5FF] text-[28px] group-hover:scale-110 transition-transform">
+            <span className="material-symbols-outlined text-[#00E5FF] text-[28px] group-hover:scale-110 transition-transform" aria-hidden="true">
               hexagon
             </span>
             <span className="font-headline font-bold text-xl tracking-wider text-white">
@@ -97,7 +97,7 @@ export const Header: React.FC<HeaderProps> = React.memo(({
               onClick={() => onNavigateView('modeler')}
               className="px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-[#00E5FF] text-[#0B0F19] text-xs font-mono font-bold hover:bg-white hover:text-black transition-all shadow-[0_0_15px_rgba(0,229,255,0.4)] flex items-center gap-2 cursor-pointer"
             >
-              <span className="material-symbols-outlined text-[16px]">calculate</span>
+              <span className="material-symbols-outlined text-[16px]" aria-hidden="true">calculate</span>
               <span>Calculate Cooperative ROI</span>
             </button>
           ) : (
@@ -105,7 +105,7 @@ export const Header: React.FC<HeaderProps> = React.memo(({
               onClick={() => onNavigateView('home')}
               className="px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-[#161F30] border border-[#00E5FF]/60 text-[#00E5FF] text-xs font-mono font-bold hover:bg-[#00E5FF] hover:text-[#0B0F19] transition-all flex items-center gap-2 cursor-pointer"
             >
-              <span className="material-symbols-outlined text-[16px]">arrow_back</span>
+              <span className="material-symbols-outlined text-[16px]" aria-hidden="true">arrow_back</span>
               <span>Overview Website</span>
             </button>
           )}
@@ -116,7 +116,7 @@ export const Header: React.FC<HeaderProps> = React.memo(({
             title="Co-op Portal & Contact Integration Team"
             aria-label="Account and contact"
           >
-            <span className="material-symbols-outlined text-[#00E5FF] text-[18px]">
+            <span className="material-symbols-outlined text-[#00E5FF] text-[18px]" aria-hidden="true">
               person
             </span>
           </button>

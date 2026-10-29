@@ -111,7 +111,7 @@ export const HeroTelemetryCard: React.FC = React.memo(() => {
               whileHover={{ scale: 1.02, y: -1 }}
               className="px-3 py-1.5 rounded bg-[#161F30]/90 backdrop-blur border border-[#2A374F] text-xs font-mono text-white flex items-center gap-2 shadow-md"
             >
-              <span className="material-symbols-outlined text-[#00E5FF] text-[16px]">
+              <span className="material-symbols-outlined text-[#00E5FF] text-[16px]" aria-hidden="true">
                 hub
               </span>
               <span>1 Operator : 20 Active Docks</span>
@@ -120,7 +120,7 @@ export const HeroTelemetryCard: React.FC = React.memo(() => {
               whileHover={{ scale: 1.02, y: -1 }}
               className="px-3 py-1.5 rounded bg-[#161F30]/90 backdrop-blur border border-[#2A374F] text-xs font-mono text-white flex items-center gap-2 shadow-md"
             >
-              <span className="material-symbols-outlined text-[#F59E0B] text-[16px]">
+              <span className="material-symbols-outlined text-[#F59E0B] text-[16px]" aria-hidden="true">
                 thermostat
               </span>
               <span>Automated Thermal Defect Detection</span>
@@ -176,6 +176,8 @@ export const HeroTelemetryCard: React.FC = React.memo(() => {
                 whileHover={{ scale: 1.08 }}
                 whileTap={{ scale: 0.94 }}
                 onClick={() => setActiveNodeIndex(idx)}
+                aria-label={`Select telemetry node 0${idx + 1}: ${node.id} (${node.location})`}
+                aria-pressed={activeNodeIndex === idx}
                 className={`px-1.5 py-0.5 rounded text-[10px] transition-all cursor-pointer ${
                   activeNodeIndex === idx
                     ? 'bg-[#00E5FF] text-[#0B0F19] font-bold shadow-[0_0_10px_rgba(0,229,255,0.5)]'
