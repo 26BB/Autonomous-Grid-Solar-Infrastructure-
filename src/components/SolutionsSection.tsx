@@ -42,7 +42,7 @@ export const SolutionsSection: React.FC<SolutionsSectionProps> = React.memo(({ o
               <span className="px-3 py-1 rounded bg-[#00E5FF]/10 text-[#00E5FF] text-xs font-mono font-bold border border-[#00E5FF]/30">
                 RURAL ELECTRIC COOPERATIVES
               </span>
-              <span className="material-symbols-outlined text-[#00E5FF] text-[32px] group-hover:rotate-12 transition-transform">
+              <span className="material-symbols-outlined text-[#00E5FF] text-[32px] group-hover:rotate-12 transition-transform" aria-hidden="true">
                 bolt
               </span>
             </div>
@@ -54,15 +54,15 @@ export const SolutionsSection: React.FC<SolutionsSectionProps> = React.memo(({ o
             </p>
             <ul className="space-y-3 mb-8 text-xs font-mono text-slate-300">
               <li className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-[#00E5FF] text-[16px]">check</span>
+                <span className="material-symbols-outlined text-[#00E5FF] text-[16px]" aria-hidden="true">check</span>
                 Vegetation encroachment predictive AI
               </li>
               <li className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-[#00E5FF] text-[16px]">check</span>
+                <span className="material-symbols-outlined text-[#00E5FF] text-[16px]" aria-hidden="true">check</span>
                 Automated pole-top insulator thermography
               </li>
               <li className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-[#00E5FF] text-[16px]">check</span>
+                <span className="material-symbols-outlined text-[#00E5FF] text-[16px]" aria-hidden="true">check</span>
                 Direct integration with Milsoft & Futura GIS
               </li>
             </ul>
@@ -91,7 +91,7 @@ export const SolutionsSection: React.FC<SolutionsSectionProps> = React.memo(({ o
               className="w-full py-2.5 px-4 rounded bg-[#0B0F19] hover:bg-[#00E5FF]/10 border border-[#00E5FF]/40 text-[#00E5FF] font-mono text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
             >
               <span>Model Co-op Rural Mileage ROI</span>
-              <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+              <span className="material-symbols-outlined text-[16px]" aria-hidden="true">arrow_forward</span>
             </motion.button>
           </div>
         </motion.div>
@@ -110,7 +110,7 @@ export const SolutionsSection: React.FC<SolutionsSectionProps> = React.memo(({ o
               <span className="px-3 py-1 rounded bg-[#F59E0B]/10 text-[#F59E0B] text-xs font-mono font-bold border border-[#F59E0B]/30">
                 DISTRIBUTED COMMUNITY SOLAR
               </span>
-              <span className="material-symbols-outlined text-[#F59E0B] text-[32px] group-hover:rotate-45 transition-transform">
+              <span className="material-symbols-outlined text-[#F59E0B] text-[32px] group-hover:rotate-45 transition-transform" aria-hidden="true">
                 wb_sunny
               </span>
             </div>
@@ -122,15 +122,15 @@ export const SolutionsSection: React.FC<SolutionsSectionProps> = React.memo(({ o
             </p>
             <ul className="space-y-3 mb-8 text-xs font-mono text-slate-300">
               <li className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-[#F59E0B] text-[16px]">check</span>
+                <span className="material-symbols-outlined text-[#F59E0B] text-[16px]" aria-hidden="true">check</span>
                 Sub-string level fault isolation
               </li>
               <li className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-[#F59E0B] text-[16px]">check</span>
+                <span className="material-symbols-outlined text-[#F59E0B] text-[16px]" aria-hidden="true">check</span>
                 Automated radiometric orthomosaic generation
               </li>
               <li className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-[#F59E0B] text-[16px]">check</span>
+                <span className="material-symbols-outlined text-[#F59E0B] text-[16px]" aria-hidden="true">check</span>
                 Seamless ticketing sync with Maximo & Salesforce
               </li>
             </ul>
@@ -159,7 +159,7 @@ export const SolutionsSection: React.FC<SolutionsSectionProps> = React.memo(({ o
               className="w-full py-2.5 px-4 rounded bg-[#0B0F19] hover:bg-[#F59E0B]/10 border border-[#F59E0B]/40 text-[#F59E0B] font-mono text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
             >
               <span>Model Solar MW Portfolio ROI</span>
-              <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+              <span className="material-symbols-outlined text-[16px]" aria-hidden="true">arrow_forward</span>
             </motion.button>
           </div>
         </motion.div>

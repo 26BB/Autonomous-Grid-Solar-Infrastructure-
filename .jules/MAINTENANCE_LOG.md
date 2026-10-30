@@ -15,6 +15,12 @@
 
 ## ✅ Completed Log (most recent first)
 
+### 2026-10-30 — Decorative Material Symbols Icon Accessibility
+**Status:** ✅ Completed by ATLAS
+**Fixed:**
+- ♿ Added `aria-hidden="true"` to Google Material Symbols icon font spans in `PlatformArchitecture.tsx`, `SolutionsSection.tsx`, and `Footer.tsx` (`security`, `ac_unit`, `satellite_alt`, `description`, `bolt`, `check`, `arrow_forward`, `wb_sunny`, `hexagon`) to prevent screen readers from voicing icon font ligature text strings.
+- 🧪 Verified with lint, node unit tests, vite build, and Playwright UI screenshot verification.
+
 ### 2026-10-15 — WAI-ARIA Keyboard Accessibility and Icon Semantics
 **Status:** ✅ Completed by ATLAS
 **Fixed:**

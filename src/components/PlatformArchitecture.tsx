@@ -39,7 +39,7 @@ export const PlatformArchitecture: React.FC<PlatformArchitectureProps> = React.m
         >
           <div>
             <div className="w-12 h-12 rounded bg-[#0B0F19] border border-[#2A374F] flex items-center justify-center mb-6 group-hover:border-[#00E5FF]/40 group-hover:scale-105 transition-all">
-              <span className="material-symbols-outlined text-[#00E5FF] text-[24px]">
+              <span className="material-symbols-outlined text-[#00E5FF] text-[24px]" aria-hidden="true">
                 security
               </span>
             </div>
@@ -67,7 +67,7 @@ export const PlatformArchitecture: React.FC<PlatformArchitectureProps> = React.m
         >
           <div>
             <div className="w-12 h-12 rounded bg-[#0B0F19] border border-[#2A374F] flex items-center justify-center mb-6 group-hover:border-[#F59E0B]/40 group-hover:scale-105 transition-all">
-              <span className="material-symbols-outlined text-[#F59E0B] text-[24px]">
+              <span className="material-symbols-outlined text-[#F59E0B] text-[24px]" aria-hidden="true">
                 ac_unit
               </span>
             </div>
@@ -95,7 +95,7 @@ export const PlatformArchitecture: React.FC<PlatformArchitectureProps> = React.m
         >
           <div>
             <div className="w-12 h-12 rounded bg-[#0B0F19] border border-[#2A374F] flex items-center justify-center mb-6 group-hover:border-emerald-400/40 group-hover:scale-105 transition-all">
-              <span className="material-symbols-outlined text-emerald-400 text-[24px]">
+              <span className="material-symbols-outlined text-emerald-400 text-[24px]" aria-hidden="true">
                 satellite_alt
               </span>
             </div>
@@ -120,7 +120,7 @@ export const PlatformArchitecture: React.FC<PlatformArchitectureProps> = React.m
           onClick={onOpenSpecs}
           className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg bg-[#161F30] border border-[#2A374F] hover:border-[#00E5FF] text-white font-mono text-xs font-semibold transition-all cursor-pointer"
         >
-          <span className="material-symbols-outlined text-[#00E5FF] text-[18px]">
+          <span className="material-symbols-outlined text-[#00E5FF] text-[18px]" aria-hidden="true">
             description
           </span>
           <span>View Complete Engineering Specification Sheet</span>
