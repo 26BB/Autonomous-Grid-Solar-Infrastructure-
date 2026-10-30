@@ -23,7 +23,7 @@ export const Footer: React.FC<FooterProps> = React.memo(({
           {/* Brand Info */}
           <div className="lg:col-span-2 space-y-4">
             <div className="flex items-center gap-2">
-              <span className="material-symbols-outlined text-[#00E5FF] text-[28px]">
+              <span className="material-symbols-outlined text-[#00E5FF] text-[28px]" aria-hidden="true">
                 hexagon
               </span>
               <span className="font-headline font-bold text-xl tracking-wider text-white">
