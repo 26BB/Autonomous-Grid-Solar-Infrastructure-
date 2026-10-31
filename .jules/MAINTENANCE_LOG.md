@@ -15,6 +15,13 @@
 
 ## ✅ Completed Log (most recent first)
 
+### 2026-10-31 — Decorative Material Symbols Icon Accessibility in Modals
+**Status:** ✅ Completed by ATLAS
+**Fixed:**
+- ♿ Added `aria-hidden="true"` to Google Material Symbols icon font spans in modal components (`BoardBriefModal.tsx`, `ContactPortalModal.tsx`, `GrantChecklistModal.tsx`, `Part108Modal.tsx`, `PlatformSpecsModal.tsx`, and `ProposalPackageModal.tsx`) to prevent screen readers from reading font ligature text strings aloud ("description", "print", "support_agent", "error", "check", "task_alt", "verified_user", "check_circle", "verified", "settings_input_component").
+- 🧪 Added regression test in `src/utils/useModalFocusTrap.test.ts` verifying that all modal components have `aria-hidden="true"` on Material Symbols icons.
+- 🧪 Ran lint (`pnpm run lint`), unit test suite (`npx tsx --test src/utils/*.test.ts`), and production build (`pnpm run build`) cleanly.
+
 ### 2026-10-30 — Decorative Material Symbols Icon Accessibility
 **Status:** ✅ Completed by ATLAS
 **Fixed:**

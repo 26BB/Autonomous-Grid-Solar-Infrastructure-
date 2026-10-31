@@ -62,7 +62,8 @@ export const GrantChecklistModal: React.FC<GrantChecklistModalProps> = React.mem
         {/* Header */}
         <div className="p-5 border-b border-[#2A374F] flex items-center justify-between bg-[#0B0F19]">
           <div className="flex items-center gap-3">
-            <span className="material-symbols-outlined text-[#F59E0B] text-[26px]">
+            {/* Accessibility: aria-hidden hides icon font ligature string from assistive tech */}
+            <span className="material-symbols-outlined text-[#F59E0B] text-[26px]" aria-hidden="true">
               task_alt
             </span>
             <div>
@@ -87,7 +88,7 @@ export const GrantChecklistModal: React.FC<GrantChecklistModalProps> = React.mem
         <div className="p-6 overflow-y-auto space-y-6 font-mono text-xs custom-scrollbar bg-[#0B0F19]/40">
           <div className="p-4 rounded-xl bg-[#0B0F19] border border-[#2A374F] text-slate-300 space-y-2">
             <div className="flex items-center gap-2 text-[#00E5FF] font-bold">
-              <span className="material-symbols-outlined text-[18px]">verified_user</span>
+              <span className="material-symbols-outlined text-[18px]" aria-hidden="true">verified_user</span>
               <span>Statutory Compliance Pre-Audit Status</span>
             </div>
             <p className="leading-relaxed text-[11px]">
@@ -108,7 +109,7 @@ export const GrantChecklistModal: React.FC<GrantChecklistModalProps> = React.mem
                       className="p-3 rounded-lg bg-[#161F30] border border-[#2A374F] flex items-center justify-between gap-4"
                     >
                       <div className="flex items-center gap-2.5">
-                        <span className="material-symbols-outlined text-emerald-400 text-[18px]">
+                        <span className="material-symbols-outlined text-emerald-400 text-[18px]" aria-hidden="true">
                           check_circle
                         </span>
                         <span className="text-slate-200">{item.text}</span>
@@ -130,7 +131,7 @@ export const GrantChecklistModal: React.FC<GrantChecklistModalProps> = React.mem
             onClick={() => window.print()}
             className="px-4 py-2 rounded bg-[#00E5FF] text-[#0B0F19] text-xs font-mono font-bold hover:bg-white transition-colors flex items-center gap-1.5 cursor-pointer"
           >
-            <span className="material-symbols-outlined text-[16px]">print</span>
+            <span className="material-symbols-outlined text-[16px]" aria-hidden="true">print</span>
             <span>Print Checklist</span>
           </button>
           <button

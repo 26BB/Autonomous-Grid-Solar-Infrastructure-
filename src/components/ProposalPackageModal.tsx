@@ -102,7 +102,8 @@ export const ProposalPackageModal: React.FC<ProposalPackageModalProps> = React.m
         {/* Header */}
         <div className="p-5 border-b border-[#2A374F] flex items-center justify-between bg-[#0B0F19]">
           <div className="flex items-center gap-3">
-            <span className="material-symbols-outlined text-[#00E5FF] text-[24px]">
+            {/* Accessibility: aria-hidden hides icon font ligature string from assistive tech */}
+            <span className="material-symbols-outlined text-[#00E5FF] text-[24px]" aria-hidden="true">
               verified
             </span>
             <div>
@@ -150,7 +151,7 @@ export const ProposalPackageModal: React.FC<ProposalPackageModalProps> = React.m
 
               {error && (
                 <div className="p-2.5 rounded bg-red-950/80 border border-red-500/50 text-red-300 text-[11px] font-mono flex items-center gap-2">
-                  <span className="material-symbols-outlined text-[16px]">error</span>
+                  <span className="material-symbols-outlined text-[16px]" aria-hidden="true">error</span>
                   <span>{error}</span>
                 </div>
               )}
@@ -175,7 +176,7 @@ export const ProposalPackageModal: React.FC<ProposalPackageModalProps> = React.m
           ) : (
             <div className="p-6 text-center space-y-4">
               <div className="w-12 h-12 rounded-full bg-emerald-500/20 border border-emerald-500 text-emerald-400 mx-auto flex items-center justify-center">
-                <span className="material-symbols-outlined text-[28px]">check</span>
+                <span className="material-symbols-outlined text-[28px]" aria-hidden="true">check</span>
               </div>
               <div>
                 <h4 className="font-headline font-bold text-lg text-white">
