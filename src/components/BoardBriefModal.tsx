@@ -56,7 +56,8 @@ export const BoardBriefModal: React.FC<BoardBriefModalProps> = React.memo(({
         {/* Modal Header */}
         <div className="p-5 border-b border-[#2A374F] flex items-center justify-between bg-[#0B0F19]">
           <div className="flex items-center gap-3">
-            <span className="material-symbols-outlined text-[#00E5FF] text-[26px]">
+            {/* Accessibility: aria-hidden hides icon font ligature string from assistive tech */}
+            <span className="material-symbols-outlined text-[#00E5FF] text-[26px]" aria-hidden="true">
               description
             </span>
             <div>
@@ -73,7 +74,7 @@ export const BoardBriefModal: React.FC<BoardBriefModalProps> = React.memo(({
               onClick={handlePrintOrDownload}
               className="px-3 py-1.5 rounded bg-[#00E5FF] text-[#0B0F19] text-xs font-mono font-bold hover:bg-white transition-colors flex items-center gap-1.5 cursor-pointer"
             >
-              <span className="material-symbols-outlined text-[16px]">print</span>
+              <span className="material-symbols-outlined text-[16px]" aria-hidden="true">print</span>
               <span>{downloaded ? 'Print / Save PDF' : 'Download / Print PDF'}</span>
             </button>
             <button

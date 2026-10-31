@@ -28,7 +28,8 @@ export const PlatformSpecsModal: React.FC<PlatformSpecsModalProps> = React.memo(
         {/* Header */}
         <div className="p-5 border-b border-[#2A374F] flex items-center justify-between bg-[#0B0F19]">
           <div className="flex items-center gap-3">
-            <span className="material-symbols-outlined text-[#00E5FF] text-[26px]">
+            {/* Accessibility: aria-hidden hides icon font ligature string from assistive tech */}
+            <span className="material-symbols-outlined text-[#00E5FF] text-[26px]" aria-hidden="true">
               settings_input_component
             </span>
             <div>
