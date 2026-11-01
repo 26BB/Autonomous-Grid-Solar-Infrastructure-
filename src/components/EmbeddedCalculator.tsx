@@ -103,7 +103,7 @@ const EmbeddedCalculatorOutputCard: React.FC<EmbeddedCalculatorOutputCardProps> 
           className="w-full py-2 text-xs font-mono text-[#00E5FF] hover:underline flex items-center justify-center gap-1 cursor-pointer"
         >
           <span>Open Comprehensive 3-Year Modeler with Sec. 40101(d) Breakdown</span>
-          <span className="material-symbols-outlined text-[14px]">open_in_new</span>
+          <span className="material-symbols-outlined text-[14px]" aria-hidden="true">open_in_new</span>
         </button>
       </div>
     </div>
