@@ -16,7 +16,6 @@ import { Part108Modal } from './components/Part108Modal';
 import { ProposalPackageModal } from './components/ProposalPackageModal';
 import { ContactPortalModal } from './components/ContactPortalModal';
 import { Footer } from './components/Footer';
-import { isValidEmail, sanitizeInput } from './utils/security';
 
 export default function App() {
   const [currentView, setCurrentView] = useState<'home' | 'modeler'>('home');
@@ -268,7 +267,7 @@ export default function App() {
                       onClick={handleOpenGrantChecklist}
                       className="px-6 py-3.5 rounded-lg bg-[#161F30] border border-[#2A374F] hover:border-[#00E5FF] text-white font-headline font-semibold text-sm transition-all text-center flex items-center justify-center gap-2 cursor-pointer shadow-md"
                     >
-                      <span className="material-symbols-outlined text-[18px]">download</span>
+                      <span className="material-symbols-outlined text-[18px]" aria-hidden="true">download</span>
                       <span>Download USDA/GRIP Procurement Deck</span>
                     </motion.button>
                   </div>

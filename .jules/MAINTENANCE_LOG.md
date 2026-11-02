@@ -15,6 +15,13 @@
 
 ## ✅ Completed Log (most recent first)
 
+### 2026-11-02 — Modal and Embedded Calculator Decorative Icon Accessibility
+**Status:** ✅ Completed by ATLAS
+**Fixed:**
+- ♿ Added `aria-hidden="true"` to Google Material Symbols icon font spans across `BoardBriefModal.tsx`, `ContactPortalModal.tsx`, `GrantChecklistModal.tsx`, `Part108Modal.tsx`, `PlatformSpecsModal.tsx`, `ProposalPackageModal.tsx`, `EmbeddedCalculator.tsx`, and `App.tsx` (`description`, `print`, `support_agent`, `error`, `check`, `task_alt`, `verified_user`, `check_circle`, `verified`, `settings_input_component`, `open_in_new`, `download`) to prevent assistive screen readers from voicing icon ligature text strings.
+- 🧹 Removed unused imports `isValidEmail` and `sanitizeInput` from `App.tsx`.
+- 🧪 Verified cleanly with `pnpm run lint`, unit tests (`npx tsx --test src/**/*.test.ts`), and `pnpm run build`.
+
 ### 2026-10-30 — Decorative Material Symbols Icon Accessibility
 **Status:** ✅ Completed by ATLAS
 **Fixed:**
