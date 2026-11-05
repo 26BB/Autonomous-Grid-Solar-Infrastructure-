@@ -10,10 +10,19 @@
 
 | Date Found | Category | File | Issue | Priority |
 |------------|----------|------|-------|----------|
+| 2026-10-30 | Accessibility | `src/components/ContactPortalModal.tsx`, `ProposalPackageModal.tsx` | Add `aria-hidden="true"` to remaining decorative status & modal icons | Low |
+| 2026-10-30 | Accessibility | `src/components/ModelerScreen.tsx` | Add `aria-hidden="true"` to modeler metric icons (avoiding hotspot file merge conflicts) | Low |
 
 ---
 
 ## ✅ Completed Log (most recent first)
+
+### 2026-10-30 — Decorative Material Symbols Icon Accessibility Across Modals & Calculator
+**Status:** ✅ Completed by ATLAS
+**Fixed:**
+- ♿ Added `aria-hidden="true"` to Google Material Symbols icon font spans in `App.tsx`, `EmbeddedCalculator.tsx`, `BoardBriefModal.tsx`, `GrantChecklistModal.tsx`, `Part108Modal.tsx`, and `PlatformSpecsModal.tsx` (`download`, `open_in_new`, `description`, `print`, `task_alt`, `verified_user`, `check_circle`, `verified`, `settings_input_component`) to prevent screen readers from voicing raw icon ligature strings.
+- 🛡️ Preserved conflict-prone hotspot files (`DeploymentSection.tsx`, `ModelerScreen.tsx`) unchanged to prevent merge contention.
+- 🧪 Verified with `pnpm run lint`, full unit test suite `npx tsx --test src/**/*.test.ts`, and `pnpm run build`.
 
 ### 2026-10-30 — Decorative Material Symbols Icon Accessibility
 **Status:** ✅ Completed by ATLAS
