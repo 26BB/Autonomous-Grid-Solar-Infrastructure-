@@ -72,6 +72,12 @@ describe('isValidEmail', () => {
     assert.equal(domain253.length, 253);
     assert.equal(isValidEmail('u@' + domain253), false);
   });
+
+  it('rejects email addresses with CRLF injection and unescaped delimiters', () => {
+    assert.equal(isValidEmail('admin@example.com\r\nBcc:attacker@example.com'), false);
+    assert.equal(isValidEmail('admin\n@example.com'), false);
+    assert.equal(isValidEmail('admin name@example.com'), false);
+  });
 });
 
 describe('sanitizeInput', () => {

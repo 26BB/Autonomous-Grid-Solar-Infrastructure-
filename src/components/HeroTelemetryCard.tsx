@@ -83,8 +83,9 @@ export const HeroTelemetryCard: React.FC = React.memo(() => {
           {/* Animated Targeting Crosshair / Reticle */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
             {/* Performance optimization: Use GPU-accelerated CSS keyframe animations (animate-radar-sweep, animate-target-pulse) instead of Framer Motion JS main-thread animation loop */}
-            <div className="w-20 h-20 border border-[#00E5FF]/30 rounded-full flex items-center justify-center animate-radar-sweep animate-target-pulse">
+            <div className="w-20 h-20 border border-[#00E5FF]/30 rounded-full flex items-center justify-center animate-radar-sweep"><div className="w-full h-full flex items-center justify-center animate-target-pulse">
               <div className="w-10 h-10 border border-dashed border-[#F59E0B]/40 rounded-full"></div>
+              </div>
             </div>
             <div className="absolute w-2 h-2 bg-[#00E5FF]/80 rounded-full animate-ping"></div>
           </div>

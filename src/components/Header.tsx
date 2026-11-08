@@ -19,25 +19,25 @@ export const Header: React.FC<HeaderProps> = React.memo(({
   onScrollToSection,
 }) => {
   return (
-    <header className="sticky top-0 w-full z-50 bg-[#0B0F19]/95 backdrop-blur-md border-b border-[#2A374F]">
-      <div className="h-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 flex items-center justify-between">
+    <header className="sticky top-0 w-full z-50 bg-white/95 backdrop-blur-md border-b border-slate-200">
+      <div className="h-20 max-w-7xl mx-auto px-3 sm:px-6 lg:px-12 flex items-center justify-between gap-2">
         {/* Logo & Compliance Pill */}
-        <div className="flex items-center gap-4 lg:gap-6">
+        <div className="flex items-center gap-3 sm:gap-4 lg:gap-6">
           <button
             onClick={() => onNavigateView('home')}
-            className="flex items-center gap-2.5 text-left group focus:outline-none"
+            className="flex items-center gap-2 sm:gap-2.5 text-left group focus:outline-none"
             aria-label="AeroDock Home"
           >
-            <span className="material-symbols-outlined text-[#00E5FF] text-[28px] group-hover:scale-110 transition-transform" aria-hidden="true">
+            <span className="material-symbols-outlined text-[#0284C7] text-[24px] sm:text-[28px] group-hover:scale-110 transition-transform" aria-hidden="true">
               hexagon
             </span>
-            <span className="font-headline font-bold text-xl tracking-wider text-white">
+            <span className="font-headline font-bold text-lg sm:text-xl tracking-wider text-slate-900">
               AERODOCK
             </span>
           </button>
 
-          <div className="hidden xl:flex items-center px-3 py-1 rounded-full bg-[#161F30] border border-[#2A374F] text-[11px] text-[#00E5FF] font-mono select-none">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-pulse" />
+          <div className="hidden xl:flex items-center px-3 py-1 rounded-full bg-slate-50 border border-slate-200 text-[11px] text-sky-800 font-mono select-none">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 mr-2" />
             100% NDAA Compliant • Blue UAS Ready • Part 108 Architecture
           </div>
         </div>
@@ -49,81 +49,60 @@ export const Header: React.FC<HeaderProps> = React.memo(({
               if (currentView !== 'home') onNavigateView('home');
               setTimeout(() => onScrollToSection('solutions'), 50);
             }}
-            className="text-slate-300 hover:text-[#00E5FF] transition-colors cursor-pointer"
+            className="text-slate-600 hover:text-[#0284C7] transition-colors cursor-pointer"
           >
             Solutions
           </button>
           <button
             onClick={onOpenSpecs}
-            className="text-slate-300 hover:text-[#00E5FF] transition-colors cursor-pointer"
+            className="text-slate-600 hover:text-[#0284C7] transition-colors cursor-pointer"
           >
             Platform Specs
           </button>
           <button
-            onClick={() => {
-              if (currentView !== 'home') {
-                onScrollToSection('benchmark-section');
-              } else {
-                onScrollToSection('tco-table');
-              }
-            }}
-            className="text-slate-300 hover:text-[#00E5FF] transition-colors cursor-pointer"
-          >
-            TCO Comparison
-          </button>
-          <button
             onClick={onOpenPart108}
-            className="text-slate-300 hover:text-[#00E5FF] transition-colors cursor-pointer"
+            className="text-slate-600 hover:text-[#0284C7] transition-colors cursor-pointer"
           >
-            Part 108 / ROC
+            Part 108 & BVLOS
           </button>
           <button
             onClick={() => {
-              if (currentView !== 'modeler') {
-                onNavigateView('modeler');
-              }
-              setTimeout(() => onScrollToSection('grants-matrix'), 100);
+              if (currentView !== 'home') onNavigateView('home');
+              setTimeout(() => onScrollToSection('calculator'), 50);
             }}
-            className="text-slate-300 hover:text-[#00E5FF] transition-colors cursor-pointer"
+            className="text-slate-600 hover:text-[#0284C7] transition-colors cursor-pointer"
           >
-            Federal Grants
+            Economics & ROI
           </button>
         </nav>
 
-        {/* Right Action Controls */}
-        <div className="flex items-center gap-3 sm:gap-4">
-          {currentView === 'home' ? (
-            <button
-              onClick={() => onNavigateView('modeler')}
-              className="px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-[#00E5FF] text-[#0B0F19] text-xs font-mono font-bold hover:bg-white hover:text-black transition-all shadow-[0_0_15px_rgba(0,229,255,0.4)] flex items-center gap-2 cursor-pointer"
-            >
-              <span className="material-symbols-outlined text-[16px]" aria-hidden="true">calculate</span>
-              <span>Calculate Cooperative ROI</span>
-            </button>
-          ) : (
-            <button
-              onClick={() => onNavigateView('home')}
-              className="px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-[#161F30] border border-[#00E5FF]/60 text-[#00E5FF] text-xs font-mono font-bold hover:bg-[#00E5FF] hover:text-[#0B0F19] transition-all flex items-center gap-2 cursor-pointer"
-            >
-              <span className="material-symbols-outlined text-[16px]" aria-hidden="true">arrow_back</span>
-              <span>Overview Website</span>
-            </button>
-          )}
+        {/* Action Buttons with Mobile Responsiveness */}
+        <div className="flex items-center gap-2 sm:gap-3">
+          <button
+            onClick={() => onNavigateView(currentView === 'home' ? 'modeler' : 'home')}
+            className="px-2.5 sm:px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-200 text-xs font-mono font-semibold transition-colors flex items-center gap-1.5 cursor-pointer"
+          >
+            <span className="material-symbols-outlined text-[16px]" aria-hidden="true">
+              {currentView === 'home' ? 'tune' : 'arrow_back'}
+            </span>
+            <span className="hidden sm:inline">
+              {currentView === 'home' ? 'Launch Fleet Modeler' : 'Return to Overview'}
+            </span>
+            <span className="sm:hidden">
+              {currentView === 'home' ? 'Modeler' : 'Overview'}
+            </span>
+          </button>
 
           <button
             onClick={onOpenContact}
-            className="w-8 h-8 rounded-full bg-[#161F30] border border-[#2A374F] hover:border-[#00E5FF] flex items-center justify-center transition-colors cursor-pointer"
-            title="Co-op Portal & Contact Integration Team"
-            aria-label="Account and contact"
+            className="px-2.5 sm:px-4 py-2 rounded-lg bg-[#0284C7] hover:bg-[#0369A1] text-white text-xs font-mono font-semibold transition-colors flex items-center gap-1.5 shadow-sm cursor-pointer"
           >
-            <span className="material-symbols-outlined text-[#00E5FF] text-[18px]" aria-hidden="true">
-              person
-            </span>
+            <span className="hidden sm:inline">Request Briefing</span>
+            <span className="sm:hidden">Briefing</span>
+            <span className="material-symbols-outlined text-[16px]" aria-hidden="true">arrow_forward</span>
           </button>
         </div>
       </div>
     </header>
   );
 });
-
-Header.displayName = 'Header';

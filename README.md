@@ -14,6 +14,14 @@
 
 ---
 
+## 📸 Product Preview
+
+[![AeroDock Systems Command Interface](./docs/screenshots/live-preview.png)](https://autonomous-grid-solar-infrastructur.vercel.app)
+
+*High-contrast aerospace command HUD & federal underwriting modeler: real-time telemetry, drone FLIR thermal modes, and instantaneous 4-page Board Memorandum generation.*
+
+---
+
 ## ⚡ Executive Summary (Plain English — For HR & Non-Technical Readers)
 
 ### **What is AeroDock Systems?**

@@ -16,7 +16,7 @@ import { Part108Modal } from './components/Part108Modal';
 import { ProposalPackageModal } from './components/ProposalPackageModal';
 import { ContactPortalModal } from './components/ContactPortalModal';
 import { Footer } from './components/Footer';
-import { isValidEmail, sanitizeInput } from './utils/security';
+
 
 export default function App() {
   const [currentView, setCurrentView] = useState<'home' | 'modeler'>('home');

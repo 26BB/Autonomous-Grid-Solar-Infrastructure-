@@ -11,7 +11,7 @@ interface ContactPortalModalProps {
 // Memoized to prevent re-renders when modal is closed or unrelated App state changes
 export const ContactPortalModal: React.FC<ContactPortalModalProps> = React.memo(({ isOpen, onClose }) => {
   const [submitted, setSubmitted] = useState(false);
-  const { email, error, handleEmailChange, validateAndSanitize, resetEmail } = useEmailInput();
+  const { email, error, setError, handleEmailChange, validateAndSanitize, resetEmail } = useEmailInput();
   const modalRef = useModalFocusTrap<HTMLDivElement>(isOpen);
   const [formData, setFormData] = useState({
     name: '',
@@ -43,10 +43,20 @@ export const ContactPortalModal: React.FC<ContactPortalModalProps> = React.memo(
     const { isValid, cleanEmail } = validateAndSanitize('Please provide a valid email address.');
     if (!isValid) return;
 
-    // Ensure sanitized inputs are stored in local variable so confirmation screen reads sanitized values immediately
+    const cleanName = sanitizeInput(formData.name, 100);
+    const cleanUtility = sanitizeInput(formData.utility, 100);
+    if (!cleanName) {
+      setError('Please provide your name.');
+      return;
+    }
+    if (!cleanUtility) {
+      setError('Please provide your utility or cooperative name.');
+      return;
+    }
+
     const cleanData = {
-      name: sanitizeInput(formData.name, 100),
-      utility: sanitizeInput(formData.utility, 100),
+      name: cleanName,
+      utility: cleanUtility,
       role: sanitizeInput(formData.role, 100),
       message: sanitizeInput(formData.message, 1000),
     };

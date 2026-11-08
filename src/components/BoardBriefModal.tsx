@@ -37,7 +37,11 @@ export const BoardBriefModal: React.FC<BoardBriefModalProps> = React.memo(({
   // Security: Use Web Crypto API instead of Math.random() (CWE-338) for cryptographically secure ID generation
   const docRef = useMemo(() => {
     const array = new Uint32Array(1);
-    window.crypto.getRandomValues(array);
+    if (typeof window !== 'undefined' && window.crypto && typeof window.crypto.getRandomValues === 'function') {
+      window.crypto.getRandomValues(array);
+    } else {
+      array[0] = Math.floor(Math.random() * 0xffffffff);
+    }
     return 100000 + (array[0] % 900000);
   }, []);
 

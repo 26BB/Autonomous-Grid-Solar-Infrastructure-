@@ -1,54 +1,49 @@
+/* Hallmark stamp: aerodock-light v1.0.0 | light-minimal | industrial-sun-telemetry */
 @import "tailwindcss";
 
 @layer base {
   :root {
-    --bg-page: #0B0F19;
-    --card-bg: #161F30;
-    --card-bg-subtle: #0B0F19;
-    --card-border: #2A374F;
-    --card-border-subtle: rgba(42, 55, 79, 0.5);
-    --text-main: #F8FAFC;
-    --text-muted: #94A3B8;
-    --text-subtle: #64748B;
-    --accent-cyan: #00E5FF;
-    --accent-cyan-hover: #ffffff;
-    --accent-cyan-glow: rgba(0, 229, 255, 0.2);
-    --accent-cyan-bg: rgba(0, 229, 255, 0.1);
-    --accent-amber: #F59E0B;
-    --accent-amber-bg: rgba(245, 158, 11, 0.15);
-    --accent-emerald: #10B981;
-    --header-bg: rgba(11, 15, 25, 0.95);
-    --slider-bg: #0B0F19;
-  }
-
-  .light {
-    --bg-page: #F3F5F9;
+    --bg-page: #F8FAFC;
     --card-bg: #FFFFFF;
-    --card-bg-subtle: #F8FAFC;
-    --card-border: #CBD5E1;
-    --card-border-subtle: #E2E8F0;
+    --card-bg-subtle: #F1F5F9;
+    --card-border: #E2E8F0;
+    --card-border-subtle: #CBD5E1;
     --text-main: #0F172A;
     --text-muted: #475569;
     --text-subtle: #64748B;
-    --accent-cyan: #0891B2;
-    --accent-cyan-hover: #0E7490;
-    --accent-cyan-glow: rgba(8, 145, 178, 0.25);
-    --accent-cyan-bg: rgba(8, 145, 178, 0.1);
+    --accent-cyan: #0284C7;
+    --accent-cyan-hover: #0369A1;
+    --accent-cyan-glow: rgba(2, 132, 199, 0.15);
+    --accent-cyan-bg: rgba(2, 132, 199, 0.08);
     --accent-amber: #D97706;
-    --accent-amber-bg: rgba(217, 119, 6, 0.15);
+    --accent-amber-bg: rgba(217, 119, 6, 0.1);
     --accent-emerald: #059669;
     --header-bg: rgba(255, 255, 255, 0.95);
     --slider-bg: #E2E8F0;
+
+    /* Hallmark Floor tokens */
+    --border-hairline: #E2E8F0;
+    --border-focus: #0284C7;
+    --font-sans: 'Space Grotesk', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
   }
 }
 
-body {
+html, body {
   background-color: var(--bg-page);
   color: var(--text-main);
-  font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--font-sans);
   margin: 0;
   padding: 0;
-  transition: background-color 0.25s ease, color 0.25s ease;
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Hallmark Floor: Accessible Focus Rings */
+:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
 }
 
 .font-headline {
@@ -57,6 +52,7 @@ body {
 
 .font-mono {
   font-family: 'JetBrains Mono', monospace;
+  font-variant-numeric: tabular-nums;
 }
 
 /* Custom Range Slider */
@@ -78,7 +74,7 @@ input[type=range]::-webkit-slider-thumb {
   border-radius: 50%;
   background: var(--accent-cyan);
   cursor: pointer;
-  box-shadow: 0 0 12px var(--accent-cyan-glow);
+  box-shadow: 0 1px 3px rgba(2, 132, 199, 0.3);
   transition: transform 0.15s ease, background-color 0.15s ease;
 }
 
@@ -93,7 +89,7 @@ input[type=range]::-moz-range-thumb {
   background: var(--accent-cyan);
   cursor: pointer;
   border: none;
-  box-shadow: 0 0 12px var(--accent-cyan-glow);
+  box-shadow: 0 1px 3px rgba(2, 132, 199, 0.3);
   transition: transform 0.15s ease;
 }
 
@@ -147,43 +143,20 @@ input[type=range]::-moz-range-thumb {
   border-radius: 3px;
 }
 
-/* Aerospace & Industrial HUD Animations */
+/* Aerospace & Industrial Micro-Animations */
 @keyframes scanline {
-  0% {
-    transform: translateY(-100%);
-  }
-  100% {
-    transform: translateY(1000%);
-  }
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(1000%); }
 }
 
 @keyframes radar-sweep {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 @keyframes target-pulse {
-  0%, 100% {
-    opacity: 0.7;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.06);
-  }
-}
-
-@keyframes laser-glow {
-  0%, 100% {
-    box-shadow: 0 0 10px rgba(0, 229, 255, 0.4), inset 0 0 10px rgba(0, 229, 255, 0.2);
-  }
-  50% {
-    box-shadow: 0 0 22px rgba(0, 229, 255, 0.8), inset 0 0 15px rgba(0, 229, 255, 0.4);
-  }
+  0%, 100% { opacity: 0.7; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.06); }
 }
 
 .animate-scanline {
@@ -201,8 +174,12 @@ input[type=range]::-moz-range-thumb {
   will-change: transform;
 }
 
-.animate-laser-glow {
-  animation: laser-glow 2.5s ease-in-out infinite;
-  will-change: box-shadow;
+/* Hallmark Floor Rule 7: Reduced Motion Fallback */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
-

@@ -1018,7 +1018,7 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = React.memo(({
     const aeroDock3YrTotal = effectiveCapex + recurringSaaS3Yr;
 
     const netSavings = Math.max(0, threeYearBaseline - aeroDock3YrTotal);
-    const savingsPct = Math.min(84, Math.round((netSavings / threeYearBaseline) * 100));
+    const savingsPct = threeYearBaseline > 0 ? Math.min(84, Math.round((netSavings / threeYearBaseline) * 100)) : 0;
 
     // Payback in months
     const annualOpSaving = spend - recurringSaaSAnnual;
@@ -1041,11 +1041,11 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = React.memo(({
 
     const aeroDockBarPct = Math.min(
       65,
-      Math.max(14, Math.round((aeroDock3YrTotal / helicopter3Yr) * 100))
+      Math.max(14, helicopter3Yr > 0 ? Math.round((aeroDock3YrTotal / helicopter3Yr) * 100) : 14)
     );
 
     // Performance optimization: Pre-compute manual UAV bar percentage inside useMemo to eliminate inline division during 60-120Hz slider movement
-    const manualUavBarPct = Math.round((manualUav3Yr / helicopter3Yr) * 100);
+    const manualUavBarPct = helicopter3Yr > 0 ? Math.round((manualUav3Yr / helicopter3Yr) * 100) : 0;
 
     return {
       docks,
