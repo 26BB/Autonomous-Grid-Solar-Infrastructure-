@@ -15,6 +15,13 @@
 
 ## ✅ Completed Log (most recent first)
 
+### 2026-11-08 — Modal Dialog Material Symbols Icon Accessibility Across Remaining Modals
+**Status:** ✅ Completed by ATLAS
+**Fixed:**
+- ♿ Added `aria-hidden="true"` to decorative Google Material Symbols icon font spans in `ContactPortalModal.tsx` and `ProposalPackageModal.tsx` (`support_agent`, `verified`, `error`, `check`) to prevent assistive screen readers from voicing icon font ligature strings.
+- 🧪 Updated regression unit test suite in `src/utils/modalIconAccessibility.test.ts` to cover all 6 modal dialog overlay components.
+- 🧪 Verified with lint (`node scripts/check-conflicts.js && tsc --noEmit`), unit test runner (`npx tsx --test src/utils/*.test.ts`), and production build (`vite build`).
+
 ### 2026-10-30 — Modal Dialog Material Symbols Icon Accessibility
 **Status:** ✅ Completed by ATLAS
 **Fixed:**

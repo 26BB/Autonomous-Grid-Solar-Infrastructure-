@@ -9,6 +9,8 @@ describe('Modal Google Material Symbols Icon Accessibility', () => {
     'src/components/Part108Modal.tsx',
     'src/components/PlatformSpecsModal.tsx',
     'src/components/GrantChecklistModal.tsx',
+    'src/components/ContactPortalModal.tsx',
+    'src/components/ProposalPackageModal.tsx',
   ];
 
   it('ensures all decorative Material Symbols icon elements have aria-hidden="true"', () => {
