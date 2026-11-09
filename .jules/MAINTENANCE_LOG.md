@@ -15,6 +15,13 @@
 
 ## ✅ Completed Log (most recent first)
 
+### 2026-11-09 — Decorative Material Symbols Icon Accessibility in Modals & Calculator
+**Status:** ✅ Completed by ATLAS
+**Fixed:**
+- ♿ Added `aria-hidden="true"` to decorative Google Material Symbols icon font elements in `ContactPortalModal.tsx` (`support_agent`, `error`, `check`), `ProposalPackageModal.tsx` (`verified`, `error`, `check`), `EmbeddedCalculator.tsx` (`open_in_new`), `ErrorBoundary.tsx` (`warning`), and `App.tsx` (`download`) to prevent assistive screen readers from vocalizing icon ligature font strings.
+- 🧪 Expanded unit test regression coverage in `src/utils/modalIconAccessibility.test.ts` to assert all decorative icon elements across modals, calculator, error boundary, and main app maintain `aria-hidden="true"`.
+- 🧪 Verified full verification pipeline cleanly: lint check (`scripts/check-conflicts.js` + `tsc --noEmit`), test runner (`npx tsx --test src/utils/*.test.ts`), and production bundle build (`vite build`).
+
 ### 2026-10-30 — Modal Dialog Material Symbols Icon Accessibility
 **Status:** ✅ Completed by ATLAS
 **Fixed:**
