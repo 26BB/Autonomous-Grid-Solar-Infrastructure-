@@ -75,7 +75,7 @@ export const DeploymentSection: React.FC = React.memo(() => {
               animate={{ opacity: 1, scale: 1 }}
               className="mt-4 p-3 rounded-lg bg-red-950/90 border border-red-500/50 text-red-300 text-xs font-mono flex items-center justify-center gap-2 max-w-md mx-auto"
             >
-              <span className="material-symbols-outlined text-[18px]">error</span>
+              <span className="material-symbols-outlined text-[18px]" aria-hidden="true">error</span>
               <span>{deploymentError}</span>
             </motion.div>
           )}
@@ -86,7 +86,7 @@ export const DeploymentSection: React.FC = React.memo(() => {
               animate={{ opacity: 1, scale: 1 }}
               className="mt-4 p-3 rounded-lg bg-emerald-950/90 border border-emerald-500 text-emerald-300 text-xs font-mono flex items-center justify-center gap-2 max-w-md mx-auto"
             >
-              <span className="material-symbols-outlined text-[18px]">check_circle</span>
+              <span className="material-symbols-outlined text-[18px]" aria-hidden="true">check_circle</span>
               <span>Toolkit dispatched! An AeroDock engineer has received your request.</span>
             </motion.div>
           )}

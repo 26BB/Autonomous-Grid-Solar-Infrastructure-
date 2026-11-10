@@ -40,7 +40,7 @@ export class ErrorBoundary extends Component {
         <div className="min-h-screen bg-[#0B0F19] text-[#F8FAFC] flex items-center justify-center p-6 font-mono">
           <div className="max-w-lg w-full bg-[#161F30] border border-red-500/50 rounded-2xl p-8 shadow-2xl space-y-5 text-center">
             <div className="w-14 h-14 rounded-full bg-red-950/80 border border-red-500/60 text-red-400 mx-auto flex items-center justify-center">
-              <span className="material-symbols-outlined text-[32px]">warning</span>
+              <span className="material-symbols-outlined text-[32px]" aria-hidden="true">warning</span>
             </div>
             <div>
               <span className="text-[10px] uppercase tracking-widest text-[#F59E0B] font-bold block mb-1">
