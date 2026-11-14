@@ -15,6 +15,13 @@
 
 ## ✅ Completed Log (most recent first)
 
+### 2026-11-11 — ModelerScreen Decorative Material Symbols Icon Accessibility
+**Status:** ✅ Completed by ATLAS
+**Fixed:**
+- ♿ Added `aria-hidden="true"` to all 14 decorative Google Material Symbols icon elements across `ModelerScreen.tsx` (`error`, `verified`, `file_download`, `check_circle` x4, `expand_more`, `flight`, `person_pin_circle`, `smart_toy`, `monitoring`, `download_done`, `tune`) to prevent screen readers from voicing ligature names into speech synthesizers.
+- 🧪 Updated regression unit test suite in `src/utils/modalIconAccessibility.test.ts` to include `src/components/ModelerScreen.tsx`.
+- 🧪 Verified with lint (`tsc --noEmit`), full test runner (`npx tsx --test src/utils/*.test.ts`), and production build (`vite build`).
+
 ### 2026-11-10 — Complete Decorative Material Symbols Icon Accessibility
 **Status:** ✅ Completed by ATLAS
 **Fixed:**

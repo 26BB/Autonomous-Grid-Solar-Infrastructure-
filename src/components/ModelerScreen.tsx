@@ -78,7 +78,7 @@ const BoardBriefForm: React.FC<BoardBriefFormProps> = React.memo(({ onSubmit }) 
       </div>
       {emailError && (
         <div className="p-2 rounded bg-red-950/80 border border-red-500/50 text-red-300 text-xs font-mono flex items-center gap-1.5">
-          <span className="material-symbols-outlined text-[16px]">error</span>
+          <span className="material-symbols-outlined text-[16px]" aria-hidden="true">error</span>
           <span>{emailError}</span>
         </div>
       )}
@@ -101,7 +101,7 @@ const GrantQualificationMatrix: React.FC<GrantQualificationMatrixProps> = React.
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#2A374F] pb-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="material-symbols-outlined text-[#F59E0B]">
+            <span className="material-symbols-outlined text-[#F59E0B]" aria-hidden="true">
               verified
             </span>
             <h2 className="text-2xl font-headline font-bold text-white">
@@ -118,7 +118,7 @@ const GrantQualificationMatrix: React.FC<GrantQualificationMatrixProps> = React.
             onClick={onOpenGrantChecklistModal}
             className="px-4 py-2 rounded bg-[#0B0F19] border border-[#00E5FF]/40 text-[#00E5FF] text-xs font-mono font-semibold hover:bg-[#161F30] transition-colors flex items-center gap-1.5 cursor-pointer"
           >
-            <span className="material-symbols-outlined text-[16px]">
+            <span className="material-symbols-outlined text-[16px]" aria-hidden="true">
               file_download
             </span>
             <span>Download Grant Checklist (PDF)</span>
@@ -130,7 +130,7 @@ const GrantQualificationMatrix: React.FC<GrantQualificationMatrixProps> = React.
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Check 1 */}
         <div className="p-4 bg-[#0B0F19] border border-[#2A374F] rounded-lg flex items-start gap-3">
-          <span className="material-symbols-outlined text-emerald-400 text-[22px] shrink-0 mt-0.5">
+          <span className="material-symbols-outlined text-emerald-400 text-[22px] shrink-0 mt-0.5" aria-hidden="true">
             check_circle
           </span>
           <div className="flex flex-col gap-1">
@@ -150,7 +150,7 @@ const GrantQualificationMatrix: React.FC<GrantQualificationMatrixProps> = React.
 
         {/* Check 2 */}
         <div className="p-4 bg-[#0B0F19] border border-[#2A374F] rounded-lg flex items-start gap-3">
-          <span className="material-symbols-outlined text-emerald-400 text-[22px] shrink-0 mt-0.5">
+          <span className="material-symbols-outlined text-emerald-400 text-[22px] shrink-0 mt-0.5" aria-hidden="true">
             check_circle
           </span>
           <div className="flex flex-col gap-1">
@@ -170,7 +170,7 @@ const GrantQualificationMatrix: React.FC<GrantQualificationMatrixProps> = React.
 
         {/* Check 3 */}
         <div className="p-4 bg-[#0B0F19] border border-[#2A374F] rounded-lg flex items-start gap-3">
-          <span className="material-symbols-outlined text-emerald-400 text-[22px] shrink-0 mt-0.5">
+          <span className="material-symbols-outlined text-emerald-400 text-[22px] shrink-0 mt-0.5" aria-hidden="true">
             check_circle
           </span>
           <div className="flex flex-col gap-1">
@@ -190,7 +190,7 @@ const GrantQualificationMatrix: React.FC<GrantQualificationMatrixProps> = React.
 
         {/* Check 4 */}
         <div className="p-4 bg-[#0B0F19] border border-[#2A374F] rounded-lg flex items-start gap-3">
-          <span className="material-symbols-outlined text-emerald-400 text-[22px] shrink-0 mt-0.5">
+          <span className="material-symbols-outlined text-emerald-400 text-[22px] shrink-0 mt-0.5" aria-hidden="true">
             check_circle
           </span>
           <div className="flex flex-col gap-1">
@@ -440,7 +440,7 @@ const ThreatVectorSelect: React.FC<ThreatVectorSelectProps> = React.memo(({
             Substation &amp; Transformer Radiometric Thermography
           </option>
         </select>
-        <span className="material-symbols-outlined text-slate-400 absolute right-3 top-3 pointer-events-none text-[20px]">
+        <span className="material-symbols-outlined text-slate-400 absolute right-3 top-3 pointer-events-none text-[20px]" aria-hidden="true">
           expand_more
         </span>
       </div>
@@ -518,7 +518,7 @@ const HelicopterCostCard: React.FC<HelicopterCostCardProps> = React.memo(({ heli
           <span className="text-xs font-mono text-red-400 uppercase font-bold">
             Legacy Helicopter Crew
           </span>
-          <span className="material-symbols-outlined text-red-400 text-[20px]">
+          <span className="material-symbols-outlined text-red-400 text-[20px]" aria-hidden="true">
             flight
           </span>
         </div>
@@ -575,7 +575,7 @@ const ManualUavCostCard: React.FC<ManualUavCostCardProps> = React.memo(({ manual
           <span className="text-xs font-mono text-amber-400 uppercase font-bold">
             Manual Drone Contractors
           </span>
-          <span className="material-symbols-outlined text-amber-400 text-[20px]">
+          <span className="material-symbols-outlined text-amber-400 text-[20px]" aria-hidden="true">
             person_pin_circle
           </span>
         </div>
@@ -648,7 +648,7 @@ const AeroDockCostCard: React.FC<AeroDockCostCardProps> = React.memo(({
           <span className="text-xs font-mono text-[#00E5FF] uppercase font-bold">
             AeroDock Autonomous DiaB
           </span>
-          <span className="material-symbols-outlined text-[#00E5FF] text-[20px]">
+          <span className="material-symbols-outlined text-[#00E5FF] text-[20px]" aria-hidden="true">
             smart_toy
           </span>
         </div>
@@ -724,7 +724,7 @@ const YieldMetricsCard: React.FC<YieldMetricsCardProps> = React.memo(({
     <div className="bg-[#161F30] border border-[#00E5FF]/40 rounded-xl p-6 lg:p-7 shadow-[0_0_30px_rgba(0,229,255,0.08)] flex flex-col gap-5">
       <div className="flex items-center justify-between border-b border-[#2A374F] pb-3">
         <div className="flex items-center gap-2">
-          <span className="material-symbols-outlined text-[#00E5FF]">
+          <span className="material-symbols-outlined text-[#00E5FF]" aria-hidden="true">
             monitoring
           </span>
           <span className="text-xs font-mono tracking-wider text-slate-300 uppercase">
@@ -829,7 +829,7 @@ const YieldMetricsCard: React.FC<YieldMetricsCardProps> = React.memo(({
         onClick={onOpenProposalPackage}
         className="w-full py-3 rounded-lg bg-[#00E5FF] text-[#0B0F19] font-headline font-bold text-sm hover:bg-white transition-all shadow-[0_0_20px_rgba(0,229,255,0.3)] flex items-center justify-center gap-2 cursor-pointer"
       >
-        <span className="material-symbols-outlined text-[18px]">
+        <span className="material-symbols-outlined text-[18px]" aria-hidden="true">
           download_done
         </span>
         <span>Lock In Grant Proposal Package</span>
@@ -1161,7 +1161,7 @@ export const ModelerScreen: React.FC<ModelerScreenProps> = React.memo(({
         <div className="lg:col-span-7 flex flex-col gap-6 bg-[#161F30] border border-[#2A374F] p-6 lg:p-8 rounded-xl shadow-2xl">
           <div className="flex items-center justify-between border-b border-[#2A374F] pb-4">
             <div className="flex items-center gap-2">
-              <span className="material-symbols-outlined text-[#00E5FF] text-[22px]">
+              <span className="material-symbols-outlined text-[#00E5FF] text-[22px]" aria-hidden="true">
                 tune
               </span>
               <h2 className="text-lg font-headline font-semibold text-white">
